@@ -46,6 +46,31 @@ test ("Are unicode fractions recognized as fractions", function() {
 	ok(!isUnicodeFraction('1'), "whole numbers aren't vulgar fractions");
 	ok(!isUnicodeFraction('1¼'), "starts with a whole number");
 })
+
+test ("Get the index of the unicode fraction", function() {
+	equal(indexOfCharFraction("1 ½ Cups"), 1);
+	equal(indexOfCharFraction("1 ⅓ Cups"), 1);
+	equal(indexOfCharFraction("⅔ Cups"), 0);
+})
+
+
+test ("see if the item in the array is a unit", function() {
+	ok(isUnit("Tbsp"), "unit");
+	ok(!isUnit("1/2"), "fraction string");
+	ok(!isUnit("⅔"), "unicode fraction string");
+})
+
+
+/*
+test("get the index of the unit", function() {
+	equal(unitIndex("1 Tbsp salt"), 1, "one whole number");
+	equal(unitIndex("1 1/2 tsp salt"), 2, "one whole number and one regular fraction");
+	equal(unitIndex("1/2 tsp salt"), 1, "one regular fraction");
+	equal(unitIndex("½ tsp salt"), 1, "one unicode fraction");
+	equal(unitIndex("1 ½ tsp salt"), 2, "one whole number and one unicode fraction");	
+})
+*/
+
 /*
 test ("Is there a unicode fraction with a whole number", function() {
 
