@@ -24,18 +24,31 @@ function getQuantity(line){
 }
 */
 
+// return the index of the last number in the line
+
+function isNumber(num) {
+	!isNaN(parseInt(num))
+}
+
+
+
+//function numPosition(line) {
+//	var ln = line.split(' ');	
+//}
+
 
 
 function getNumber(line) {
 	var ln = line.split(' ');
 	//extract the number from the beginning of the string and convert it to a number
 	var numb = parseInt(ln[0]);
+	for (i=0; i<ln.length; i++) {
+
 	if(isFraction(ln[0])) {
 		log("first");
+		}
 	}
-	if(isFraction(ln[1])) {
-		log("second");
-	}
+
 
 }
 
@@ -67,7 +80,7 @@ function indexOfCharFraction(line) {
 }
 
 function isQuantity(line) {
-	
+	return ((isUnicodeFraction(line)) || (isFraction(line)));
 }
 
 

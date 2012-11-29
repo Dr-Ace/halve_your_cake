@@ -10,6 +10,15 @@ test("quantity test", function() {
  	deepEqual(getQuantity("2 C pastry flour"), ["2", "C", "pastry flour"], "simple list" );
 });
 
+
+test("see if a string can be converted to a number", function() {
+	ok(isNumber("3"), "one whole number");
+	ok(!isNumber("⅓"), "one unicode fraction number (not a number)");
+	ok(isNumber("1/3"), "one regular fraction");
+	ok(!isNaN(parseInt("3")), "straight function");
+});
+
+
 /*
 test("number conversions", function() {
 	equal(convertToNumber("3"), 3, "no conversions");
@@ -17,6 +26,16 @@ test("number conversions", function() {
 	equal(convertToNumber("1 1/4"), 1.25, "fraction conversions");
 	equal(convertToNumber("1 3/4"), 1.75, "fraction conversions");
 	equal(convertToNumber("1 &frac34"), 1.75, "ascii fraction conversions");
+})
+*/
+
+/*
+test("get the position of the last number in the string", function() {
+	equal(numPosition("1 cup flour"), 0, "one number");
+	equal(numPosition("1/2 cup flour"), 0, "one regular fraction");
+	equal(numPosition("½ cup flour"), 0, "one unicode fraction");
+	equal(numPosition("1 1/2 cups flour"), 1, "one number and one regular fraction");
+	equal(numPosition("1 ½ cups flour"), 1, "one number and one unicode fraction");
 })
 */
 
@@ -35,7 +54,7 @@ test("Is it a fraction", function () {
 	ok(!isFraction("abc"), "alpha chars not allowed");
 	ok(!isFraction("'3 1/4'"), "fractions must be alone");
 	ok(!isFraction("1¼"), "starts with a whole number");
-})
+});
 
 test ("Are unicode fractions recognized as fractions", function() {
 	var list = ['¼', '½', '¾', '⅓', '⅔', '⅕', '⅖', '⅗', '⅘', '⅙', '⅚', '⅛', '⅜', '⅝', '⅞'];
@@ -45,20 +64,20 @@ test ("Are unicode fractions recognized as fractions", function() {
 	ok(!isUnicodeFraction('1/4'), "common fractions aren't vulgar");
 	ok(!isUnicodeFraction('1'), "whole numbers aren't vulgar fractions");
 	ok(!isUnicodeFraction('1¼'), "starts with a whole number");
-})
+});
 
 test ("Get the index of the unicode fraction", function() {
 	equal(indexOfCharFraction("1 ½ Cups"), 1);
 	equal(indexOfCharFraction("1 ⅓ Cups"), 1);
 	equal(indexOfCharFraction("⅔ Cups"), 0);
-})
+});
 
 
 test ("see if the item in the array is a unit", function() {
 	ok(isUnit("Tbsp"), "unit");
 	ok(!isUnit("1/2"), "fraction string");
 	ok(!isUnit("⅔"), "unicode fraction string");
-})
+});
 
 
 /*
