@@ -18,6 +18,12 @@ test("see if a string can be converted to a number", function() {
 	ok(!isNaN(parseInt("3")), "straight function");
 });
 
+test("return the numbers and/or fractions in the line", function() {
+	equal(getFrac("1/2 C flour"), "1/2", "regular fraction");
+	equal(getFrac("1 C flour"), "1", "one whole number");
+	equal(getFrac("½ C flour"), "½", "unicode fraction")
+});
+
 
 /*
 test("number conversions", function() {

@@ -24,8 +24,18 @@ function getQuantity(line){
 }
 */
 
-// return the index of the last number in the line
+// regular expression to return the quantity at the beginning of a string
+function getFrac(line) {
+	var uniFrac = /[\u8531-\u8542]|[\u0188-\u0190]/ ;
+	line.match(uniFrac)
+}
+//if it matches [o], replace with "[1]+"/"+[2]"
 
+// regular expression to split the string up into quantity, unit, ingredient
+
+
+
+// return the index of the last number in the line
 function isNumber(num) {
 	!isNaN(parseInt(num))
 }
