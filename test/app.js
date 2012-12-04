@@ -24,11 +24,19 @@ function getQuantity(line){
 }
 */
 
-// regular expression to return the quantity at the beginning of a string
+// regular expression to determine if there is a fraction in the string
 function getFrac(line) {
-	var uniFrac = /[\u8531-\u8542]|[\u0188-\u0190]/ ;
-	line.match(uniFrac)
+ var exp = new RegExp("[1-9]+/[1-9]+|[\u00BC-\u00BE]|[\u2150-\u215E]");
+ return exp.exec(line);
 }
+
+function getQuant(line) {
+quantity = (line).match("[0-9]\s+|[1-9]+/[1-9]+|[\u00BC-\u00BE]|[\u2150-\u215E]", "g");
+return quantity
+}
+
+
+
 //if it matches [o], replace with "[1]+"/"+[2]"
 
 // regular expression to split the string up into quantity, unit, ingredient

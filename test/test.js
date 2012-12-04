@@ -20,9 +20,17 @@ test("see if a string can be converted to a number", function() {
 
 test("return the numbers and/or fractions in the line", function() {
 	equal(getFrac("1/2 C flour"), "1/2", "regular fraction");
-	equal(getFrac("1 C flour"), "1", "one whole number");
+	equal(!getFrac("1 C flour"), "1", "one whole number is not a fraction");
 	equal(getFrac("½ C flour"), "½", "unicode fraction")
 });
+
+test("return the quantity at the begining of the string", function() {
+	equal(getQuant("1/2 C flour"), "1/2", "regular fraction");
+	equal(getQuant("1 C flour"), "1", "one whole number");
+	equal(getQuant("½ C flour"), "½", "unicode fraction")
+	equal(getQuant("1 1/2 C flour"), ["1","1/2"], "one whole number plus one regular fraction");
+	equal(getQuant("1 ½ C flour"), ["1","½"], "one whole number plus unicode fraction");
+})
 
 
 /*
