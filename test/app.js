@@ -24,28 +24,36 @@ function getQuantity(line){
 }
 */
 
+
 // regular expression to determine if there is a fraction in the string
 function getFrac(line) {
- var exp = new RegExp("[1-9]+/[1-9]+|[\u00BC-\u00BE]|[\u2150-\u215E]");
- return exp.exec(line);
+	var exp = new RegExp("[1-9]+/[1-9]+|[\u00BC-\u00BE]|[\u2150-\u215E]");
+	return exp.exec(line);
 }
 
-function getQuant(line) {
-quantity = (line).match("[0-9]\s+|[1-9]+/[1-9]+|[\u00BC-\u00BE]|[\u2150-\u215E]", "g");
-return quantity
+// get the index of the fraction
+function getFracIndex(line) {
+	var exp1 = new RegExp("[1-9]+/[1-9]+|[\u00BC-\u00BE]|[\u2150-\u215E]");
+	var fraction = exp1.exec(line);
+	if (fraction !== null) {
+		var ln = line.split(" ");
+		console.log(ln);
+		return ln.indexOf(fraction[0]);
+	}
+	else {
+		return -1;
+	} 
 }
-
-
-
-//if it matches [o], replace with "[1]+"/"+[2]"
-
-// regular expression to split the string up into quantity, unit, ingredient
 
 
 
 // return the index of the last number in the line
-function isNumber(num) {
-	!isNaN(parseInt(num))
+function numberIndex(line) {
+	var ln = line.split(" ");
+	for (i=0; i<ln.length; i++) {;
+		!isNaN(parseInt(ln[i]));
+		return i;
+	}
 }
 
 
