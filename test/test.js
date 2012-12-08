@@ -10,15 +10,28 @@ test("quantity test", function() {
  	deepEqual(getQuantity("2 C flour"), ["2", "C", "flour"], "simple list" );
 });
 */
+/*
+test("get the quantity from the beginning of the string," function(){
+	equal(getQunatity("1/2 C flour"), "1/2", "one regular fraction");
+	equal(getQunatity("1 C flour"), "1", "one whole number ");
+	equal(getQunatity("one C flour"), null, "one whole number is not a fraction");
+	equal(getQunatity("½ C flour"), "½", "one unicode fraction");
+	equal(getQunatity("1 ½ C flour"), "1 ½", "one whole number and one unicode fraction");
+	equal(getQunatity("1 1/2 C flour"), "1 1/2", "one whole number and one regular fraction");	
+})
+*/
 
 test("return the fractions in the line", function() {
 	equal(getFrac("1/2 C flour"), "1/2", "regular fraction");
 	equal(!getFrac("1 C flour"), "1", "one whole number is not a fraction");
 	equal(getFrac("1 C flour"), null, "one whole number is not a fraction");
+	equal(getFrac("one C flour"), null, "one whole number is not a fraction");
 	equal(getFrac("½ C flour"), "½", "unicode fraction");
 	equal(getFrac("1 ½ C flour"), "½", "one whole number and one unicode fraction");
-	equal(getFrac("1 1/2 C flour"), "1/2", "one whole number and one regular fraction")
+	equal(getFrac("1 1/2 C flour"), "1/2", "one whole number and one regular fraction");
+	
 });
+
 
 test("return the index of the fraction", function() {
 	equal(getFracIndex("1/2 C flour"), 0, "regular fraction");
@@ -29,16 +42,19 @@ test("return the index of the fraction", function() {
 });
 
 
+
 test("get the index of the whole number", function() {
-	equal(numberIndex("1 C flour"), 0, "whole number");
-	equal(numberIndex("½ C flour"), -1, "unicode fraction");
-	equal(numberIndex("1 ½ C flour"), 0, "one whole number and one unicode fraction");
-	equal(numberIndex("1 1/2 C flour"), 0, "one whole number and one regular fraction")
+	equal(getNumbIndex("1 C flour"), 0, "whole number");
+	equal(getNumbIndex("at least 1 C flour"), 2, "index 2");
+	equal(getNumbIndex("½ C flour"), -1, "unicode fraction");
+	equal(getNumbIndex("1 ½ C flour"), 0, "one whole number and one unicode fraction");
+	equal(getNumbIndex("1 1/2 C flour"), 0, "one whole number and one regular fraction")
+	equal(getNumbIndex("one C flour"), -1, "one whole number and one regular fraction")
 });
 
 
 
-/*
+/* now done with getNumbIndex
 test("get the position of the last number in the string", function() {
 	equal(numPosition("1 cup flour"), 0, "one number");
 	equal(numPosition("1/2 cup flour"), 0, "one regular fraction");

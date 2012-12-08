@@ -1,4 +1,58 @@
-// parse for "number" "unit" "ingredient"
+
+
+
+// regular expression to determine if there is a fraction in the string
+function getFrac(line) {
+	var exp = new RegExp("[1-9]+/[1-9]+|[\u00BC-\u00BE]|[\u2150-\u215E]");
+	return exp.exec(line);
+}
+
+
+// get the index of the fraction
+function getFracIndex(line) {
+	var ln = line.split(' ');
+	var fraction = getFrac(ln) ;
+	for (i=0; i<ln.length; i++) {
+		if (ln[i] == fraction) {
+			return i;
+		}
+//		else {
+//			return -1;
+//		}
+	}
+}
+
+
+// return the index of the last number in the line
+function getNumbIndex(line) {
+	var ln = line.split(" ");
+	for (i=0; i<ln.length; i++) {
+		if (!isNaN(ln[i])){
+			return i;
+		}
+//		else {
+//			return -1
+//		}
+	}
+}
+
+
+// extract the number and/or fraction at the beginning of the line and assign it to var quantity
+function getQuantity(line){
+	var ln = line.split(' ');
+	var fracIndex = getFracIndex(line);
+	var numIndex = getNumbIndex(line);
+	if (fracIndex <= 0 && numIndex <= 0) {
+		var quantity = ln[0]
+	}
+	else if (fracIndex <= 1 && numIndex <= 1) {
+		var quantity = ln[0] + " " + ln[1];
+	}
+}
+
+
+//////////// older work
+
 
 /*
 function getQuantity(line){
@@ -25,45 +79,6 @@ function getQuantity(line){
 */
 
 
-// regular expression to determine if there is a fraction in the string
-function getFrac(line) {
-	var exp = new RegExp("[1-9]+/[1-9]+|[\u00BC-\u00BE]|[\u2150-\u215E]");
-	return exp.exec(line);
-}
-
-// get the index of the fraction
-function getFracIndex(line) {
-	var exp1 = new RegExp("[1-9]+/[1-9]+|[\u00BC-\u00BE]|[\u2150-\u215E]");
-	var fraction = exp1.exec(line);
-	if (fraction !== null) {
-		var ln = line.split(" ");
-		console.log(ln);
-		return ln.indexOf(fraction[0]);
-	}
-	else {
-		return -1;
-	} 
-}
-
-
-
-// return the index of the last number in the line
-function numberIndex(line) {
-	var ln = line.split(" ");
-	for (i=0; i<ln.length; i++) {;
-		!isNaN(parseInt(ln[i]));
-		return i;
-	}
-}
-
-
-
-//function numPosition(line) {
-//	var ln = line.split(' ');	
-//}
-
-
-
 function getNumber(line) {
 	var ln = line.split(' ');
 	//extract the number from the beginning of the string and convert it to a number
@@ -74,9 +89,9 @@ function getNumber(line) {
 		log("first");
 		}
 	}
-
-
 }
+
+
 
 function isFraction(element) {
 	var isVul = isUnicodeFraction(element);
@@ -92,6 +107,7 @@ function isUnicodeFraction(char) {
 	var unicode = char.charCodeAt(0);
 	return ((unicode >= 188 && unicode <= 190) || (unicode >= 8531 && unicode <= 8542))
 }
+
 
 function indexOfCharFraction(line) {
 	var index = -1;
@@ -114,13 +130,15 @@ function isUnit(line) {
 	return ((!isUnicodeFraction(line)) && (!isFraction(line)));
 }
 
+
+
 //find the first item in the "line" array that is not a number or a fraction
 
 
 
 
 // check what the value of the vulgar fraction is
-/*
+
 function fractionValue(fraction) {
 	
 	var vulgar = [
@@ -141,7 +159,7 @@ function fractionValue(fraction) {
 		["⅞", 7, 8]
 	]
 }
-*/
+
 
 //
 
