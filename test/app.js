@@ -3,37 +3,45 @@
 
 // regular expression to determine if there is a fraction in the string
 function getFrac(line) {
+	console.log(line);
 	var exp = new RegExp("[1-9]+/[1-9]+|[\u00BC-\u00BE]|[\u2150-\u215E]");
-	return exp.exec(line);
+	var result = exp.exec(line);
+	var ans = null;
+	if(result !== null) {
+		var lastindex = result.index + result[0].length - 1;
+		ans = {"text": result[0], "startIndex": result.index, "endIndex": lastindex};
+	}
+	return ans;
 }
 
 
 // get the index of the fraction
 function getFracIndex(line) {
+	console.log("----------- "+line);
+	var fracIndex = -1;
 	var ln = line.split(' ');
-	var fraction = getFrac(ln) ;
 	for (i=0; i<ln.length; i++) {
-		if (ln[i] == fraction) {
-			return i;
+		var fraction = getFrac(ln[i]);
+		if (fraction != null) {
+			fracIndex = i;
+			break;
 		}
-//		else {
-//			return -1;
-//		}
 	}
+	return fracIndex;
 }
 
 
-// return the index of the last number in the line
+// return the index of the number in the line
 function getNumbIndex(line) {
+	var numIndex = -1
 	var ln = line.split(" ");
 	for (i=0; i<ln.length; i++) {
 		if (!isNaN(ln[i])){
-			return i;
+			numIndex = i;
+			break;
 		}
-//		else {
-//			return -1
-//		}
 	}
+	return numIndex;
 }
 
 
@@ -139,27 +147,24 @@ function isUnit(line) {
 
 // check what the value of the vulgar fraction is
 
-function fractionValue(fraction) {
-	
-	var vulgar = [
-		["¼", 1, 4],
-		["½", 1, 2],
-		["¾", 1, 2],
-		["⅓", 1, 3],
-		["⅔", 2, 3],
-		["⅕", 1, 5],
-		["⅖", 2, 5],
-		["⅗", 3, 5],
-		["⅘", 4, 5],
-		["⅙", 1, 6],
-		["⅚", 5, 6],
-		["⅛", 1, 8],
-		["⅜", 3, 8],
-		["⅝", 5, 8],
-		["⅞", 7, 8]
-	]
+function convertUnicodeFraction(char) {
+	var vulgar = {
+		"¼": {"num": 1, "den": 4, "text": "1/4"},
+		"½": {"num": 1, "den": 2, "text": "1/2"},
+		"¾": {"num": 3, "den": 4, "text": "3/4"},
+		"⅓": {"num": 1, "den": 3, "text": "1/3"},
+		"⅔": {"num": 2, "den": 3, "text": "2/3"},
+		"⅕": {"num": 1, "den": 5, "text": "1/5"},
+		"⅖": {"num": 2, "den": 5, "text": "2/5"},
+		"⅗": {"num": 3, "den": 5, "text": "3/5"},
+		"⅘": {"num": 4, "den": 5, "text": "4/5"},
+		"⅙": {"num": 1, "den": 6, "text": "1/6"},
+		"⅚": {"num": 5, "den": 6, "text": "5/6"},
+		"⅛": {"num": 1, "den": 8, "text": "1/8"},
+		"⅜": {"num": 3, "den": 8, "text": "3/8"},
+		"⅝": {"num": 5, "den": 8, "text": "5/8"},
+		"⅞": {"num": 7, "den": 8, "text": "7/8"}
+	};
+	return vulgar[char];
 }
-
-
-//
 

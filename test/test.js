@@ -22,13 +22,12 @@ test("get the quantity from the beginning of the string," function(){
 */
 
 test("return the fractions in the line", function() {
-	equal(getFrac("1/2 C flour"), "1/2", "regular fraction");
-	equal(!getFrac("1 C flour"), "1", "one whole number is not a fraction");
-	equal(getFrac("1 C flour"), null, "one whole number is not a fraction");
-	equal(getFrac("one C flour"), null, "one whole number is not a fraction");
-	equal(getFrac("½ C flour"), "½", "unicode fraction");
-	equal(getFrac("1 ½ C flour"), "½", "one whole number and one unicode fraction");
-	equal(getFrac("1 1/2 C flour"), "1/2", "one whole number and one regular fraction");
+	deepEqual(getFrac("1/2 C flour"), {"text": "1/2", "startIndex": 0, "endIndex": 2}, "regular fraction");
+	deepEqual(getFrac("1 C flour"), null, "one whole number is not a fraction");
+	deepEqual(getFrac("one C flour"), null, "one whole number is not a fraction");
+	deepEqual(getFrac("½ C flour"), {"text": "½", "startIndex": 0, "endIndex": 0}, "unicode fraction");
+	deepEqual(getFrac("1...½ C flour"), {"text": "½", "startIndex": 4, "endIndex": 4}, "one whole number and one unicode fraction");
+	deepEqual(getFrac("1...1/2 1/8C flour"), {"text": "1/2", "startIndex": 4, "endIndex": 6}, "one whole number and one regular fraction");
 	
 });
 
@@ -51,6 +50,11 @@ test("get the index of the whole number", function() {
 	equal(getNumbIndex("1 1/2 C flour"), 0, "one whole number and one regular fraction")
 	equal(getNumbIndex("one C flour"), -1, "one whole number and one regular fraction")
 });
+
+test("create a JSON object to store values of unicode fractions", function(){
+	deepEqual(convertUnicodeFraction("¼"), {"num": 1, "den": 4, "text": "1/4"}, "one fourth");
+	deepEqual(convertUnicodeFraction("⅙"), {"num": 1, "den": 6, "text": "1/6"}, "one sixth");
+})
 
 
 
@@ -90,6 +94,10 @@ test ("Are unicode fractions recognized as fractions", function() {
 	ok(!isUnicodeFraction('1'), "whole numbers aren't vulgar fractions");
 	ok(!isUnicodeFraction('1¼'), "starts with a whole number");
 });
+
+
+
+////////////////
 
 test ("Get the index of the unicode fraction", function() {
 	equal(indexOfCharFraction("1 ½ Cups"), 1);
