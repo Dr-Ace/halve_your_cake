@@ -1,9 +1,6 @@
 
-
-
 // regular expression to determine if there is a fraction in the string
 function getFrac(line) {
-	console.log(line);
 	var exp = new RegExp("[1-9]+/[1-9]+|[\u00BC-\u00BE]|[\u2150-\u215E]");
 	var result = exp.exec(line);
 	var ans = null;
@@ -14,49 +11,81 @@ function getFrac(line) {
 	return ans;
 }
 
-
-// get the index of the fraction
 function getFracIndex(line) {
-	console.log("----------- "+line);
-	var fracIndex = -1;
-	var ln = line.split(' ');
-	for (i=0; i<ln.length; i++) {
-		var fraction = getFrac(ln[i]);
-		if (fraction != null) {
-			fracIndex = i;
-			break;
-		}
-	}
-	return fracIndex;
+	return getFrac(line).endIndex
 }
 
 
 // return the index of the number in the line
-function getNumbIndex(line) {
-	var numIndex = -1
-	var ln = line.split(" ");
-	for (i=0; i<ln.length; i++) {
-		if (!isNaN(ln[i])){
-			numIndex = i;
-			break;
-		}
+function getNumb(line) {
+	var num = new RegExp("[0-9]+");
+	var result = num.exec(line);
+	var numIndex = null;
+	if(result !== null) {
+		var lastindex = result.index + result[0].length - 1;
+		numIndex = {"text": result[0], "startIndex": result.index, "endIndex": lastindex};
 	}
 	return numIndex;
+	
+// 	var numIndex = -1
+// 	var ln = line.split("");
+// 	for (i=0; i<ln.length; i++) {
+// 		if (!isNaN(ln[i])){
+// 			numIndex = i;
+// 			break;
+// 		}
+// 	}
+// 	console.log(ln[2]);
+// 	return numIndex;
 }
-
 
 // extract the number and/or fraction at the beginning of the line and assign it to var quantity
+
 function getQuantity(line){
-	var ln = line.split(' ');
-	var fracIndex = getFracIndex(line);
-	var numIndex = getNumbIndex(line);
-	if (fracIndex <= 0 && numIndex <= 0) {
-		var quantity = ln[0]
+	var quantityLastIndex = -1
+	var fracLastIndex = getFrac(line).endIndex;
+	var numbLastIndex = getNumb(line).endIndex;
+	if (fracLastIndex >= numbLastIndex) {
+		var quantityLastIndex = fracLastIndex;
 	}
-	else if (fracIndex <= 1 && numIndex <= 1) {
-		var quantity = ln[0] + " " + ln[1];
-	}
+	else if (fracLastIndex < numbLastIndex) {
+		 var quantityLastIndex = numbLastIndex;
+		}
+	console.log(quantityLastIndex);
+	var quantity = line.slice(0,quantityLastIndex+1);
+	return quantity;
 }
+// "Cannot read property 'endIndex' of null"
+
+
+
+// parse the value of the vulgar fraction
+function convertUnicodeFraction(char) {
+	var vulgar = {
+		"¼": {"num": 1, "den": 4, "text": "1/4"},
+		"½": {"num": 1, "den": 2, "text": "1/2"},
+		"¾": {"num": 3, "den": 4, "text": "3/4"},
+		"⅓": {"num": 1, "den": 3, "text": "1/3"},
+		"⅔": {"num": 2, "den": 3, "text": "2/3"},
+		"⅕": {"num": 1, "den": 5, "text": "1/5"},
+		"⅖": {"num": 2, "den": 5, "text": "2/5"},
+		"⅗": {"num": 3, "den": 5, "text": "3/5"},
+		"⅘": {"num": 4, "den": 5, "text": "4/5"},
+		"⅙": {"num": 1, "den": 6, "text": "1/6"},
+		"⅚": {"num": 5, "den": 6, "text": "5/6"},
+		"⅛": {"num": 1, "den": 8, "text": "1/8"},
+		"⅜": {"num": 3, "den": 8, "text": "3/8"},
+		"⅝": {"num": 5, "den": 8, "text": "5/8"},
+		"⅞": {"num": 7, "den": 8, "text": "7/8"}
+	};
+	return vulgar[char];
+}
+
+
+
+
+
+
 
 
 //////////// older work
@@ -145,26 +174,4 @@ function isUnit(line) {
 
 
 
-// check what the value of the vulgar fraction is
-
-function convertUnicodeFraction(char) {
-	var vulgar = {
-		"¼": {"num": 1, "den": 4, "text": "1/4"},
-		"½": {"num": 1, "den": 2, "text": "1/2"},
-		"¾": {"num": 3, "den": 4, "text": "3/4"},
-		"⅓": {"num": 1, "den": 3, "text": "1/3"},
-		"⅔": {"num": 2, "den": 3, "text": "2/3"},
-		"⅕": {"num": 1, "den": 5, "text": "1/5"},
-		"⅖": {"num": 2, "den": 5, "text": "2/5"},
-		"⅗": {"num": 3, "den": 5, "text": "3/5"},
-		"⅘": {"num": 4, "den": 5, "text": "4/5"},
-		"⅙": {"num": 1, "den": 6, "text": "1/6"},
-		"⅚": {"num": 5, "den": 6, "text": "5/6"},
-		"⅛": {"num": 1, "den": 8, "text": "1/8"},
-		"⅜": {"num": 3, "den": 8, "text": "3/8"},
-		"⅝": {"num": 5, "den": 8, "text": "5/8"},
-		"⅞": {"num": 7, "den": 8, "text": "7/8"}
-	};
-	return vulgar[char];
-}
 

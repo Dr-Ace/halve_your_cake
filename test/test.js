@@ -1,26 +1,4 @@
-/*
-test("quantity test", function() {
- 	deepEqual(getQuantity("1 cup flour"), ["1", "cup", "flour"], "simple list" );
- 	deepEqual(getQuantity("3 cups flour"), ["3", "cups", "flour"], "simple list" );
- 	deepEqual(getQuantity("3cups flour"), ["3", "cups", "flour"], "simple list" );
- 	deepEqual(getQuantity("3 C flour"), ["3", "C", "flour"], "simple list" );
- 	deepEqual(getQuantity("3C flour"), ["3", "C", "flour"], "simple list" );
- 	deepEqual(getQuantity("10 oz water"), ["10", "oz", "water"], "simple list" );
- 	deepEqual(getQuantity("2 green onions"), ["2", "green", "onions"], "simple list" );
- 	deepEqual(getQuantity("2 C flour"), ["2", "C", "flour"], "simple list" );
-});
-*/
-/*
-test("get the quantity from the beginning of the string," function(){
-	equal(getQunatity("1/2 C flour"), "1/2", "one regular fraction");
-	equal(getQunatity("1 C flour"), "1", "one whole number ");
-	equal(getQunatity("one C flour"), null, "one whole number is not a fraction");
-	equal(getQunatity("½ C flour"), "½", "one unicode fraction");
-	equal(getQunatity("1 ½ C flour"), "1 ½", "one whole number and one unicode fraction");
-	equal(getQunatity("1 1/2 C flour"), "1 1/2", "one whole number and one regular fraction");	
-})
-*/
-
+//1
 test("return the fractions in the line", function() {
 	deepEqual(getFrac("1/2 C flour"), {"text": "1/2", "startIndex": 0, "endIndex": 2}, "regular fraction");
 	deepEqual(getFrac("1 C flour"), null, "one whole number is not a fraction");
@@ -28,45 +6,42 @@ test("return the fractions in the line", function() {
 	deepEqual(getFrac("½ C flour"), {"text": "½", "startIndex": 0, "endIndex": 0}, "unicode fraction");
 	deepEqual(getFrac("1...½ C flour"), {"text": "½", "startIndex": 4, "endIndex": 4}, "one whole number and one unicode fraction");
 	deepEqual(getFrac("1...1/2 1/8C flour"), {"text": "1/2", "startIndex": 4, "endIndex": 6}, "one whole number and one regular fraction");
-	
 });
 
-
-test("return the index of the fraction", function() {
-	equal(getFracIndex("1/2 C flour"), 0, "regular fraction");
-	equal(getFracIndex("1 C flour"), -1, "whole number");
-	equal(getFracIndex("½ C flour"), 0, "unicode fraction");
-	equal(getFracIndex("1 ½ C flour"), 1, "one whole number and one unicode fraction");
-	equal(getFracIndex("1 1/2 C flour"), 1, "one whole number and one regular fraction")
+//2
+test("get the last index of the fraction", function() {
+	equal(getFracIndex("1/2 C flour"), 2, "1/2 C flour");
+	equal(getFracIndex("½ C flour"), 0, "½ C flour");
+	equal(getFracIndex("1...½ C flour"), 4, "1...½ C flour");
+	equal(getFracIndex("1...1/2 1/8C flour"), 6, "1...1/2 1/8C flour");
 });
 
-
-
+//3
 test("get the index of the whole number", function() {
-	equal(getNumbIndex("1 C flour"), 0, "whole number");
-	equal(getNumbIndex("at least 1 C flour"), 2, "index 2");
-	equal(getNumbIndex("½ C flour"), -1, "unicode fraction");
-	equal(getNumbIndex("1 ½ C flour"), 0, "one whole number and one unicode fraction");
-	equal(getNumbIndex("1 1/2 C flour"), 0, "one whole number and one regular fraction")
-	equal(getNumbIndex("one C flour"), -1, "one whole number and one regular fraction")
+	deepEqual(getNumb("1 C flour"), {"text": "1", "startIndex": 0, "endIndex": 0}, "1 C flour");
+	deepEqual(getNumb("at least 1 C flour"), {"text": "1", "startIndex": 9, "endIndex": 9}, "at least 1 C flour");
+	deepEqual(getNumb("½ C flour"), null, "½ C flour");
+	deepEqual(getNumb("1 ½ C flour"), {"text": "1", "startIndex": 0, "endIndex": 0}, "1 ½ C flour");
+	deepEqual(getNumb("1 1/2 C flour"), {"text": "1", "startIndex": 0, "endIndex": 0}, "1 1/2 C flour")
+	deepEqual(getNumb("one C flour"), null, "one C flour")
 });
 
+//4
+test("get the quantity", function() {
+	equal(getQuantity("1/2 C flour"), "1/2", "1/2 C flour");
+	equal(getQuantity("½ C flour"), "½", "½ C flour");
+	equal(getQuantity("½C flour"), "½", "½C flour");
+	equal(getQuantity("1 C flour"), "1", "1C flour");
+	equal(getQuantity("1C flour"), "1", "1C flour");
+	equal(getQuantity("1...½ C flour"), "1...½", "1...½ C flour");
+	equal(getQuantity("1...1/2 flour"), "1...1/2", "1...1/2 flour");
+});
+
+//5
 test("create a JSON object to store values of unicode fractions", function(){
 	deepEqual(convertUnicodeFraction("¼"), {"num": 1, "den": 4, "text": "1/4"}, "one fourth");
 	deepEqual(convertUnicodeFraction("⅙"), {"num": 1, "den": 6, "text": "1/6"}, "one sixth");
 })
-
-
-
-/* now done with getNumbIndex
-test("get the position of the last number in the string", function() {
-	equal(numPosition("1 cup flour"), 0, "one number");
-	equal(numPosition("1/2 cup flour"), 0, "one regular fraction");
-	equal(numPosition("½ cup flour"), 0, "one unicode fraction");
-	equal(numPosition("1 1/2 cups flour"), 1, "one number and one regular fraction");
-	equal(numPosition("1 ½ cups flour"), 1, "one number and one unicode fraction");
-})
-*/
 
 
 test("Is it a fraction", function () {
@@ -111,20 +86,3 @@ test ("see if the item in the array is a unit", function() {
 	ok(!isUnit("1/2"), "fraction string");
 	ok(!isUnit("⅔"), "unicode fraction string");
 });
-
-
-/*
-test("get the index of the unit", function() {
-	equal(unitIndex("1 Tbsp salt"), 1, "one whole number");
-	equal(unitIndex("1 1/2 tsp salt"), 2, "one whole number and one regular fraction");
-	equal(unitIndex("1/2 tsp salt"), 1, "one regular fraction");
-	equal(unitIndex("½ tsp salt"), 1, "one unicode fraction");
-	equal(unitIndex("1 ½ tsp salt"), 2, "one whole number and one unicode fraction");	
-})
-*/
-
-/*
-test ("Is there a unicode fraction with a whole number", function() {
-
-})
-*/
