@@ -1,4 +1,3 @@
-//1
 test("return the fractions in the line", function() {
 	deepEqual(getFrac("1/2 C flour"), {"text": "1/2", "startIndex": 0, "endIndex": 2}, "regular fraction");
 	deepEqual(getFrac("1 C flour"), null, "one whole number is not a fraction");
@@ -8,7 +7,6 @@ test("return the fractions in the line", function() {
 	deepEqual(getFrac("1...1/2 1/8C flour"), {"text": "1/2", "startIndex": 4, "endIndex": 6}, "one whole number and one regular fraction");
 });
 
-//2
 test("get the last index of the fraction", function() {
 	equal(getFracIndex("1/2 C flour"), 2, "1/2 C flour");
 	equal(getFracIndex("½ C flour"), 0, "½ C flour");
@@ -16,7 +14,6 @@ test("get the last index of the fraction", function() {
 	equal(getFracIndex("1...1/2 1/8C flour"), 6, "1...1/2 1/8C flour");
 });
 
-//3
 test("get the index of the whole number", function() {
 	deepEqual(getNumb("1 C flour"), {"text": "1", "startIndex": 0, "endIndex": 0}, "1 C flour");
 	deepEqual(getNumb("at least 1 C flour"), {"text": "1", "startIndex": 9, "endIndex": 9}, "at least 1 C flour");
@@ -26,7 +23,6 @@ test("get the index of the whole number", function() {
 	deepEqual(getNumb("one C flour"), null, "one C flour")
 });
 
-//4
 test("get the quantity", function() {
 	equal(getQuantity("1/2 C flour"), "1/2", "1/2 C flour");
 	equal(getQuantity("½ C flour"), "½", "½ C flour");
@@ -36,6 +32,41 @@ test("get the quantity", function() {
 	equal(getQuantity("1...½ C flour"), "1...½", "1...½ C flour");
 	equal(getQuantity("1...1/2 flour"), "1...1/2", "1...1/2 flour");
 });
+
+test("remove the quantity", function() {
+	deepEqual(removeQuantity("1/2 C flour"), ["C", "flour"], "1/2 C flour");
+	deepEqual(removeQuantity("1/2 Cup flour"), ["Cup", "flour"], "1/2 C flour");
+	deepEqual(removeQuantity("½ C flour"), ["C", "flour"], "½ C flour");
+	deepEqual(removeQuantity("½C sugar"), ["C", "sugar"], "½C flour");
+	deepEqual(removeQuantity("1 Tbsp flour"), ["Tbsp", "flour"], "1 Tbsp flour");
+	deepEqual(removeQuantity("1tsp flour"), ["tsp", "flour"], "1tsp flour");
+	deepEqual(removeQuantity("1½ Tablespoon flour"), ["Tablespoon", "flour"], "1½ Tablespoon flour");
+	deepEqual(removeQuantity("1 1/2 teaspoon flour"), ["teaspoon", "flour"], "1 1/2 teaspoon flour");
+});
+
+test("get the unit", function() {
+	equal(getUnit("1/2 C flour"), "C", "1/2 C flour");
+	equal(getUnit("1/2 Cup flour"), "Cup", "1/2 C flour");
+	equal(getUnit("½ C flour"), "C", "½ C flour");
+	equal(getUnit("½C sugar"), "C", "½C flour");
+	equal(getUnit("1 Tbsp flour"), "Tbsp", "1 Tbsp flour");
+	equal(getUnit("1tsp flour"), "tsp", "1tsp flour");
+	equal(getUnit("1½ Tablespoon flour"), "Tablespoon", "1½ Tablespoon flour");
+	equal(getUnit("1 1/2 teaspoon flour"), "teaspoon", "1 1/2 teaspoon flour");
+});
+
+test("get the ingredient", function() {
+	equal(getIngredient("1/2 C flour"), "flour", "1/2 C flour");
+	equal(getIngredient("1/2 Cup chopped onions"), "chopped onions", "1/2 C chopped onions");
+	equal(getIngredient("½ C flour"), "flour", "½ C flour");
+	equal(getIngredient("½C sugar"), "sugar", "½C sugar");
+	equal(getIngredient("1 Tbsp baking powder"), "baking powder", "1 Tbsp baking powder");
+	equal(getIngredient("1tsp flour"), "flour", "1tsp flour");
+	equal(getIngredient("1½ Tablespoon salt"), "salt", "1½ Tablespoon salt");
+	equal(getIngredient("1 1/2 teaspoon flour"), "flour", "1 1/2 teaspoon flour");
+});
+
+
 
 //5
 test("create a JSON object to store values of unicode fractions", function(){
