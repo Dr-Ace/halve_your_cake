@@ -26,36 +26,36 @@ function getNumb(line) {
 		numIndex = {"text": result[0], "startIndex": result.index, "endIndex": lastindex};
 	}
 	return numIndex;
-	
-// 	var numIndex = -1
-// 	var ln = line.split("");
-// 	for (i=0; i<ln.length; i++) {
-// 		if (!isNaN(ln[i])){
-// 			numIndex = i;
-// 			break;
-// 		}
-// 	}
-// 	console.log(ln[2]);
-// 	return numIndex;
 }
 
 // extract the number and/or fraction at the beginning of the line and assign it to var quantity
 
-function getQuantity(line){
+function getQuantityIndex(line){
+	var fracLastIndex = -1
+	var numbLastIndex = -1
 	var quantityLastIndex = -1
-	var fracLastIndex = getFrac(line).endIndex;
-	var numbLastIndex = getNumb(line).endIndex;
-	if (fracLastIndex >= numbLastIndex) {
-		var quantityLastIndex = fracLastIndex;
+	if (getFrac(line) != null) {
+		fracLastIndex = getFrac(line).endIndex;
 	}
-	else if (fracLastIndex < numbLastIndex) {
-		 var quantityLastIndex = numbLastIndex;
-		}
-	console.log(quantityLastIndex);
-	var quantity = line.slice(0,quantityLastIndex+1);
+	if (getNumb(line) != null) {
+		numbLastIndex = getNumb(line).endIndex;
+	}
+	quantityLastIndex = Math.max(fracLastIndex,numbLastIndex);
+	return quantityLastIndex;
+}
+
+function getQuantity(line) {
+	var quantityLastIndex = getQuantityIndex(line)+1;
+	var quantity = line.slice(0,quantityLastIndex);
 	return quantity;
 }
-// "Cannot read property 'endIndex' of null"
+
+function getUnit(line){
+	var quantityLastIndex = getQuantityIndex(line) +1;
+	var noQuant = line.slice(quantityLastIndex,line.length);
+	console.log(noQuant);
+}
+
 
 
 
@@ -80,6 +80,7 @@ function convertUnicodeFraction(char) {
 	};
 	return vulgar[char];
 }
+
 
 
 
