@@ -71,7 +71,9 @@ function getIngredient(line){
 	return ingredient;
 }
 
-
+// function replaceUnicode(quantity) {
+// 	for vulgar
+// }
 
 
 
@@ -92,8 +94,34 @@ function convertUnicodeFraction(char) {
 		"⅜": {"num": 3, "den": 8, "text": "3/8"},
 		"⅝": {"num": 5, "den": 8, "text": "5/8"},
 		"⅞": {"num": 7, "den": 8, "text": "7/8"}
-	};
-	return vulgar[char];
+		};
+	console.log(vulgar)
+}
+
+function standardizeUnit(char) {
+	var units = {
+		"tsp": {"teaspoon", "tsp", "t"},
+		"Tbsp": {"Tablespoon", "Tbs", "Tbsp", "T"},
+		"C": {"cup", "C"},
+		"flOz": {"fluid ounce", "fluid oz"}
+		"pint": {"pint", "pt"},
+		"quart": {"quart", "qt"},
+		"gallon": {"gallon"}
+	}
+}
+
+function units(char){
+	var units = {
+		["qt": 1,
+		"tsp": 4,
+		"Tbsp": 12,
+		"C": 64,
+		"flOz": 64,
+		"pint": 128,
+		"quart": 256,
+		"gallon": 1024
+		]
+	}
 }
 
 
