@@ -71,11 +71,6 @@ function getIngredient(line){
 	return ingredient;
 }
 
-// function replaceUnicode(quantity) {
-// 	for vulgar
-// }
-
-
 
 function convertUnicodeFraction(char) {
 	var vulgar = {
@@ -98,18 +93,50 @@ function convertUnicodeFraction(char) {
 	console.log(vulgar)
 }
 
-function standardizeUnit(char) {
-	var units = {
-		"tsp": {"teaspoon", "tsp", "t"},
-		"Tbsp": {"Tablespoon", "Tbs", "Tbsp", "T"},
-		"C": {"cup", "C"},
-		"flOz": {"fluid ounce", "fluid oz"}
-		"pint": {"pint", "pt"},
-		"quart": {"quart", "qt"},
-		"gallon": {"gallon"}
-	}
+function StandardizeUnit(unit) {
+ var result = "";
+ // t by itself is case sesitive.
+ if(unit != "T") {
+   unit = unit.toLowerCase();
+ }
+ switch(unit) {
+     case "cups":
+     case "cup":
+     case "c":
+         result = "cup";
+         break;
+     case "teaspoon":
+     case "teaspoons":
+     case "tsp":
+     case "t":
+         result = "teaspoon";
+         break;
+     case "tablespoon":
+     case "tablespoons":
+     case "tbs":
+	 case "tbsp":
+     case "T":
+         result = "tablespoon";
+         break;
+     case "fluid ounce":
+     case "fluid oz":
+         result = "fluidOunce";
+         break;
+     case "pint":
+     case "pt":
+         result = "pint";
+     case "quart":
+     case "qt":
+         result = "quart";
+         break;
+     default:
+         result = "unknown"
+ }
+ return result;
 }
 
+
+/*
 function units(char){
 	var units = {
 		["qt": 1,
@@ -124,7 +151,7 @@ function units(char){
 	}
 }
 
-
+*/
 
 
 

@@ -74,6 +74,28 @@ test("create a JSON object to store values of unicode fractions", function(){
 	deepEqual(convertUnicodeFraction("⅙"), {"num": 1, "den": 6, "text": "1/6"}, "one sixth");
 })
 
+test("get uniform unit", function() {
+	equal(StandardizeUnit("C"), "cup", "C");
+	equal(StandardizeUnit("Cup"), "cup", "Cup");
+	equal(StandardizeUnit("Tbsp"), "tablespoon", "Tbsp");
+	equal(StandardizeUnit("tsp"), "teaspoon", "tsp");
+	equal(StandardizeUnit("Tablespoon"), "tablespoon", "Tablespoon");
+	equal(StandardizeUnit("teaspoon"), "teaspoon", "teaspoon");
+});
+
+/*
+test("get uniform unit", function() {
+	equal(StandardizeUnit("1 C flour"), "cup", "C");
+	equal(StandardizeUnit("2 Cups flour"), "cup", "Cups");
+	equal(StandardizeUnit("3 Tbsp yogurt"), "tablespoon", "Tbsp");
+	equal(StandardizeUnit("1/2 tsp cinamin"), "teaspoon", "tsp");
+	equal(StandardizeUnit("2 Tablespoons butter"), "tablespoon", "Tablespoon");
+	equal(StandardizeUnit("1 teaspoon mustard"), "teaspoon", "teaspoon");
+});
+*/
+
+///////////////
+
 
 test("Is it a fraction", function () {
 	ok(!isFraction("3"), "whole numbers are not fractions");
