@@ -71,6 +71,7 @@ test("get the ingredient", function() {
 //5
 test("create a JSON object to store values of unicode fractions", function(){
 	deepEqual(convertUnicodeFraction("¼"), {"num": 1, "den": 4, "text": "1/4"}, "one fourth");
+	deepEqual(convertUnicodeFraction("¼").text, "1/4", "one fourth");
 	deepEqual(convertUnicodeFraction("⅙"), {"num": 1, "den": 6, "text": "1/6"}, "one sixth");
 })
 
@@ -83,16 +84,16 @@ test("get uniform unit", function() {
 	equal(StandardizeUnit("teaspoon"), "teaspoon", "teaspoon");
 });
 
-/*
-test("get uniform unit", function() {
-	equal(StandardizeUnit("1 C flour"), "cup", "C");
-	equal(StandardizeUnit("2 Cups flour"), "cup", "Cups");
-	equal(StandardizeUnit("3 Tbsp yogurt"), "tablespoon", "Tbsp");
-	equal(StandardizeUnit("1/2 tsp cinamin"), "teaspoon", "tsp");
-	equal(StandardizeUnit("2 Tablespoons butter"), "tablespoon", "Tablespoon");
-	equal(StandardizeUnit("1 teaspoon mustard"), "teaspoon", "teaspoon");
+
+test("convert quantity to quarter teaspoons", function() {
+	equal(units("1 C flour"), "64", "1 C");
+	equal(units("2 Cups flour"), "128", "2 cups");
+	equal(units("3 Tbsp yogurt"), "36", "3 Tbsp");
+	equal(units("1/2 tsp cinamin"), "2", "1/2 tsp");
+	equal(units("2 Tablespoons butter"), "24", "2 Tablespoon");
+	equal(units("1 teaspoon mustard"), "4", "1 teaspoon");
 });
-*/
+
 
 ///////////////
 

@@ -90,7 +90,7 @@ function convertUnicodeFraction(char) {
 		"⅝": {"num": 5, "den": 8, "text": "5/8"},
 		"⅞": {"num": 7, "den": 8, "text": "7/8"}
 		};
-	console.log(vulgar)
+	return(vulgar[char])
 }
 
 function StandardizeUnit(unit) {
@@ -129,6 +129,10 @@ function StandardizeUnit(unit) {
      case "qt":
          result = "quart";
          break;
+     case "gallon":
+     case "gl":
+         result = "gallon";
+         break;
      default:
          result = "unknown"
  }
@@ -136,22 +140,25 @@ function StandardizeUnit(unit) {
 }
 
 
-/*
-function units(char){
+
+function units(line){
+	var quant = parseInt(getQuantity(line));
+	var unit = getUnit(line); 
+	
 	var units = {
-		["qt": 1,
-		"tsp": 4,
-		"Tbsp": 12,
-		"C": 64,
-		"flOz": 64,
+		"qt": 1,
+		"teaspoon": 4,
+		"tablespoon": 12,
+		"cup": 64,
+		"fluidOunce": 64,
 		"pint": 128,
 		"quart": 256,
-		"gallon": 1024
-		]
+		"gallon": 1024	
 	}
+	
 }
 
-*/
+
 
 
 
