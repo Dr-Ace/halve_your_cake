@@ -5,13 +5,57 @@ function getFrac(line) {
 	var exp = new RegExp("[1-9]+/[1-9]+|[\u00BC-\u00BE]|[\u2150-\u215E]");
 	var result = exp.exec(line);
 	var ans = null;
+	// does fraction exist?
 	if(result !== null) {
-		var lastindex = result.index + result[0].length - 1;
-		ans = {"text": result[0], "startIndex": result.index, "endIndex": lastindex};
+		var text = result[0];
+		var startIndex = result.index;
+		var lastindex = startIndex + text.length - 1;
+		var num = den = 1; // 1/1 is a good initializer for a frac 
+		// single char means it is a UNICODE Char
+		if(text.length === 1) {
+			var fracInfo = convertUnicodeFraction(text);
+			num = fracInfo.num;
+			den = fracInfo.den;
+			text = fracInfo.text;
+		} else {
+			var fracInfo = splitTextFraction(text);
+			num = fracInfo.num;
+			den = fracInfo.den;
+		}
+		ans = {"num": num, "den": den, "text": text, "startIndex": startIndex, "endIndex": lastindex};
 	}
 	return ans;
 }
 
+function splitTextFraction(text) {
+	var fracInfo =text.match(/[1-9]+/g);
+	num = parseInt(fracInfo[0]);
+	den = parseInt(fracInfo[1]);
+	return {"num": num, "den": den, "text": text};
+}
+
+function convertUnicodeFraction(char) {
+	var vulgar = {
+		"¼": {"num": 1, "den": 4, "text": "1/4"},
+		"½": {"num": 1, "den": 2, "text": "1/2"},
+		"¾": {"num": 3, "den": 4, "text": "3/4"},
+		"⅓": {"num": 1, "den": 3, "text": "1/3"},
+		"⅔": {"num": 2, "den": 3, "text": "2/3"},
+		"⅕": {"num": 1, "den": 5, "text": "1/5"},
+		"⅖": {"num": 2, "den": 5, "text": "2/5"},
+		"⅗": {"num": 3, "den": 5, "text": "3/5"},
+		"⅘": {"num": 4, "den": 5, "text": "4/5"},
+		"⅙": {"num": 1, "den": 6, "text": "1/6"},
+		"⅚": {"num": 5, "den": 6, "text": "5/6"},
+		"⅛": {"num": 1, "den": 8, "text": "1/8"},
+		"⅜": {"num": 3, "den": 8, "text": "3/8"},
+		"⅝": {"num": 5, "den": 8, "text": "5/8"},
+		"⅞": {"num": 7, "den": 8, "text": "7/8"}
+		};
+	return(vulgar[char])
+}
+
+//Depercated
 function getFracIndex(line) {
 	return getFrac(line).endIndex
 }
@@ -21,25 +65,28 @@ function getFracIndex(line) {
 function getNumb(line) {
 	var num = new RegExp("[0-9]+");
 	var result = num.exec(line);
-	var numIndex = null;
+	var ans = null;
 	if(result !== null) {
 		var lastindex = result.index + result[0].length - 1;
-		numIndex = {"text": result[0], "startIndex": result.index, "endIndex": lastindex};
+		ans = {"value": parseInt(result[0]), "text": result[0], "startIndex": result.index, "endIndex": lastindex};
 	}
-	return numIndex;
+	return ans;
 }
 
 // extract the number and/or fraction at the beginning of the line and assign it to var quantity
 
 function getQuantityIndex(line){
-	var fracLastIndex = -1
-	var numbLastIndex = -1
-	var quantityLastIndex = -1
-	if (getFrac(line) != null) {
-		fracLastIndex = getFrac(line).endIndex;
+	var fracLastIndex = -1;
+	var numbLastIndex = -1;
+	var quantityLastIndex = -1;
+	var fracInfo = getFrac(line);
+	if (fracInfo != null) {
+		fracLastIndex = fracInfo.endIndex;
 	}
-	if (getNumb(line) != null) {
-		numbLastIndex = getNumb(line).endIndex;
+
+	var wholeNumInfo = getNumb(line);
+	if (wholeNumInfo != null) {
+		numbLastIndex =  wholeNumInfo.endIndex;
 	}
 	quantityLastIndex = Math.max(fracLastIndex,numbLastIndex);
 	return quantityLastIndex;
@@ -72,30 +119,9 @@ function getIngredient(line){
 }
 
 
-function convertUnicodeFraction(char) {
-	var vulgar = {
-		"¼": {"num": 1, "den": 4, "text": "1/4"},
-		"½": {"num": 1, "den": 2, "text": "1/2"},
-		"¾": {"num": 3, "den": 4, "text": "3/4"},
-		"⅓": {"num": 1, "den": 3, "text": "1/3"},
-		"⅔": {"num": 2, "den": 3, "text": "2/3"},
-		"⅕": {"num": 1, "den": 5, "text": "1/5"},
-		"⅖": {"num": 2, "den": 5, "text": "2/5"},
-		"⅗": {"num": 3, "den": 5, "text": "3/5"},
-		"⅘": {"num": 4, "den": 5, "text": "4/5"},
-		"⅙": {"num": 1, "den": 6, "text": "1/6"},
-		"⅚": {"num": 5, "den": 6, "text": "5/6"},
-		"⅛": {"num": 1, "den": 8, "text": "1/8"},
-		"⅜": {"num": 3, "den": 8, "text": "3/8"},
-		"⅝": {"num": 5, "den": 8, "text": "5/8"},
-		"⅞": {"num": 7, "den": 8, "text": "7/8"}
-		};
-	return(vulgar[char])
-}
-
 function StandardizeUnit(unit) {
  var result = "";
- // t by itself is case sesitive.
+ // T by itself is case sesitive.
  if(unit != "T") {
    unit = unit.toLowerCase();
  }

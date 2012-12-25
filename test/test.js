@@ -1,10 +1,10 @@
 test("return the fractions in the line", function() {
-	deepEqual(getFrac("1/2 C flour"), {"text": "1/2", "startIndex": 0, "endIndex": 2}, "regular fraction");
+	deepEqual(getFrac("1/2 C flour"), {"num": 1, "den": 2, "text": "1/2", "startIndex": 0, "endIndex": 2}, "regular fraction");
 	deepEqual(getFrac("1 C flour"), null, "one whole number is not a fraction");
 	deepEqual(getFrac("one C flour"), null, "one whole number is not a fraction");
-	deepEqual(getFrac("½ C flour"), {"text": "½", "startIndex": 0, "endIndex": 0}, "unicode fraction");
-	deepEqual(getFrac("1...½ C flour"), {"text": "½", "startIndex": 4, "endIndex": 4}, "one whole number and one unicode fraction");
-	deepEqual(getFrac("1...1/2 1/8C flour"), {"text": "1/2", "startIndex": 4, "endIndex": 6}, "one whole number and one regular fraction");
+	deepEqual(getFrac("½ C flour"), {"num": 1, "den": 2, "text": "½", "startIndex": 0, "endIndex": 0}, "unicode fraction");
+	deepEqual(getFrac("1...½ C flour"), {"num": 1, "den": 2, "text": "½", "startIndex": 4, "endIndex": 4}, "one whole number and one unicode fraction");
+	deepEqual(getFrac("1...1/2 1/8C flour"), {"num": 1, "den": 2, "text": "1/2", "startIndex": 4, "endIndex": 6}, "one whole number and one regular fraction");
 });
 
 test("get the last index of the fraction", function() {
@@ -15,11 +15,11 @@ test("get the last index of the fraction", function() {
 });
 
 test("get the index of the whole number", function() {
-	deepEqual(getNumb("1 C flour"), {"text": "1", "startIndex": 0, "endIndex": 0}, "1 C flour");
-	deepEqual(getNumb("at least 1 C flour"), {"text": "1", "startIndex": 9, "endIndex": 9}, "at least 1 C flour");
+	deepEqual(getNumb("1 C flour"), {"value": 1, "text": "1", "startIndex": 0, "endIndex": 0}, "1 C flour");
+	deepEqual(getNumb("at least 1 C flour"), {"value": 1, "text": "1", "startIndex": 9, "endIndex": 9}, "at least 1 C flour");
 	deepEqual(getNumb("½ C flour"), null, "½ C flour");
-	deepEqual(getNumb("1 ½ C flour"), {"text": "1", "startIndex": 0, "endIndex": 0}, "1 ½ C flour");
-	deepEqual(getNumb("1 1/2 C flour"), {"text": "1", "startIndex": 0, "endIndex": 0}, "1 1/2 C flour")
+	deepEqual(getNumb("1 ½ C flour"), {"value": 1, "text": "1", "startIndex": 0, "endIndex": 0}, "1 ½ C flour");
+	deepEqual(getNumb("1 1/2 C flour"), {"value": 1, "text": "1", "startIndex": 0, "endIndex": 0}, "1 1/2 C flour")
 	deepEqual(getNumb("one C flour"), null, "one C flour")
 });
 
