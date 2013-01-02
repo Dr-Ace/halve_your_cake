@@ -88,18 +88,18 @@ function getQuantityIndex(line){
 	if (wholeNumInfo != null) {
 		numbLastIndex =  wholeNumInfo.endIndex;
 	}
-	quantityLastIndex = Math.max(fracLastIndex,numbLastIndex);
+	quantityLastIndex = Math.max(fracLastIndex,numbLastIndex) +1;
 	return quantityLastIndex;
 }
 
 function getQuantity(line) {
-	var quantityLastIndex = getQuantityIndex(line)+1;
+	var quantityLastIndex = getQuantityIndex(line);
 	var quantity = line.slice(0,quantityLastIndex);
 	return quantity;
 }
 
 function removeQuantity(line){
-	var quantityLastIndex = getQuantityIndex(line) +1;
+	var quantityLastIndex = getQuantityIndex(line);
 	var noQuant = line.slice(quantityLastIndex,line.length);
 	noQuant = noQuant.replace(/(^[\s]+)/, '');  //remove space at beginning of line
 	var ar = noQuant.split(" ");
