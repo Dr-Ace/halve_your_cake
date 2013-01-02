@@ -16,7 +16,7 @@ function getFrac(line) {
 			var fracInfo = convertUnicodeFraction(text);
 			num = fracInfo.num;
 			den = fracInfo.den;
-			text = fracInfo.text;
+			// text = fracInfo.text;
 		} else {
 			var fracInfo = splitTextFraction(text);
 			num = fracInfo.num;
@@ -166,29 +166,52 @@ function StandardizeUnit(unit) {
 }
 
 
+function getUnitList(quantity) {
+	var orderUnits = [
+	{qts: 1,  unit: "teaspoon", label: "1/4"},
+	{qts: 2,  unit: "teaspoon", label: "1/2"},
+	{qts: 4,  unit: "teaspoon", label: "1"},
+	{qts: 6,  unit: "tablespoon", label: "1/2"},
+	{qts: 12,  unit: "tablespoon", label: "1"},
+	// {qts: 24, unit: "fluidOunce", label: "1"},
+	{qts: 48, unit: "cup", label: "1/4"},
+	{qts: 64, unit: "cup", label: "1/3"},
+	{qts: 96, unit: "cup", label: "1/2"},
+	{qts: 128, unit: "cup", label: "2/3"},
+	{qts: 144, unit: "cup", label: "3/4"},
+	{qts: 192, unit: "cup", label: "1"},
+	// {qts: 384, unit: "pint", label: "1"},
+	// {qts: 3072, unit: "gallon", label: "1"},
+	{qts: 999999, unit: "ass_load", label: "1"}
+	];
 
-function units(line){
-	var quant = parseInt(getQuantity(line));
-	var unit = getUnit(line); 
-	
-	var units = {
-		"qt": 1,
-		"teaspoon": 4,
-		"tablespoon": 12,
-		"cup": 64,
-		"fluidOunce": 64,
-		"pint": 128,
-		"quart": 256,
-		"gallon": 1024	
+	unitsList = [];
+
+	// Chose the smaller unit that the quantity is inbetween.
+	// Find out how many of those units are contained in that quantity.
+	// Subtract number of units from total quantity.
+	// Repeat until you have no quantity left.
+	while(quantity >= 1) {
+	// if the largest unit can't be found in the for loop, assume it's the largest unit
+	var largestUnit = orderUnits[orderUnits.length - 1];
+		for (var i = 0; i < orderUnits.length; i++) {
+			if(orderUnits[i].qts >= quantity) {
+				// if not equal it must be between previous largest unit.
+				var unitIdx = orderUnits[i].qts === quantity ? i : i - 1;
+				largestUnit = orderUnits[unitIdx];
+				break;
+			}
+		};
+	// subtract the largest unit from the quantity and do the exercise again with the remainder.
+		var numberOfUnits = Math.floor(quantity/largestUnit.qts);
+		var numberOfQts = numberOfUnits * largestUnit.qts;
+		var ammount = {qts: numberOfQts, amt: numberOfUnits, unit: largestUnit.unit, label: largestUnit.label};
+		unitsList.push(ammount);
+		quantity -= numberOfQts;
 	}
 	
+	return unitsList;
 }
-
-
-
-
-
-
 
 
 

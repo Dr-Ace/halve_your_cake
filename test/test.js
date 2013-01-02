@@ -85,16 +85,13 @@ test("get uniform unit", function() {
 });
 
 
-test("convert quantity to quarter teaspoons", function() {
-	equal(units("1 C flour"), "64", "1 C");
-	equal(units("2 Cups flour"), "128", "2 cups");
-	equal(units("3 Tbsp yogurt"), "36", "3 Tbsp");
-	equal(units("1/2 tsp cinamin"), "2", "1/2 tsp");
-	equal(units("2 Tablespoons butter"), "24", "2 Tablespoon");
-	equal(units("1 teaspoon mustard"), "4", "1 teaspoon");
+test("convert amount to the largest units", function() {
+	deepEqual(getUnitList(192), [{qts: 192, "label": "1", unit: "cup", amt: 1}], "1 cup");
+	deepEqual(getUnitList(216), [{qts: 192, "label": "1", unit: "cup", amt: 1}, {qts: 24, "label": "1", unit: "tablespoon", amt: 2}], "1 cup and 2 Tbsp");
+	deepEqual(getUnitList(24), [{qts: 24, "label": "1", unit: "tablespoon", amt: 2}], "2 Tbsp");
+	deepEqual(getUnitList(96), [{qts: 96, "label": "1/2", unit: "cup", amt: 1}], "1/2 cup");
+
 });
-
-
 ///////////////
 
 
