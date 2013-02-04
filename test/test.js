@@ -94,11 +94,22 @@ test("convert amount to the largest units", function() {
 });
 
 test("combine like units into one unit", function() {
+	var unitList = [{qts: 192, unit: "cup", amount: "1"}];
+	deepEqual(combineLikeUnits(unitList), [{qts: 192, unit: "cup", amount: "1"}], "1 cup");
 	var two_half_cups = [{qts: 384, unit: "cup", amount: "2"}, {qts: 46, unit: "cup", amount: "1/2"}];
 	deepEqual(combineLikeUnits(two_half_cups), [{qts: 430, "amount": "2 1/2", unit: "cup"}], "2 1/2 cup(s)");
 	var one_quarter_teaspoon = [{qts: 4, unit: "teaspoon", amount: "1"}, {qts: 1, unit: "teaspoon", amount: "1/4"}];
 	deepEqual(combineLikeUnits(one_quarter_teaspoon), [{qts: 5, "amount": "1 1/4", unit: "teaspoon"}], "1 1/4 teaspoon");
+	var two_half_cups_qt = [{qts: 384, unit: "cup", amount: "2"}, {qts: 46, unit: "cup", amount: "1/2"}, {qts: 1, unit: "teaspoon", amount: "1/4"}];
+	deepEqual(combineLikeUnits(two_half_cups_qt), [{qts: 430, "amount": "2 1/2", unit: "cup"}, {qts: 1, unit: "teaspoon", amount: "1/4"}], "2 1/2 cup, 1/4 teaspoon");
 });
+
+
+test("print human readable ", function() {
+	//equal(format({qts: 430, "amount": "2 1/2", unit: "cup"}), "2 1/2 cup", "2 1/2 cup");
+	equal(format([{qts: 430, "amount": "2 1/2", unit: "cup"}, {qts: 1, unit: "teaspoon", amount: "1/4"}]), "2 1/2 cup, 1/4 teaspoon", "2 1/2 cup");
+});
+
 
 ///////////////
 

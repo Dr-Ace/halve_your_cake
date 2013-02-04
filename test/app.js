@@ -218,23 +218,39 @@ function getUnitList(quantity) {
 function combineLikeUnits(unitsList) {
 	console.log(unitsList)
 	var combinedUnits = [];
-	for (var i=0; i<unitsList.length-1; i++) {
+	for (var i=0; i<unitsList.length; i++) {
 		var currentUnit = unitsList[i];
 		var nextUnit = unitsList[i+1];
 		console.log("for loop is running")
 		console.log ("currentUnit: " + currentUnit + ", nextUnit: " + nextUnit);
-		if (nextUnit == null) {
-			console.log("nextUnit is null")
-			continue;
-		}
-		if (currentUnit.unit == nextUnit.unit) {
+
+		if (nextUnit != null && currentUnit.unit == nextUnit.unit) {
 			console.log("units are the same")
 			var combinedItem = {qts: (currentUnit.qts + nextUnit.qts), amount: currentUnit.amount+ " "+nextUnit.amount, unit: currentUnit.unit};
 			console.log(combinedItem)
 			combinedUnits.push(combinedItem);
+			i++; //HACKISH: we already dealt with the next unit skip it next time around.
+		} else {
+			// save unit that does not match
+			combinedUnits.push(currentUnit);
 		}
 	}
 	return combinedUnits;
+}
+
+function format(combinedUnits) {
+	if(combinedUnits == null || combinedUnits.length === 0) {
+		return "";
+	}
+
+	formattedString = "";
+	// don't process last element. each needs a "," expect last one.
+	for (var i = 0; i < combinedUnits.length-1; i++) {
+		formattedString += (combinedUnits[i].amount + " " + combinedUnits[i].unit) + ", ";
+	};
+	var lastElement = combinedUnits.length-1;
+	formattedString += combinedUnits[lastElement].amount + " " + combinedUnits[lastElement].unit;
+	return formattedString;
 }
 
 
