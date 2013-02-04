@@ -86,12 +86,20 @@ test("get uniform unit", function() {
 
 
 test("convert amount to the largest units", function() {
-	deepEqual(getUnitList(192), [{qts: 192, "label": "1", unit: "cup", amt: 1}], "1 cup");
-	deepEqual(getUnitList(216), [{qts: 192, "label": "1", unit: "cup", amt: 1}, {qts: 24, "label": "1", unit: "tablespoon", amt: 2}], "1 cup and 2 Tbsp");
-	deepEqual(getUnitList(24), [{qts: 24, "label": "1", unit: "tablespoon", amt: 2}], "2 Tbsp");
-	deepEqual(getUnitList(96), [{qts: 96, "label": "1/2", unit: "cup", amt: 1}], "1/2 cup");
+	deepEqual(getUnitList(192), [{qts: 192, "amount": "1", unit: "cup"}], "1 cup");
+	deepEqual(getUnitList(216), [{qts: 192, "amount": "1", unit: "cup"}, {qts: 24, "amount": "2", unit: "tablespoon"}], "1 cup and 2 Tbsp");
+	deepEqual(getUnitList(24), [{qts: 24, "amount": "2", unit: "tablespoon"}], "2 Tbsp");
+	deepEqual(getUnitList(96), [{qts: 96, "amount": "1/2", unit: "cup"}], "1/2 cup");
 
 });
+
+test("combine like units into one unit", function() {
+	var two_half_cups = [{qts: 384, unit: "cup", amount: "2"}, {qts: 46, unit: "cup", amount: "1/2"}];
+	deepEqual(combineLikeUnits(two_half_cups), [{qts: 430, "amount": "2 1/2", unit: "cup"}], "2 1/2 cup(s)");
+	var one_quarter_teaspoon = [{qts: 4, unit: "teaspoon", amount: "1"}, {qts: 1, unit: "teaspoon", amount: "1/4"}];
+	deepEqual(combineLikeUnits(one_quarter_teaspoon), [{qts: 5, "amount": "1 1/4", unit: "teaspoon"}], "1 1/4 teaspoon");
+});
+
 ///////////////
 
 

@@ -1,0 +1,117 @@
+<html>
+<script>
+var orderUnits = [
+	{qts: 1,  unit: "teaspoon", label: "1/4"},
+	{qts: 2,  unit: "teaspoon", label: "1/2"},
+	{qts: 3,  unit: "teaspoon", label: "3/4"},
+	{qts: 4,  unit: "teaspoon", label: "1"},
+	{qts: 12,  unit: "tablespoon", label: "1"},
+	{qts: 16, unit: "cup", label: "1/4"},
+	{qts: 21, unit: "cup", label: "1/3"},
+	{qts: 32, unit: "cup", label: "1/2"},
+	{qts: 43, unit: "cup", label: "2/3"},
+	{qts: 48, unit: "cup", label: "3/4"},
+	{qts: 64, unit: "cup", label: "1"}
+];
+
+
+
+// keep reducing while there is no quantity left
+// while(quantity >= 1) {
+// 	// handle the case where the quanity is already larger then the largest unit
+// 	var largestUnit  = orderUnits[orderUnits.length - 1];
+// 	if(quantity > largestUnit.qts) {
+// 		var numberOf = Math.floor(quantity/largestUnit.qts);
+// 		largestUnit.amt = numberOf; //update the ammount
+// 		unitsList.push(largestUnit);
+// 		quantity -= numberOf * largestUnit.qts;
+// 	}
+
+// 	for (var i = 0; i < orderUnits.length; i++) {
+// 		var unitQty = orderUnits[i].qts;
+// 		if(unitQty > quantity) {
+// 			// get pervious largest unit unless already first
+// 			var prevUnitIdx = i === 0 ? 0 : i - 1; //NOTE: maybe unnecessary 
+// 			var largestUnit  = orderUnits[prevUnitIdx];
+// 			var numberOf = Math.floor(quantity/largestUnit.qts);
+// 			largestUnit.amt = numberOf; //update the ammount
+// 			unitsList.push(largestUnit);
+// 			quantity -= numberOf * largestUnit.qts;
+// 			break;
+// 		}
+// 	};
+// }
+
+// Chose the smaller unit that the quantity is inbetween. 
+// Find out how many of those units are contained in that quantity.
+// Subtract number of units from total quantity.
+// Repeat until you have no quantity left.
+function createUnitList(quantity) {
+	unitsList = [];
+	while(quantity >= 1) {
+		// if the largest unit can't be found in the for loop, assume it's the largest unit
+		var largestUnit = orderUnits[orderUnits.length - 1];
+		for (var i = 0; i < orderUnits.length; i++) {
+			if(orderUnits[i].qts >= quantity) {
+				// if not equal it must be between previous largest unit.
+				var unitIdx = orderUnits[i].qts === quantity ? i : i - 1; 
+				largestUnit = orderUnits[unitIdx];
+				break;
+			}
+		};
+	// subtract the largest unit from the quantity and do the exercise again with the remainder.
+		var numberOfUnits = Math.floor(quantity/largestUnit.qts);
+		var totalQts = numberOfUnits * largestUnit.qts;
+		var ammount = {qts: totalQts, amt: numberOfUnits, unit: largestUnit.unit, label: largestUnit.label};
+		unitsList.push(ammount);
+		quantity -= totalQts;
+	}
+	return unitsList;
+}
+
+function gatherLikeUnits(unitsList) {
+	var combinedUnts = [];
+	for (var i = 0; i < unitsList.length; i++) {
+		
+		var previousUnit = combinedUnts[combinedUnts.length - 1]; // get previous unit to compare against
+		if(previousUnit == null) {
+			continue; // nothing to compare continue to next unit in list
+		}
+		if(unitsList[i].unit === previousUnit.unit) {
+			console.log("we found a match. unit:"+previousUnit.unit);
+			console.log(previousUnit.amount.amt + " " + unitsList[i].amount.amt + " " + unitList[i].amount.unit)
+		}
+	};
+}
+
+function combineLikeUnits(unitsList) {
+	var combinedUnts = [];
+
+	return combinedUnts;
+}
+
+function printUnitList(unitsList) {
+	for (var i = 0; i < unitsList.length; i++) {
+		var obj = unitsList[i];
+		console.log(unitsList[i]);
+		console.log(obj.amt+" * "+obj.label+" "+obj.unit);
+	};
+}
+var quantity = 160;
+var list = createUnitList(quantity);
+printUnitList(list);
+combineLikeUnits(list);
+console.log(list);
+/*
+123 - 64
+59	- 48
+11	- 11
+0
+
+[{qty: 64, unit: "cup", amt: "1"}, {qty: 48, unit: "cup", amt: "3/4"}, {qty: 11, unit: "teaspoon", amt: "1/4"}]
+
+
+1 3/4 cups + 11qt Flour
+*/
+</script>
+</html>

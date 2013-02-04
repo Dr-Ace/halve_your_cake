@@ -168,21 +168,21 @@ function StandardizeUnit(unit) {
 
 function getUnitList(quantity) {
 	var orderUnits = [
-	{qts: 1,  unit: "teaspoon", label: "1/4"},
-	{qts: 2,  unit: "teaspoon", label: "1/2"},
-	{qts: 4,  unit: "teaspoon", label: "1"},
-	{qts: 6,  unit: "tablespoon", label: "1/2"},
-	{qts: 12,  unit: "tablespoon", label: "1"},
-	// {qts: 24, unit: "fluidOunce", label: "1"},
-	{qts: 48, unit: "cup", label: "1/4"},
-	{qts: 64, unit: "cup", label: "1/3"},
-	{qts: 96, unit: "cup", label: "1/2"},
-	{qts: 128, unit: "cup", label: "2/3"},
-	{qts: 144, unit: "cup", label: "3/4"},
-	{qts: 192, unit: "cup", label: "1"},
-	// {qts: 384, unit: "pint", label: "1"},
-	// {qts: 3072, unit: "gallon", label: "1"},
-	{qts: 999999, unit: "ass_load", label: "1"}
+	{qts: 1,  unit: "teaspoon", amount: "1/4"},
+	{qts: 2,  unit: "teaspoon", amount: "1/2"},
+	{qts: 4,  unit: "teaspoon", amount: "1"},
+	//{qts: 6,  unit: "tablespoon", amount: "1/2"},
+	{qts: 12,  unit: "tablespoon", amount: "1"},
+	// {qts: 24, unit: "fluidOunce", amount: "1"},
+	{qts: 48, unit: "cup", amount: "1/4"},
+	{qts: 64, unit: "cup", amount: "1/3"},
+	{qts: 96, unit: "cup", amount: "1/2"},
+	{qts: 128, unit: "cup", amount: "2/3"},
+	{qts: 144, unit: "cup", amount: "3/4"},
+	{qts: 192, unit: "cup", amount: "1"}
+	// {qts: 384, unit: "pint", amount: "1"},
+	// {qts: 3072, unit: "gallon", amount: "1"},
+	//{qts: 999999, unit: "ass_load", amount: "1"}
 	];
 
 	unitsList = [];
@@ -205,12 +205,36 @@ function getUnitList(quantity) {
 	// subtract the largest unit from the quantity and do the exercise again with the remainder.
 		var numberOfUnits = Math.floor(quantity/largestUnit.qts);
 		var numberOfQts = numberOfUnits * largestUnit.qts;
-		var ammount = {qts: numberOfQts, amt: numberOfUnits, unit: largestUnit.unit, label: largestUnit.label};
-		unitsList.push(ammount);
+		var printedAmount = isFraction(largestUnit.amount) ? largestUnit.amount : ""+numberOfUnits;
+		var newAmount = {qts: numberOfQts, unit: largestUnit.unit, amount: printedAmount};
+		console.log(newAmount);
+		unitsList.push(newAmount);
 		quantity -= numberOfQts;
 	}
 	
 	return unitsList;
+}
+
+function combineLikeUnits(unitsList) {
+	console.log(unitsList)
+	var combinedUnits = [];
+	for (var i=0; i<unitsList.length-1; i++) {
+		var currentUnit = unitsList[i];
+		var nextUnit = unitsList[i+1];
+		console.log("for loop is running")
+		console.log ("currentUnit: " + currentUnit + ", nextUnit: " + nextUnit);
+		if (nextUnit == null) {
+			console.log("nextUnit is null")
+			continue;
+		}
+		if (currentUnit.unit == nextUnit.unit) {
+			console.log("units are the same")
+			var combinedItem = {qts: (currentUnit.qts + nextUnit.qts), amount: currentUnit.amount+ " "+nextUnit.amount, unit: currentUnit.unit};
+			console.log(combinedItem)
+			combinedUnits.push(combinedItem);
+		}
+	}
+	return combinedUnits;
 }
 
 
