@@ -242,18 +242,12 @@ function format(combinedUnits) {
 	if(combinedUnits == null || combinedUnits.length === 0) {
 		return "";
 	}
-
-	formattedString = "";
-	// don't process last element. each needs a "," expect last one.
-	for (var i = 0; i < combinedUnits.length-1; i++) {
-		formattedString += (combinedUnits[i].amount + " " + combinedUnits[i].unit) + ", ";
+	formattedString = combinedUnits[0].amount + " " + combinedUnits[0].unit;
+	for (var i = 1; i < combinedUnits.length; i++) {
+		formattedString += ", " + combinedUnits[i].amount + " " + combinedUnits[i].unit;
 	};
-	var lastElement = combinedUnits.length-1;
-	formattedString += combinedUnits[lastElement].amount + " " + combinedUnits[lastElement].unit;
 	return formattedString;
 }
-
-
 
 //////////// older work
 
