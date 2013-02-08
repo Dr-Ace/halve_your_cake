@@ -1,4 +1,5 @@
 $(document).ready(function(){
+/*
 	var content = $("#click_block").html().split(' ');
 	console.log(content);
 
@@ -12,5 +13,10 @@ $(document).ready(function(){
 	getQuantity = function(line){
 		console.log(line);
 	}
-
+*/
+	
+	$("buton#process_factor").click(function(e) {
+		console.log("button has been clicked");
+	//	var factor = $("#factor > option").attr(value);
+		});
 })
