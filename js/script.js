@@ -15,8 +15,9 @@ $(document).ready(function(){
 	}
 */
 	
-	$("buton#process_factor").click(function(e) {
+	var entered_recipe = $("#recipe_input").val();
+	$("button#process_factor").click(function(e) {
 		console.log("button has been clicked");
 	//	var factor = $("#factor > option").attr(value);
 		});
-})
+});
