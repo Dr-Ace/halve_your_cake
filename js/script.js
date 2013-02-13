@@ -14,10 +14,29 @@ $(document).ready(function(){
 		console.log(line);
 	}
 */
-	
-	var entered_recipe = $("#recipe_input").val();
-	$("button#process_factor").click(function(e) {
+	// function choseFactor(){
+	// 	$("#factor-list").change(function(){
+	// 		var factor = $(this).val()
+	// 		return factor
+	// 		});
+	// }
+	function multiplyRecipe(){
+		$("#factor-list").change(function(){
+		var factor = $(this).val();
+		console.log(factor);
+
+		var entered_recipe = $("#recipe_input").val();
 		console.log("button has been clicked");
-	//	var factor = $("#factor > option").attr(value);
-		});
+	}
+	
+	$("button#process_factor").click(function(e){
+		multiplyRecipe()
+	});
+	
+	// // for range
+	// function displayValue() {
+	// 	var chosenValue = document.getElementById("range-slider").value;
+	// 	$("#range-value").html(chosenValue);
+	// }
+	
 });

@@ -35,7 +35,7 @@ a:link {
 }
 
 .recipe_form button {
-	margin: 1%;
+/*	margin: 1%; */
 	font-size: 1em;
 	color: #263143;
 	background-color: #899dbd;
@@ -47,10 +47,9 @@ a:link {
 }
 
 .recipe_form select {
-	margin: 1%;
 	font-size: 1em;
 	padding: 3px;
-	height: 25px;
+	line-height: 25px;
 	/*
 	color: #263143;
 	background-color: #899dbd;
@@ -58,4 +57,24 @@ a:link {
 	border-radius: 5px;
 	font-weight: bold;
 	box-shadow: inset 0px 0px 3px 2px #abbddb; */
+}
+
+#range-value {
+	font-size: 14px;
+	font-weight: bold;
+	width: 30px;
+	
+}
+
+.controls {
+	margin: 0 1% 0 1%;
+	height: 35px;
+	position: relative;
+}
+
+.controls *{
+	float: left;
+	margin-right: 10px;
+	position: relative;
+	top: 50%;
 }
