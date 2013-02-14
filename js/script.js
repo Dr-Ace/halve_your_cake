@@ -1,38 +1,24 @@
+function multiplyRecipe(factor){
+	console.log("fact: "+factor);
+	var entered_recipe = $("#recipe_input").val();
+	console.log(factor*entered_recipe)
+}
+
+
 $(document).ready(function(){
-/*
-	var content = $("#click_block").html().split(' ');
-	console.log(content);
 
-	console.log("hello");
-	$("#click_block").click(function(3 cups flour){
-		var click_number = parseInt($("#click_count").html());
-		$("#click_count").text(click_number + 1);
-	})
-
-	// parse for "number" "unit" "ingredient"
-	getQuantity = function(line){
-		console.log(line);
-	}
-*/
-	// function choseFactor(){
-	// 	$("#factor-list").change(function(){
-	// 		var factor = $(this).val()
-	// 		return factor
-	// 		});
-	// }
-	function multiplyRecipe(){
-		$("#factor-list").change(function(){
+	$("#factor-list").change(function(){
 		var factor = $(this).val();
 		console.log(factor);
-
-		var entered_recipe = $("#recipe_input").val();
-		console.log("button has been clicked");
-	}
-	
-	$("button#process_factor").click(function(e){
-		multiplyRecipe()
 	});
-	
+
+	$("button#process_factor").click(function(e){
+		console.log("button has been clicked");
+		var factor = $("#factor-list").val(); 
+		console.log("f="+factor);
+		multiplyRecipe(factor);
+	});
+		
 	// // for range
 	// function displayValue() {
 	// 	var chosenValue = document.getElementById("range-slider").value;
