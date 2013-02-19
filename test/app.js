@@ -34,7 +34,7 @@ function splitTextFraction(text) {
 	return {"num": num, "den": den, "text": text};
 }
 
-function convertUnicodeFraction(char) {
+var convertUnicodeFraction = (function() {
 	var vulgar = {
 		"¼": {"num": 1, "den": 4, "text": "1/4"},
 		"½": {"num": 1, "den": 2, "text": "1/2"},
@@ -52,28 +52,29 @@ function convertUnicodeFraction(char) {
 		"⅝": {"num": 5, "den": 8, "text": "5/8"},
 		"⅞": {"num": 7, "den": 8, "text": "7/8"}
 		};
-	return(vulgar[char])
-}
 
-//Depercated
-function getFracIndex(line) {
-	return getFrac(line).endIndex
-}
-
+	return function(char) {
+		return(vulgar[char])
+	};
+})();
 
 // return the index of the number in the line
+//TODO: rename to something more explicit
 function getNumb(line) {
 	var num = new RegExp("[0-9]+");
 	var result = num.exec(line);
 	var ans = null;
+
 	if(result !== null) {
 		var lastindex = result.index + result[0].length - 1;
-		ans = {"value": parseInt(result[0]), "text": result[0], "startIndex": result.index, "endIndex": lastindex};
+		var nextChar = line.charAt(lastindex+1)
+		// double check to see if not a fraction
+		if(nextChar != '/') {
+			ans = {"value": parseInt(result[0]), "text": result[0], "startIndex": result.index, "endIndex": lastindex};	
+		}
 	}
 	return ans;
 }
-
-// extract the number and/or fraction at the beginning of the line and assign it to var quantity
 
 function getQuantityIndex(line){
 	var fracLastIndex = -1;
@@ -165,9 +166,7 @@ function StandardizeUnit(unit) {
  return result;
 }
 
-
-function getUnitList(quantity) {
-	var orderUnits = [
+var _orderUnits = [
 	{qts: 1,  unit: "teaspoon", amount: "1/4"},
 	{qts: 2,  unit: "teaspoon", amount: "1/2"},
 	{qts: 4,  unit: "teaspoon", amount: "1"},
@@ -183,8 +182,50 @@ function getUnitList(quantity) {
 	// {qts: 384, unit: "pint", amount: "1"},
 	// {qts: 3072, unit: "gallon", amount: "1"},
 	//{qts: 999999, unit: "ass_load", amount: "1"}
-	];
+];
 
+function lookupUnit(amount, unit) {
+		for (var i = 0; i < _orderUnits.length; i++) {
+		if (_orderUnits[i].unit == unit && _orderUnits[i].amount == amount) {
+			return _orderUnits[i];
+		};
+	};
+	return null;
+};
+
+function convertToQts(line) {
+	var qtQuantity = 0;
+	var standardUnit = StandardizeUnit(getUnit(line));
+	
+	// var recipeQuantity = getQuantity(line);
+	var quantity = getQuantity(line);
+
+	var fracQts = 0;
+	var fracObj = getFrac(line);
+	if (fracObj !== null) {
+		quantity = fracObj.num + "/" + fracObj.den
+		var fracUnit = lookupUnit(quantity, standardUnit);
+		// check if the unit exists
+		if(fracUnit !== null) {
+			fracQts = fracUnit.qts;
+		}
+	}
+	
+	var wholeNumQts = 0;
+	var wholeNumQuanity = getNumb(line);
+	if(wholeNumQuanity !== null) {
+		var wholeNumUnit = lookupUnit("1", standardUnit);
+		// check if the unit exists
+		if(wholeNumUnit !== null) {
+			wholeNumQts = wholeNumUnit.qts * wholeNumQuanity.value;
+		}
+	}
+	qtQuantity = wholeNumQts + fracQts;
+	// console.log(">> "+wholeNumQts +" + "+fracQts+" = "+ qtQuantity);
+	return qtQuantity;
+};
+
+function getUnitList(quantity) {
 	unitsList = [];
 
 	// Chose the smaller unit that the quantity is inbetween.
@@ -193,12 +234,12 @@ function getUnitList(quantity) {
 	// Repeat until you have no quantity left.
 	while(quantity >= 1) {
 	// if the largest unit can't be found in the for loop, assume it's the largest unit
-	var largestUnit = orderUnits[orderUnits.length - 1];
-		for (var i = 0; i < orderUnits.length; i++) {
-			if(orderUnits[i].qts >= quantity) {
+	var largestUnit = _orderUnits[_orderUnits.length - 1];
+		for (var i = 0; i < _orderUnits.length; i++) {
+			if(_orderUnits[i].qts >= quantity) {
 				// if not equal it must be between previous largest unit.
-				var unitIdx = orderUnits[i].qts === quantity ? i : i - 1;
-				largestUnit = orderUnits[unitIdx];
+				var unitIdx = (_orderUnits[i].qts === quantity) ? i : i - 1;
+				largestUnit = _orderUnits[unitIdx];
 				break;
 			}
 		};
@@ -207,7 +248,7 @@ function getUnitList(quantity) {
 		var numberOfQts = numberOfUnits * largestUnit.qts;
 		var printedAmount = isFraction(largestUnit.amount) ? largestUnit.amount : ""+numberOfUnits;
 		var newAmount = {qts: numberOfQts, unit: largestUnit.unit, amount: printedAmount};
-		console.log(newAmount);
+		// console.log(newAmount);
 		unitsList.push(newAmount);
 		quantity -= numberOfQts;
 	}
@@ -216,18 +257,18 @@ function getUnitList(quantity) {
 }
 
 function combineLikeUnits(unitsList) {
-	console.log(unitsList)
+	// console.log(unitsList)
 	var combinedUnits = [];
 	for (var i=0; i<unitsList.length; i++) {
 		var currentUnit = unitsList[i];
 		var nextUnit = unitsList[i+1];
-		console.log("for loop is running")
-		console.log ("currentUnit: " + currentUnit + ", nextUnit: " + nextUnit);
+		// console.log("for loop is running")
+		// console.log ("currentUnit: " + currentUnit + ", nextUnit: " + nextUnit);
 
 		if (nextUnit != null && currentUnit.unit == nextUnit.unit) {
-			console.log("units are the same")
+			// console.log("units are the same")
 			var combinedItem = {qts: (currentUnit.qts + nextUnit.qts), amount: currentUnit.amount+ " "+nextUnit.amount, unit: currentUnit.unit};
-			console.log(combinedItem)
+			// console.log(combinedItem)
 			combinedUnits.push(combinedItem);
 			i++; //HACKISH: we already dealt with the next unit skip it next time around.
 		} else {
@@ -249,23 +290,6 @@ function format(combinedUnits) {
 	return formattedString;
 }
 
-//////////// older work
-
-
-function getNumber(line) {
-	var ln = line.split(' ');
-	//extract the number from the beginning of the string and convert it to a number
-	var numb = parseInt(ln[0]);
-	for (i=0; i<ln.length; i++) {
-
-	if(isFraction(ln[0])) {
-		log("first");
-		}
-	}
-}
-
-
-
 function isFraction(element) {
 	var isVul = isUnicodeFraction(element);
 	var hasSlash = element.indexOf('/') >= 0;
@@ -281,24 +305,6 @@ function isUnicodeFraction(char) {
 	return ((unicode >= 188 && unicode <= 190) || (unicode >= 8531 && unicode <= 8542))
 }
 
-
-function indexOfCharFraction(line) {
-	var index = -1;
-	var ln = line.split(' ');
-	for (i=0; i<ln.length; i++) {
-		if (isUnicodeFraction(ln[i])) {
-			index = i;
-			break;
-		}
-	}
-	return index;
-}
-
-function isQuantity(line) {
-	return ((isUnicodeFraction(line)) || (isFraction(line)));
-}
-
-
 function isUnit(line) {
 	return ((!isUnicodeFraction(line)) && (!isFraction(line)));
 }
@@ -309,5 +315,27 @@ function isUnit(line) {
 
 
 
+function doit(line) {
+	console.log("line: " +line);
+	var qtQuantity = convertToQts(line);
+	var ingredient = getIngredient(line);
+	var factor = 2;
+	var unitList = getUnitList(factor * qtQuantity);
+	// console.log(unitsList);
+	var convertedResult = combineLikeUnits(unitList);
+	console.log(convertedResult)
+	// for (var i = 0; i < convertedResult.length; i++) {
+	// 	convertedResult[i].amount +" "+ convertedResult[i].unit
+	// };
+	var printedResult = format(convertedResult) + " " + ingredient;
+	return printedResult;
+}
 
+function doAllLines(textBlock) {
+	var result = [];
+	for (var i = 0; i < textBlock.length; i++) {
+		result[i] = doit(textBlock[i]); // convert each line
+	};
+	return result;
+}
 

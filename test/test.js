@@ -7,19 +7,15 @@ test("return the fractions in the line", function() {
 	deepEqual(getFrac("1...1/2 1/8C flour"), {"num": 1, "den": 2, "text": "1/2", "startIndex": 4, "endIndex": 6}, "one whole number and one regular fraction");
 });
 
-test("get the last index of the fraction", function() {
-	equal(getFracIndex("1/2 C flour"), 2, "1/2 C flour");
-	equal(getFracIndex("½ C flour"), 0, "½ C flour");
-	equal(getFracIndex("1...½ C flour"), 4, "1...½ C flour");
-	equal(getFracIndex("1...1/2 1/8C flour"), 6, "1...1/2 1/8C flour");
-});
-
 test("get the index of the whole number", function() {
 	deepEqual(getNumb("1 C flour"), {"value": 1, "text": "1", "startIndex": 0, "endIndex": 0}, "1 C flour");
 	deepEqual(getNumb("at least 1 C flour"), {"value": 1, "text": "1", "startIndex": 9, "endIndex": 9}, "at least 1 C flour");
 	deepEqual(getNumb("½ C flour"), null, "½ C flour");
 	deepEqual(getNumb("1 ½ C flour"), {"value": 1, "text": "1", "startIndex": 0, "endIndex": 0}, "1 ½ C flour");
 	deepEqual(getNumb("1 1/2 C flour"), {"value": 1, "text": "1", "startIndex": 0, "endIndex": 0}, "1 1/2 C flour")
+	deepEqual(getNumb("2 1/2 C flour"), {"value": 2, "text": "2", "startIndex": 0, "endIndex": 0}, "2 1/2 C flour")
+	deepEqual(getNumb("10 1/2 C flour"), {"value": 10, "text": "10", "startIndex": 0, "endIndex": 1}, "10 1/2 C flour")
+	deepEqual(getNumb("1/2 C flour"), null, "1/2 C flour")
 	deepEqual(getNumb("one C flour"), null, "one C flour")
 });
 
@@ -144,15 +140,33 @@ test ("Are unicode fractions recognized as fractions", function() {
 
 ////////////////
 
-test ("Get the index of the unicode fraction", function() {
-	equal(indexOfCharFraction("1 ½ Cups"), 1);
-	equal(indexOfCharFraction("1 ⅓ Cups"), 1);
-	equal(indexOfCharFraction("⅔ Cups"), 0);
-});
+// test ("Get the index of the unicode fraction", function() {
+// 	equal(indexOfCharFraction("1 ½ Cups"), 1);
+// 	equal(indexOfCharFraction("1 ⅓ Cups"), 1);
+// 	equal(indexOfCharFraction("⅔ Cups"), 0);
+// });
 
 
 test ("see if the item in the array is a unit", function() {
 	ok(isUnit("Tbsp"), "unit");
 	ok(!isUnit("1/2"), "fraction string");
 	ok(!isUnit("⅔"), "unicode fraction string");
+});
+
+
+test ("convert written recipe quantity to qts", function() {
+	equal(convertToQts("1 C"), "192", "1 C");
+	equal(convertToQts("1 cup"), "192", "1 cup");
+	equal(convertToQts("2 tsp"), "8", "2 tsp");
+	equal(convertToQts("1/2 tsp"), "2", "1/2 tsp");
+	equal(convertToQts("1 1/2 tsp"), "6", "1 1/2 tsp");
+	equal(convertToQts("½ teaspoon"), "2", "½ teaspoon");
+});
+
+test ("convert written recipe quantity to qts", function() {
+	equal(doit("1 C flour"), "2 cup flour", "1 C flour");
+	equal(doit("1/4 tsp salt"), "1/2 teaspoon salt", "1/4 tsp salt");
+	equal(doit("1/3 cup sugar"), "2/3 cup sugar", "1/3 cup sugar");
+	equal(doit("2 3/4 cup water"), "5 1/2 cup water", "2 3/4 cup water");
+
 });
