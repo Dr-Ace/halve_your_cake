@@ -305,15 +305,6 @@ function isUnicodeFraction(char) {
 	return ((unicode >= 188 && unicode <= 190) || (unicode >= 8531 && unicode <= 8542))
 }
 
-function isUnit(line) {
-	return ((!isUnicodeFraction(line)) && (!isFraction(line)));
-}
-
-
-
-//find the first item in the "line" array that is not a number or a fraction
-
-
 
 function doit(line) {
 	console.log("line: " +line);

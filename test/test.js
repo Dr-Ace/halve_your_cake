@@ -138,22 +138,6 @@ test ("Are unicode fractions recognized as fractions", function() {
 
 
 
-////////////////
-
-// test ("Get the index of the unicode fraction", function() {
-// 	equal(indexOfCharFraction("1 ½ Cups"), 1);
-// 	equal(indexOfCharFraction("1 ⅓ Cups"), 1);
-// 	equal(indexOfCharFraction("⅔ Cups"), 0);
-// });
-
-
-test ("see if the item in the array is a unit", function() {
-	ok(isUnit("Tbsp"), "unit");
-	ok(!isUnit("1/2"), "fraction string");
-	ok(!isUnit("⅔"), "unicode fraction string");
-});
-
-
 test ("convert written recipe quantity to qts", function() {
 	equal(convertToQts("1 C"), "192", "1 C");
 	equal(convertToQts("1 cup"), "192", "1 cup");
