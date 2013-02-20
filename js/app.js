@@ -294,8 +294,8 @@ function isFraction(element) {
 	var isVul = isUnicodeFraction(element);
 	var hasSlash = element.indexOf('/') >= 0;
 	var fracPieces = element.split('/');
-	hasNum = !isNaN(parseInt(fracPieces[0]))
-	hasDom = !isNaN(parseInt(fracPieces[1]))
+	var hasNum = !isNaN(parseInt(fracPieces[0]))
+	var hasDom = !isNaN(parseInt(fracPieces[1]))
 	return isVul || (hasSlash && hasNum && hasDom);
 }
 
@@ -305,67 +305,32 @@ function isUnicodeFraction(char) {
 	return ((unicode >= 188 && unicode <= 190) || (unicode >= 8531 && unicode <= 8542))
 }
 
-// process the text input by seperating the quantity and ingredient. convert the quantity into qts.
+// process the text input by seperating the quantity and ingredient and converting into qts.
 // take the fraction value from the selected 'option' element, convert it into an object containing two integers, and multiply the qts by the "fraction"
-function multiplyRecipe(){
+function multiplyRecipe(line, factor){
 	console.log("multiplyRecipe has been called");
-	var enteredRecipe = $("#recipe_input").val();
-	var qtQuantity = convertToQts(enteredRecipe);
-	var fraction = $("#factor-list").val();
-	var seperateFraction = fraction.split("/");
-	var numerator = seperateFraction[0];
-	var denominator = seperateFraction[1];
-	for( i=0; i< seperateFraction.length; i++){
-		seperateFraction[i] = parseInt(seperateFraction[i]);
-	};
-	
-	var arithmatic = function(input){
-		return((input*numerator)/denominator);		
-	};
-	
-	return arithmatic(qtQuantity);
-	console.log("arithmatic has been called");
+	var qtQuantity = convertToQts(line);
+	var seperateFraction = factor.split("/");
+	var numerator = parseInt(seperateFraction[0]);
+	var denominator = parseInt(seperateFraction[1]);
+	return((qtQuantity*numerator)/denominator);		
 }
 
-
-function doit(line) {
-	// console.log("line: " +line);
+function doit(line, factor) {
 	var ingredient = getIngredient(line);
-	var totalQts = multiplyRecipe();
-	// console.log("totalQts: "+totalQts);
+	var totalQts = multiplyRecipe(line, factor);
 	var unitList = getUnitList(totalQts);
-	// console.log(unitsList);
 	var convertedResult = combineLikeUnits(unitList);
-	// console.log(convertedResult)
 	var printedResult = format(convertedResult) + " " + ingredient;
 	return printedResult;
 }
 
-
-$("button#process_factor").click(function(e){
-	// console.log("button has been clicked");
-	var allLines = doAllLines(textBlock);
-	var factor = $("#factor-list").val(); 
-	// console.log("f="+factor);
-	var printedRecipe = multiplyRecipe(factor);
-	// console.log(printedRecipe)
-	// print the new value to the screen
-	$("#content").append("<p>"+ printedRecipe +"</p>");
-	console.log(allLines);
-});
-
-
-
-function doAllLines(textBlock) {
-	console.log("doAllLines has been called");
-	var textBlock = $("#recipe_input").val();
+function doAllLines(textBlock, factor) {
 	var result = [];
 	lines = textBlock.split("\n");
-	console.log(lines);
 	for (var i = 0; i < lines.length; i++) {
-		result[i] = doit(lines[i]); // convert each line
+		result[i] = doit(lines[i], factor); // convert each line
 	};
-	console.log(result);
 	return result;
 }
 
