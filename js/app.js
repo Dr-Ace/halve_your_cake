@@ -307,21 +307,32 @@ function isUnicodeFraction(char) {
 
 // process the text input by seperating the quantity and ingredient and converting into qts.
 // take the fraction value from the selected 'option' element, convert it into an object containing two integers, and multiply the qts by the "fraction"
-function multiplyRecipe(line, factor){
-	console.log("multiplyRecipe has been called");
-	var qtQuantity = convertToQts(line);
+// function multiplyRecipe(line, factor){
+// 	console.log("multiplyRecipe has been called");
+// 	var qtQuantity = convertToQts(line);	
+// 	return((qtQuantity*numerator)/denominator);		
+// }
+
+function multiplyIngredient(line, factor) {
 	var seperateFraction = factor.split("/");
 	var numerator = parseInt(seperateFraction[0]);
 	var denominator = parseInt(seperateFraction[1]);
-	return((qtQuantity*numerator)/denominator);		
-}
-
-function doit(line, factor) {
-	var ingredient = getIngredient(line);
-	var totalQts = multiplyRecipe(line, factor);
-	var unitList = getUnitList(totalQts);
-	var convertedResult = combineLikeUnits(unitList);
-	var printedResult = format(convertedResult) + " " + ingredient;
+	var unit = StandardizeUnit(getUnit(line));
+	var printedResult = ""
+	if(unit == "unknown") {
+		var quantity = getQuantity(line);
+		var noQuant = removeQuantity(line);
+		var ingredient = noQuant.join(" ");
+		var total = (quantity*numerator)/denominator;	
+		printedResult = total+" "+ingredient;
+	} else {
+		var ingredient = getIngredient(line);
+		var qtQuantity = convertToQts(line);	
+		var totalQts = (qtQuantity*numerator)/denominator;	
+		var unitList = getUnitList(totalQts);
+		var convertedResult = combineLikeUnits(unitList);
+		printedResult = format(convertedResult) + " " + ingredient;
+	}
 	return printedResult;
 }
 
@@ -329,7 +340,7 @@ function doAllLines(textBlock, factor) {
 	var result = [];
 	lines = textBlock.split("\n");
 	for (var i = 0; i < lines.length; i++) {
-		result[i] = doit(lines[i], factor); // convert each line
+		result[i] = multiplyIngredient(lines[i], factor); // convert each line
 	};
 	return result;
 }
