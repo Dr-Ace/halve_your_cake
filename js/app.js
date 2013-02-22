@@ -176,6 +176,7 @@ var _orderUnits = [
 	{qts: 48, unit: "cup", amount: "1/4"},
 	{qts: 64, unit: "cup", amount: "1/3"},
 	{qts: 96, unit: "cup", amount: "1/2"},
+	// {qts: 96, unit: "stick", amount: "1"},
 	{qts: 128, unit: "cup", amount: "2/3"},
 	{qts: 144, unit: "cup", amount: "3/4"},
 	{qts: 192, unit: "cup", amount: "1"}
@@ -313,6 +314,41 @@ function isUnicodeFraction(char) {
 // 	return((qtQuantity*numerator)/denominator);		
 // }
 
+function simplifyFrac(fraction){
+	// var numFrac = splitTextFraction(fraction);
+	//NOTE: splitTextFraction is a duplicate funciton with seperateFraction
+	var seperateFraction = fraction.split("/");
+	var numerator = parseInt(seperateFraction[0]);
+	var denominator = parseInt(seperateFraction[1]);
+	var wholeNum = "";
+	if (numerator > denominator) {
+		var wholeNum = Math.floor(numerator/denominator);
+		console.log("fraction: "+fraction);
+		console.log("wholeNum: "+wholeNum);
+		var numerator = (numerator%denominator);
+		console.log("numerator: "+numerator);
+		// var remainingNum = numerator%denominator;
+		// var wholeNum = (numerator - remainingNum)/denominator;		
+		// return wholeNum +" "+ remainingNum +"/"+ denominator; 
+	};
+	var x = [2,3,4,5,6,7,8,9,10];
+	for (var i = 0; i < x.length; i++) {
+		if(numerator%x[i] == 0 && den%x[i] == 0){
+			console.log("both divisable by: "+x[i])
+			numerator = numerator/x[i];
+			console.log("numerator/x[i]: "+numerator);
+			denominator = denominator/x[i];
+		};
+		if (numerator === 0){
+			return wholeNum
+		}
+		else{
+			return wholeNum +" "+numerator+"/"+denominator;
+		}
+	};
+	
+};
+
 function multiplyIngredient(line, factor) {
 	var seperateFraction = factor.split("/");
 	var numerator = parseInt(seperateFraction[0]);
@@ -323,8 +359,17 @@ function multiplyIngredient(line, factor) {
 		var quantity = getQuantity(line);
 		var noQuant = removeQuantity(line);
 		var ingredient = noQuant.join(" ");
-		var total = (quantity*numerator)/denominator;	
-		printedResult = total+" "+ingredient;
+		//if the quantity is a fraction it needs to be converted into something that can be multiplied
+		if(getFrac(line) !== null){
+			var newNum = splitTextFraction(quantity).num * numerator;
+			var newDen = splitTextFraction(quantity).den * denominator;
+			var total = newNum + "/" + newDen;
+			printedResult= total +" "+ ingredient;
+		}
+		else {
+				var total = (quantity*numerator)/denominator;
+				printedResult = total+" "+ingredient;
+			};
 	} else {
 		var ingredient = getIngredient(line);
 		var qtQuantity = convertToQts(line);	

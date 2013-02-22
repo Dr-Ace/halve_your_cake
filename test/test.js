@@ -148,9 +148,19 @@ test ("convert written recipe quantity to qts", function() {
 });
 
 test ("convert written recipe quantity to qts", function() {
-	equal(doit("1 C flour"), "2 cup flour", "1 C flour");
-	equal(doit("1/4 tsp salt"), "1/2 teaspoon salt", "1/4 tsp salt");
-	equal(doit("1/3 cup sugar"), "2/3 cup sugar", "1/3 cup sugar");
-	equal(doit("2 3/4 cup water"), "5 1/2 cup water", "2 3/4 cup water");
+	equal(multiplyIngredient("1 C flour"), "2 cup flour", "1 C flour");
+	equal(multiplyIngredient("1/4 tsp salt"), "1/2 teaspoon salt", "1/4 tsp salt");
+	equal(multiplyIngredient("1/3 cup sugar"), "2/3 cup sugar", "1/3 cup sugar");
+	equal(multiplyIngredient("2 3/4 cup water"), "5 1/2 cup water", "2 3/4 cup water");
 
 });
+
+
+test ("rationalize fraction", function() {
+	equal(simplifyFrac("5/4"), "1 1/4", "5/4 - remainder");
+	equal(simplifyFrac("4/2"), "2", "4/2 - simplifying whole number");
+	equal(simplifyFrac("6/4"), "1 1/2", "6/4 - remainder that also needs simplifying");
+	equal(simplifyFrac("8/3"), "2 2/3", "8/3 - whole number greater than one, and remainders");
+	equal(simplifyFrac("4/12"), "3", "4/12 - whole number greater than one");
+});
+

@@ -78,3 +78,13 @@ a:link {
 	position: relative;
 	top: 50%;
 }
+
+ul#converted-recipe {
+	padding: 10px;
+	font-size: 14px;
+}
+
+ul#converted-recipe li {
+	list-style-type: none;
+}
+

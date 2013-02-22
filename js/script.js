@@ -7,7 +7,7 @@ $(document).ready(function(){
 	// print the new value to the screen
 	for (var i = 0; i < allLines.length; i++) {
 		allLines[i]
-		$("#content").append("<p>"+ allLines[i] +"</p>");
+		$("#converted-recipe").append("<li>"+ allLines[i] +"</li>");
 		};
 	});
 
