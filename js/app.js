@@ -320,33 +320,30 @@ function simplifyFrac(fraction){
 	var seperateFraction = fraction.split("/");
 	var numerator = parseInt(seperateFraction[0]);
 	var denominator = parseInt(seperateFraction[1]);
-	var wholeNum = "";
-	if (numerator > denominator) {
-		var wholeNum = Math.floor(numerator/denominator);
-		console.log("fraction: "+fraction);
-		console.log("wholeNum: "+wholeNum);
-		var numerator = (numerator%denominator);
-		console.log("numerator: "+numerator);
-		// var remainingNum = numerator%denominator;
-		// var wholeNum = (numerator - remainingNum)/denominator;		
-		// return wholeNum +" "+ remainingNum +"/"+ denominator; 
-	};
-	var x = [2,3,4,5,6,7,8,9,10];
+	// if it is an improper fraction (greater than one)
+	var wholeNum = Math.floor(numerator/denominator);
+	var numerator = (numerator%denominator);
+	// if the fraction can be simplified
+	var x = [10,9,8,7,6,5,4,3,2];
 	for (var i = 0; i < x.length; i++) {
-		if(numerator%x[i] == 0 && den%x[i] == 0){
-			console.log("both divisable by: "+x[i])
-			numerator = numerator/x[i];
+		console.log("x[i]: "+x[i])
+		if(numerator%x[i] === 0 && denominator%x[i] === 0){
+			console.log("both "+numerator +" and "+denominator+" are divisable by: "+x[i])
+			numerator /= x[i];
 			console.log("numerator/x[i]: "+numerator);
-			denominator = denominator/x[i];
+			denominator /= x[i];
+			break;
 		};
-		if (numerator === 0){
-			return wholeNum
-		}
-		else{
-			return wholeNum +" "+numerator+"/"+denominator;
-		}
 	};
-	
+	if (numerator === 0){
+		return wholeNum
+	}
+	else if(wholeNum !== 0) {
+		return wholeNum +" "+numerator+"/"+denominator;
+	}
+	else{
+		return numerator+"/"+denominator;
+	}
 };
 
 function multiplyIngredient(line, factor) {
