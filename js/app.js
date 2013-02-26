@@ -107,6 +107,18 @@ function removeQuantity(line){
 	return ar;
 	}
 
+// function removeQuantity(line){
+// 	var lineItems = line.split(" ");
+// 	console.log(lineItems);
+// 	for (var i = 0; i < lineItems.length; i++) {
+// 		if(getFrac(lineItems[i]) || getNumb(lineItems[i])) {
+// 			console.log(i+" is a number or fraction");
+// 			lineItems = lineItems.splice(i, 1);
+// 		};
+// 	};
+// 	return lineItems;	
+// }
+
 function getUnit(line){
 	var noQuant = removeQuantity(line);
 	return noQuant[0]
@@ -315,22 +327,16 @@ function isUnicodeFraction(char) {
 // }
 
 function simplifyFrac(fraction){
-	// var numFrac = splitTextFraction(fraction);
-	//NOTE: splitTextFraction is a duplicate funciton with seperateFraction
-	var seperateFraction = fraction.split("/");
-	var numerator = parseInt(seperateFraction[0]);
-	var denominator = parseInt(seperateFraction[1]);
+	var numerator = splitTextFraction(fraction).num;
+	var denominator = splitTextFraction(fraction).den;
 	// if it is an improper fraction (greater than one)
 	var wholeNum = Math.floor(numerator/denominator);
 	var numerator = (numerator%denominator);
 	// if the fraction can be simplified
 	var x = [10,9,8,7,6,5,4,3,2];
 	for (var i = 0; i < x.length; i++) {
-		console.log("x[i]: "+x[i])
 		if(numerator%x[i] === 0 && denominator%x[i] === 0){
-			console.log("both "+numerator +" and "+denominator+" are divisable by: "+x[i])
 			numerator /= x[i];
-			console.log("numerator/x[i]: "+numerator);
 			denominator /= x[i];
 			break;
 		};
@@ -346,10 +352,10 @@ function simplifyFrac(fraction){
 	}
 };
 
+
 function multiplyIngredient(line, factor) {
-	var seperateFraction = factor.split("/");
-	var numerator = parseInt(seperateFraction[0]);
-	var denominator = parseInt(seperateFraction[1]);
+	var numerator = splitTextFraction(factor).num;
+	var denominator = splitTextFraction(factor).den;
 	var unit = StandardizeUnit(getUnit(line));
 	var printedResult = ""
 	if(unit == "unknown") {
