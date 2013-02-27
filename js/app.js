@@ -60,7 +60,7 @@ var convertUnicodeFraction = (function() {
 
 // return the index of the number in the line
 //TODO: rename to something more explicit
-function getNumb(line) {
+function findFirstWholeNumber(line) {
 	var num = new RegExp("[0-9]+");
 	var result = num.exec(line);
 	var ans = null;
@@ -85,7 +85,7 @@ function getQuantityIndex(line){
 		fracLastIndex = fracInfo.endIndex;
 	}
 
-	var wholeNumInfo = getNumb(line);
+	var wholeNumInfo = findFirstWholeNumber(line);
 	if (wholeNumInfo != null) {
 		numbLastIndex =  wholeNumInfo.endIndex;
 	}
@@ -213,7 +213,7 @@ function convertToQts(line) {
 	}
 	
 	var wholeNumQts = 0;
-	var wholeNumQuanity = getNumb(line);
+	var wholeNumQuanity = findFirstWholeNumber(line);
 	if(wholeNumQuanity !== null) {
 		var wholeNumUnit = lookupUnit("1", standardUnit);
 		// check if the unit exists
@@ -326,11 +326,11 @@ function simplifyFrac(fraction){
 	// if the fraction can be simplified
 	var x = [10,9,8,7,6,5,4,3,2];
 	for (var i = 0; i < x.length; i++) {
-		console.log("x[i]: "+x[i])
+		// console.log("x[i]: "+x[i])
 		if(numerator%x[i] === 0 && denominator%x[i] === 0){
-			console.log("both "+numerator +" and "+denominator+" are divisable by: "+x[i])
+			// console.log("both "+numerator +" and "+denominator+" are divisable by: "+x[i])
 			numerator /= x[i];
-			console.log("numerator/x[i]: "+numerator);
+			// console.log("numerator/x[i]: "+numerator);
 			denominator /= x[i];
 			break;
 		};
@@ -346,25 +346,36 @@ function simplifyFrac(fraction){
 	}
 };
 
+function isBlank(str) {
+    return (!str || /^\s*$/.test(str));
+}
+
 function multiplyIngredient(line, factor) {
+	if(isBlank(line)) {
+		console.log("input should not be an empty line: "+line);
+		return;
+	}
 	var seperateFraction = factor.split("/");
 	var numerator = parseInt(seperateFraction[0]);
 	var denominator = parseInt(seperateFraction[1]);
 	var unit = StandardizeUnit(getUnit(line));
 	var printedResult = ""
+	var total = ""
 	if(unit == "unknown") {
 		var quantity = getQuantity(line);
 		var noQuant = removeQuantity(line);
 		var ingredient = noQuant.join(" ");
 		//if the quantity is a fraction it needs to be converted into something that can be multiplied
 		if(getFrac(line) !== null){
+			// console.log(ingredient+": unit is unkown and there is a fraction in the quantity")
 			var newNum = splitTextFraction(quantity).num * numerator;
 			var newDen = splitTextFraction(quantity).den * denominator;
-			var total = newNum + "/" + newDen;
+			total = newNum + "/" + newDen;
 			printedResult= total +" "+ ingredient;
 		}
 		else {
-				var total = (quantity*numerator)/denominator;
+				total = simplifyFrac((quantity*numerator)+"/"+denominator);
+				console.log("ingredient: "+ingredient+", total: "+total)
 				printedResult = total+" "+ingredient;
 			};
 	} else {
@@ -382,8 +393,14 @@ function doAllLines(textBlock, factor) {
 	var result = [];
 	lines = textBlock.split("\n");
 	for (var i = 0; i < lines.length; i++) {
-		result[i] = multiplyIngredient(lines[i], factor); // convert each line
+		if (!isBlank(lines[i])){
+			result.push(multiplyIngredient(lines[i], factor));
+		}
+		else {
+			// leave in line breaks to perserve the orginal format
+			result.push("");
+		}
 	};
 	return result;
 }
-
+	

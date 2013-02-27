@@ -8,15 +8,15 @@ test("return the fractions in the line", function() {
 });
 
 test("get the index of the whole number", function() {
-	deepEqual(getNumb("1 C flour"), {"value": 1, "text": "1", "startIndex": 0, "endIndex": 0}, "1 C flour");
-	deepEqual(getNumb("at least 1 C flour"), {"value": 1, "text": "1", "startIndex": 9, "endIndex": 9}, "at least 1 C flour");
-	deepEqual(getNumb("½ C flour"), null, "½ C flour");
-	deepEqual(getNumb("1 ½ C flour"), {"value": 1, "text": "1", "startIndex": 0, "endIndex": 0}, "1 ½ C flour");
-	deepEqual(getNumb("1 1/2 C flour"), {"value": 1, "text": "1", "startIndex": 0, "endIndex": 0}, "1 1/2 C flour")
-	deepEqual(getNumb("2 1/2 C flour"), {"value": 2, "text": "2", "startIndex": 0, "endIndex": 0}, "2 1/2 C flour")
-	deepEqual(getNumb("10 1/2 C flour"), {"value": 10, "text": "10", "startIndex": 0, "endIndex": 1}, "10 1/2 C flour")
-	deepEqual(getNumb("1/2 C flour"), null, "1/2 C flour")
-	deepEqual(getNumb("one C flour"), null, "one C flour")
+	deepEqual(findFirstWholeNumber("1 C flour"), {"value": 1, "text": "1", "startIndex": 0, "endIndex": 0}, "1 C flour");
+	deepEqual(findFirstWholeNumber("at least 1 C flour"), {"value": 1, "text": "1", "startIndex": 9, "endIndex": 9}, "at least 1 C flour");
+	deepEqual(findFirstWholeNumber("½ C flour"), null, "½ C flour");
+	deepEqual(findFirstWholeNumber("1 ½ C flour"), {"value": 1, "text": "1", "startIndex": 0, "endIndex": 0}, "1 ½ C flour");
+	deepEqual(findFirstWholeNumber("1 1/2 C flour"), {"value": 1, "text": "1", "startIndex": 0, "endIndex": 0}, "1 1/2 C flour")
+	deepEqual(findFirstWholeNumber("2 1/2 C flour"), {"value": 2, "text": "2", "startIndex": 0, "endIndex": 0}, "2 1/2 C flour")
+	deepEqual(findFirstWholeNumber("10 1/2 C flour"), {"value": 10, "text": "10", "startIndex": 0, "endIndex": 1}, "10 1/2 C flour")
+	deepEqual(findFirstWholeNumber("1/2 C flour"), null, "1/2 C flour")
+	deepEqual(findFirstWholeNumber("one C flour"), null, "one C flour")
 });
 
 test("get the quantity", function() {
