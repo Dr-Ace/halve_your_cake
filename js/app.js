@@ -206,18 +206,12 @@ function lookupUnit(amount, unit) {
 	return null;
 };
 
-function convertToQts(line) {
-	var qtQuantity = 0;
-	var standardUnit = StandardizeUnit(getUnit(line));
-	
-	// var recipeQuantity = getQuantity(line);
-	var quantity = getQuantity(line);
-
+function convertToQts(quantityStr, standardUnit) {
 	var fracQts = 0;
-	var fracObj = getFrac(line);
+	var fracObj = getFrac(quantityStr);
 	if (fracObj !== null) {
-		quantity = fracObj.num + "/" + fracObj.den
-		var fracUnit = lookupUnit(quantity, standardUnit);
+		var fracQuantityStr = fracObj.num + "/" + fracObj.den
+		var fracUnit = lookupUnit(fracQuantityStr, standardUnit);
 		// check if the unit exists
 		if(fracUnit !== null) {
 			fracQts = fracUnit.qts;
@@ -225,16 +219,19 @@ function convertToQts(line) {
 	}
 	
 	var wholeNumQts = 0;
-	var wholeNumQuanity = findFirstWholeNumber(line);
+	var wholeNumQuanity = findFirstWholeNumber(quantityStr);
 	if(wholeNumQuanity !== null) {
+		// lookupUnit does not include amounts greater than one
+		// amounts greater than one must be set to "1" to match the appropriate unit
+		// then the number of qts will be multiplied by the amount greater than one
 		var wholeNumUnit = lookupUnit("1", standardUnit);
 		// check if the unit exists
 		if(wholeNumUnit !== null) {
 			wholeNumQts = wholeNumUnit.qts * wholeNumQuanity.value;
 		}
 	}
-	qtQuantity = wholeNumQts + fracQts;
-	// console.log(">> "+wholeNumQts +" + "+fracQts+" = "+ qtQuantity);
+
+	var qtQuantity = wholeNumQts + fracQts;
 	return qtQuantity;
 };
 
@@ -359,16 +356,20 @@ function isBlank(str) {
 function multiplyIngredient(line, factor) {
 	if(isBlank(line)) {
 		console.log("input should not be an empty line: "+line);
-		return;
+		return "";
 	}
 	var seperateFraction = factor.split("/");
 	var numerator = parseInt(seperateFraction[0]);
 	var denominator = parseInt(seperateFraction[1]);
+	var quantity = getQuantity(line);
 	var unit = StandardizeUnit(getUnit(line));
 	var printedResult = ""
 	var total = ""
-	if(unit == "unknown") {
-		var quantity = getQuantity(line);
+	if(unit === "unknown" && quantity === "") {
+		return line;
+	}
+	else if(unit == "unknown") {
+		// var quantity = getQuantity(line);
 		var noQuant = removeQuantity(line);
 		var ingredient = noQuant.join(" ");
 		//if the quantity is a fraction it needs to be converted into something that can be multiplied
@@ -380,13 +381,13 @@ function multiplyIngredient(line, factor) {
 			printedResult= total +" "+ ingredient;
 		}
 		else {
-				total = simplifyFrac((quantity*numerator)+"/"+denominator);
-				console.log("ingredient: "+ingredient+", total: "+total)
-				printedResult = total+" "+ingredient;
-			};
+			total = simplifyFrac((quantity*numerator)+"/"+denominator);
+			console.log("ingredient: "+ingredient+", total: "+total)
+			printedResult = total+" "+ingredient;
+		};
 	} else {
 		var ingredient = getIngredient(line);
-		var qtQuantity = convertToQts(line);	
+		var qtQuantity = convertToQts(quantity, unit);	
 		var totalQts = (qtQuantity*numerator)/denominator;	
 		var unitList = getUnitList(totalQts);
 		var convertedResult = combineLikeUnits(unitList);
@@ -395,7 +396,7 @@ function multiplyIngredient(line, factor) {
 	return printedResult;
 }
 
-function doAllLines(textBlock, factor) {
+function multiplyRecipe(textBlock, factor) {
 	var result = [];
 	lines = textBlock.split("\n");
 	for (var i = 0; i < lines.length; i++) {
