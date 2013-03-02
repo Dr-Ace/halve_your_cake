@@ -132,7 +132,7 @@ function getIngredient(line){
 }
 
 
-function StandardizeUnit(unit) {
+function standardizeUnit(unit) {
  var result = "";
  // T by itself is case sesitive.
  if(unit != "T") {
@@ -181,8 +181,9 @@ function StandardizeUnit(unit) {
 var _orderUnits = [
 	{qts: 1,  unit: "teaspoon", amount: "1/4"},
 	{qts: 2,  unit: "teaspoon", amount: "1/2"},
+	{qts: 3,  unit: "teaspoon", amount: "3/4"},
 	{qts: 4,  unit: "teaspoon", amount: "1"},
-	//{qts: 6,  unit: "tablespoon", amount: "1/2"},
+	// {qts: 6,  unit: "tablespoon", amount: "1/2"},
 	{qts: 12,  unit: "tablespoon", amount: "1"},
 	// {qts: 24, unit: "fluidOunce", amount: "1"},
 	{qts: 48, unit: "cup", amount: "1/4"},
@@ -207,6 +208,9 @@ function lookupUnit(amount, unit) {
 };
 
 function convertToQts(quantityStr, standardUnit) {
+	if (standardUnit === "unkown"){
+		return "";
+	}
 	var fracQts = 0;
 	var fracObj = getFrac(quantityStr);
 	if (fracObj !== null) {
@@ -231,36 +235,36 @@ function convertToQts(quantityStr, standardUnit) {
 		}
 	}
 
-	var qtQuantity = wholeNumQts + fracQts;
-	return qtQuantity;
+	var enteredQtQuantity = wholeNumQts + fracQts;
+	return enteredQtQuantity;
 };
 
-function getUnitList(quantity) {
+function getUnitList(enteredQtQuantity) {
 	unitsList = [];
 
 	// Chose the smaller unit that the quantity is inbetween.
 	// Find out how many of those units are contained in that quantity.
 	// Subtract number of units from total quantity.
 	// Repeat until you have no quantity left.
-	while(quantity >= 1) {
+	while(enteredQtQuantity >= 1) {
 	// if the largest unit can't be found in the for loop, assume it's the largest unit
 	var largestUnit = _orderUnits[_orderUnits.length - 1];
 		for (var i = 0; i < _orderUnits.length; i++) {
-			if(_orderUnits[i].qts >= quantity) {
+			if(_orderUnits[i].qts >= enteredQtQuantity) {
 				// if not equal it must be between previous largest unit.
-				var unitIdx = (_orderUnits[i].qts === quantity) ? i : i - 1;
+				var unitIdx = (_orderUnits[i].qts === enteredQtQuantity) ? i : i - 1;
 				largestUnit = _orderUnits[unitIdx];
 				break;
 			}
 		};
 	// subtract the largest unit from the quantity and do the exercise again with the remainder.
-		var numberOfUnits = Math.floor(quantity/largestUnit.qts);
+		var numberOfUnits = Math.floor(enteredQtQuantity/largestUnit.qts);
 		var numberOfQts = numberOfUnits * largestUnit.qts;
 		var printedAmount = isFraction(largestUnit.amount) ? largestUnit.amount : ""+numberOfUnits;
 		var newAmount = {qts: numberOfQts, unit: largestUnit.unit, amount: printedAmount};
 		// console.log(newAmount);
 		unitsList.push(newAmount);
-		quantity -= numberOfQts;
+		enteredQtQuantity -= numberOfQts;
 	}
 	
 	return unitsList;
@@ -354,40 +358,59 @@ function isBlank(str) {
 }
 
 function multiplyIngredient(line, factor) {
+	// if the line is blank, do not process
 	if(isBlank(line)) {
 		console.log("input should not be an empty line: "+line);
 		return "";
 	}
-	var seperateFraction = factor.split("/");
-	var numerator = parseInt(seperateFraction[0]);
-	var denominator = parseInt(seperateFraction[1]);
-	var quantity = getQuantity(line);
-	var unit = StandardizeUnit(getUnit(line));
+	// if there is a "read more" link at the end of your paste text (epicurious), do not process
+	else if(/http|\/\/www./.test(line)){
+		return line;
+	}
+	//if there's a fraction in the entered quantity
+	if(getFrac(line) ==! null) {
+		console.log("quantity: "+getQuantity(line)+" has a fraction");
+	}
+	var numerator = splitTextFraction(factor).num;
+	var denominator = splitTextFraction(factor).den;
+	var enteredQuantity = getQuantity(line);
+	var unit = standardizeUnit(getUnit(line));
 	var printedResult = ""
 	var total = ""
-	if(unit === "unknown" && quantity === "") {
+	// if the line is not an ingredient (a lable or irrelevent line)
+	if(unit === "unknown" && enteredQuantity === "") {
 		return line;
 	}
 	else if(unit == "unknown") {
-		// var quantity = getQuantity(line);
+		// var enteredQuantity = getQuantity(line);
 		var noQuant = removeQuantity(line);
 		var ingredient = noQuant.join(" ");
-		//if the quantity is a fraction it needs to be converted into something that can be multiplied
+		//if the enteredQuantity contains a fraction it needs to be converted into something that can be multiplied
 		if(getFrac(line) !== null){
-			// console.log(ingredient+": unit is unkown and there is a fraction in the quantity")
-			var newNum = splitTextFraction(quantity).num * numerator;
-			var newDen = splitTextFraction(quantity).den * denominator;
-			total = newNum + "/" + newDen;
-			printedResult= total +" "+ ingredient;
+			console.log(ingredient+": unit is unkown and there is a fraction in the quantity")
+			// if there is also a whole number, retreive that as well
+			var wholeNum = findFirstWholeNumber(line);
+			if (wholeNum !== ""){
+				wholeNum *= enteredQuantity
+			}
+			var newNum = splitTextFraction(enteredQuantity).num * numerator;
+			var newDen = splitTextFraction(enteredQuantity).den * denominator;
+			total = simplifyFrac(newNum + "/" + newDen);
+			// if(wholeNum !== ""){
+			// 	printedResult = wholeNum+" "+total +" "+ ingredient;
+			// }
+			// else {
+				printedResult = total +" "+ ingredient;
+			// }
 		}
 		else {
-			total = simplifyFrac((quantity*numerator)+"/"+denominator);
+			total = simplifyFrac((enteredQuantity*numerator)+"/"+denominator);
 			console.log("ingredient: "+ingredient+", total: "+total)
 			printedResult = total+" "+ingredient;
 		};
 	} else {
 		var ingredient = getIngredient(line);
-		var qtQuantity = convertToQts(quantity, unit);	
+		var qtQuantity = convertToQts(enteredQuantity, unit);	
 		var totalQts = (qtQuantity*numerator)/denominator;	
 		var unitList = getUnitList(totalQts);
 		var convertedResult = combineLikeUnits(unitList);
