@@ -28,7 +28,7 @@ function getFrac(line) {
 }
 
 function splitTextFraction(text) {
-	var fracInfo =text.match(/[1-9]+/g);
+	var fracInfo = text.match(/[1-9]+/g);
 	num = parseInt(fracInfo[0]);
 	den = parseInt(fracInfo[1]);
 	return {"num": num, "den": den, "text": text};
@@ -77,6 +77,18 @@ function findFirstWholeNumber(line) {
 }
 
 function getQuantityInfo(line){
+	var wholeNumStartIndex = -1;
+	var wholeNumbEndIndex  = -1;
+	var wholeNumInfo = findFirstWholeNumber(line);
+	if (wholeNumInfo != null) {
+		wholeNumStartIndex = wholeNumInfo.startIndex;
+		wholeNumbEndIndex =  wholeNumInfo.endIndex;
+	};
+
+	// TODO: if a whole number and a fraction are present
+	// characters between the whole number and the fraction can only be spaces
+	// also no more then 5 spaces between them
+
 	var fracStartIndex = -1
 	var fracEndIndex  = -1;
 	var fracInfo = getFrac(line);
@@ -85,18 +97,12 @@ function getQuantityInfo(line){
 		fracStartIndex = fracInfo.startIndex
 	};
 
-	var wholeNumStartIndex = -1;
-	var wholeNumbEndIndex  = -1;
-	var wholeNumInfo = findFirstWholeNumber(line);
-	if (wholeNumInfo != null) {
-		wholeNumStartIndex = wholeNumInfo.startIndex;
-		wholeNumbEndIndex =  wholeNumInfo.endIndex;
-	};
 	var quantityStartIndex = -1;
 	// if there is not a whole number or fraction, check for the start of the existing quantity (not -1)
 	if(fracStartIndex <= -1 || wholeNumStartIndex <= -1) {
 		quantityStartIndex = Math.max(fracStartIndex, wholeNumStartIndex);
 	}
+	// if there is both a whole number and a fraction
 	else { quantityStartIndex = Math.min(fracStartIndex, wholeNumStartIndex); }
 	var quantityEndIndex = Math.max(fracEndIndex, wholeNumbEndIndex) +1;
 	// console.log("quantityEndIndex: "+quantityEndIndex);
@@ -417,14 +423,16 @@ function multiplyIngredient(line, factor) {
 		var ingredient = noQuant.join(" ");
 		//if the enteredQuantity contains a fraction it needs to be converted into something that can be multiplied
 		if(getFrac(line) !== null){
-			console.log(ingredient+": unit is unkown and there is a fraction in the quantity");
+			console.log(">>>> "+ingredient+": unit is unkown and there is a fraction in the quantity");
 			// if there is also a whole number, retreive that as well
 			var wholeNum = findFirstWholeNumber(line);
 			if (wholeNum !== ""){
-				wholeNum *= parseInt(enteredQuantity);
+				wholeNum *= parseInt(enteredQuantityInfo.text);
 			}
-			var newNum = splitTextFraction(enteredQuantity).num * fractorNumerator;
-			var newDen = splitTextFraction(enteredQuantity).den * fractorDenominator;
+			console.log(enteredQuantityInfo); 
+			console.log(splitTextFraction(enteredQuantityInfo.text).num);
+			var newNum = splitTextFraction(enteredQuantityInfo.text).num * fractorNumerator;
+			var newDen = splitTextFraction(enteredQuantityInfo.text).den * fractorDenominator;
 			total = simplifyFrac(newNum + "/" + newDen);
 			// if(wholeNum !== ""){
 			// 	printedResult = wholeNum+" "+total +" "+ ingredient;
