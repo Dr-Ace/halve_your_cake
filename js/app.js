@@ -28,7 +28,7 @@ function getFrac(line) {
 }
 
 function splitTextFraction(text) {
-	var fracInfo =text.match(/[1-9]+/g);
+	var fracInfo = text.match(/[1-9]+/g);
 	num = parseInt(fracInfo[0]);
 	den = parseInt(fracInfo[1]);
 	return {"num": num, "den": den, "text": text};
@@ -76,36 +76,64 @@ function findFirstWholeNumber(line) {
 	return ans;
 }
 
-function getQuantityIndex(line){
-	var fracLastIndex = -1;
-	var numbLastIndex = -1;
-	var quantityLastIndex = -1;
-	var fracInfo = getFrac(line);
-	if (fracInfo != null) {
-		fracLastIndex = fracInfo.endIndex;
-	}
-
+function getQuantityInfo(line){
+	var wholeNumStartIndex = -1;
+	var wholeNumbEndIndex  = -1;
 	var wholeNumInfo = findFirstWholeNumber(line);
 	if (wholeNumInfo != null) {
-		numbLastIndex =  wholeNumInfo.endIndex;
+		wholeNumStartIndex = wholeNumInfo.startIndex;
+		wholeNumbEndIndex =  wholeNumInfo.endIndex;
+	};
+
+	var fracStartIndex = -1
+	var fracEndIndex  = -1;
+	var fracInfo = getFrac(line);
+	if (fracInfo != null) {
+		fracEndIndex = fracInfo.endIndex;
+		fracStartIndex = fracInfo.startIndex
+	};
+
+	// if a whole number and a fraction are present
+	// characters between the whole number and the fraction can only be spaces
+	// also no more then 5 spaces between them
+
+	if (fracInfo !== null && wholeNumInfo !== null
+		&& (fracInfo.startIndex - wholeNumInfo.endIndex) > 5
+		&&	!isBlank(line.slice(wholeNumInfo.endIndex+1, fracInfo.startIndex))
+		) {
+		console.log("fraction and whole number are NOT adjacent");
+		fracEndIndex = -1;
+		fracStartIndex = -1;
 	}
-	quantityLastIndex = Math.max(fracLastIndex,numbLastIndex) +1;
-	return quantityLastIndex;
+
+	var quantityStartIndex = Math.min(fracStartIndex, wholeNumStartIndex);
+	// if either fraction or wholeNumber is not present
+	// then the MAX will report the starting position of the one that exists
+	if(fracStartIndex === -1 || wholeNumStartIndex === -1) {
+		quantityStartIndex = Math.max(fracStartIndex, wholeNumStartIndex);
+	}
+
+	var quantityEndIndex = Math.max(fracEndIndex, wholeNumbEndIndex);
+	var text = line.slice(quantityStartIndex, quantityEndIndex+1);
+	return {"text": text, "start":quantityStartIndex, "end":quantityEndIndex};
 }
 
-function getQuantity(line) {
-	var quantityLastIndex = getQuantityIndex(line);
-	var quantity = line.slice(0,quantityLastIndex);
-	return quantity;
-}
+// function getQuantity(line) {
+// 	var quantityStartIndex = getQuantityInfo(line).start;
+// 	var quantityEndIndex = getQuantityInfo(line).end;
+// 	var quantity = line.slice(quantityStartIndex,quantityEndIndex);
+// 	console.log("quantity: "+quantity);
+// 	return quantity;
+// }
 
+// used only if unit is unkown
 function removeQuantity(line){
-	var quantityLastIndex = getQuantityIndex(line);
-	var noQuant = line.slice(quantityLastIndex,line.length);
+	var quantityInfo = getQuantityInfo(line);
+	var noQuant = line.slice(quantityInfo.end + 1);
 	noQuant = noQuant.replace(/(^[\s]+)/, '');  //remove space at beginning of line
 	var ar = noQuant.split(" ");
 	return ar;
-	}
+}
 
 // function removeQuantity(line){
 // 	var lineItems = line.split(" ");
@@ -119,16 +147,28 @@ function removeQuantity(line){
 // 	return lineItems;	
 // }
 
-function getUnit(line){
-	var noQuant = removeQuantity(line);
-	return noQuant[0]
+// function getUnit2(line){
+// 	var quantityInfo = getQuantityInfo(line);
+// 	var afterQuantity = line.slice(quantityInfo.end, line.length);
+// 	var words = line.split(" ");
+// 	return words[0];
+// }
+
+function getUnit(line, quantityInfo){
+	var afterQuantity = line.slice(quantityInfo.end + 1).trim();
+	var words = afterQuantity.split(" ");
+	var potentialUnit = words[0];
+	var position = line.search(potentialUnit);
+	var unitStartIndex = position;
+	var unitEndIndex = unitStartIndex + potentialUnit.length;
+	return {"text": potentialUnit, "start":unitStartIndex, "end":unitEndIndex};
 }
 
-function getIngredient(line){
-	var noQuant = removeQuantity(line);
-	var ingredientAr = noQuant.slice(1,noQuant.length);
-	var ingredient = ingredientAr.join(" ");
-	return ingredient;
+function getIngredient(line, unitInfo){
+	// var noQuant = removeQuantity(line);
+	// var ingredientAr = noQuant.slice(1,noQuant.length);
+	// var ingredient = ingredientAr.join(" ");
+	return line.slice(unitInfo.end + 1);
 }
 
 
@@ -181,8 +221,9 @@ function standardizeUnit(unit) {
 var _orderUnits = [
 	{qts: 1,  unit: "teaspoon", amount: "1/4"},
 	{qts: 2,  unit: "teaspoon", amount: "1/2"},
+	{qts: 3,  unit: "teaspoon", amount: "3/4"},
 	{qts: 4,  unit: "teaspoon", amount: "1"},
-	//{qts: 6,  unit: "tablespoon", amount: "1/2"},
+	// {qts: 6,  unit: "tablespoon", amount: "1/2"},
 	{qts: 12,  unit: "tablespoon", amount: "1"},
 	// {qts: 24, unit: "fluidOunce", amount: "1"},
 	{qts: 48, unit: "cup", amount: "1/4"},
@@ -193,8 +234,7 @@ var _orderUnits = [
 	{qts: 144, unit: "cup", amount: "3/4"},
 	{qts: 192, unit: "cup", amount: "1"}
 	// {qts: 384, unit: "pint", amount: "1"},
-	// {qts: 3072, unit: "gallon", amount: "1"},
-	//{qts: 999999, unit: "ass_load", amount: "1"}
+	// {qts: 3072, unit: "gallon", amount: "1"}
 ];
 
 function lookupUnit(amount, unit) {
@@ -280,7 +320,9 @@ function combineLikeUnits(unitsList) {
 
 		if (nextUnit != null && currentUnit.unit == nextUnit.unit) {
 			// console.log("units are the same")
-			var combinedItem = {qts: (currentUnit.qts + nextUnit.qts), amount: currentUnit.amount+ " "+nextUnit.amount, unit: currentUnit.unit};
+			var combinedItem = {qts: (currentUnit.qts + nextUnit.qts), 
+								amount: currentUnit.amount+ " "+nextUnit.amount, 
+								unit: currentUnit.unit};
 			// console.log(combinedItem)
 			combinedUnits.push(combinedItem);
 			i++; //HACKISH: we already dealt with the next unit skip it next time around.
@@ -319,7 +361,8 @@ function isUnicodeFraction(char) {
 }
 
 // process the text input by seperating the quantity and ingredient and converting into qts.
-// take the fraction value from the selected 'option' element, convert it into an object containing two integers, and multiply the qts by the "fraction"
+// take the fraction value from the selected 'option' element, 
+// convert it into an object containing two integers, and multiply the qts by the "fraction"
 // function multiplyRecipe(line, factor){
 // 	console.log("multiplyRecipe has been called");
 // 	var qtQuantity = convertToQts(line);	
@@ -359,7 +402,7 @@ function isBlank(str) {
 function multiplyIngredient(line, factor) {
 	// if the line is blank, do not process
 	if(isBlank(line)) {
-		console.log("input should not be an empty line: "+line);
+		// console.log("input should not be an empty line: "+line);
 		return "";
 	}
 	// if there is a "read more" link at the end of your paste text (epicurious), do not process
@@ -368,32 +411,41 @@ function multiplyIngredient(line, factor) {
 	}
 	//if there's a fraction in the entered quantity
 	if(getFrac(line) ==! null) {
-		console.log("quantity: "+getQuantity(line)+" has a fraction");
+
+		// console.log("quantity: "+getQuantity(line)+" has a fraction");
 	}
-	var numerator = splitTextFraction(factor).num;
-	var denominator = splitTextFraction(factor).den;
-	var enteredQuantity = getQuantity(line);
-	var unit = standardizeUnit(getUnit(line));
+	var fractorNumerator = splitTextFraction(factor).num;
+	var fractorDenominator = splitTextFraction(factor).den;
+	var enteredQuantityInfo = getQuantityInfo(line);	
+	console.log(enteredQuantityInfo);
+	var unitInfo = getUnit(line, enteredQuantityInfo);
+	console.log(unitInfo);
+	var unit = standardizeUnit(unitInfo.text);
+	console.log("standard unit: " +unit);
 	var printedResult = ""
 	var total = ""
 	// if the line is not an ingredient (a lable or irrelevent line)
-	if(unit === "unknown" && enteredQuantity === "") {
+	if(unit === "unknown" && enteredQuantityInfo.text === "") {
 		return line;
 	}
 	else if(unit == "unknown") {
 		// var enteredQuantity = getQuantity(line);
 		var noQuant = removeQuantity(line);
+		console.log(noQuant);
 		var ingredient = noQuant.join(" ");
 		//if the enteredQuantity contains a fraction it needs to be converted into something that can be multiplied
-		if(getFrac(line) !== null){
-			console.log(ingredient+": unit is unkown and there is a fraction in the quantity")
+
+		if(getFrac(enteredQuantityInfo.text) !== null){
+			console.log(">>>> "+ingredient+": unit is unkown and there is a fraction in the quantity");
 			// if there is also a whole number, retreive that as well
 			var wholeNum = findFirstWholeNumber(line);
 			if (wholeNum !== ""){
-				wholeNum *= enteredQuantity
+				wholeNum *= parseInt(enteredQuantityInfo.text);
 			}
-			var newNum = splitTextFraction(enteredQuantity).num * numerator;
-			var newDen = splitTextFraction(enteredQuantity).den * denominator;
+			console.log(enteredQuantityInfo); 
+			console.log(splitTextFraction(enteredQuantityInfo.text).num);
+			var newNum = splitTextFraction(enteredQuantityInfo.text).num * fractorNumerator;
+			var newDen = splitTextFraction(enteredQuantityInfo.text).den * fractorDenominator;
 			total = simplifyFrac(newNum + "/" + newDen);
 			// if(wholeNum !== ""){
 			// 	printedResult = wholeNum+" "+total +" "+ ingredient;
@@ -403,18 +455,19 @@ function multiplyIngredient(line, factor) {
 			// }
 		}
 		else {
-			total = simplifyFrac((enteredQuantity*numerator)+"/"+denominator);
+			total = simplifyFrac((enteredQuantityInfo.text*fractorNumerator)+"/"+fractorDenominator);
 			console.log("ingredient: "+ingredient+", total: "+total)
 			printedResult = total+" "+ingredient;
 		};
 	} else {
-		var ingredient = getIngredient(line);
-		var qtQuantity = convertToQts(enteredQuantity, unit);	
-		var totalQts = (qtQuantity*numerator)/denominator;	
+		console.log("i haz unit");
+		var ingredient = getIngredient(line, unitInfo);
+		var qtQuantity = convertToQts(enteredQuantityInfo.text, unit);	
+		var totalQts = (qtQuantity*fractorNumerator)/fractorDenominator;	
 		var unitList = getUnitList(totalQts);
 		var convertedResult = combineLikeUnits(unitList);
 		printedResult = format(convertedResult) + " " + ingredient;
-	}
+	}	
 	return printedResult;
 }
 
@@ -422,6 +475,7 @@ function multiplyRecipe(textBlock, factor) {
 	var result = [];
 	lines = textBlock.split("\n");
 	for (var i = 0; i < lines.length; i++) {
+		console.log("----- start: "+lines[i] + " -----------");
 		if (!isBlank(lines[i])){
 			result.push(multiplyIngredient(lines[i], factor));
 		}
