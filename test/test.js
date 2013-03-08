@@ -1,10 +1,10 @@
 test("return the fractions in the line", function() {
-	deepEqual(getFrac("1/2 C flour"), {"num": 1, "den": 2, "text": "1/2", "startIndex": 0, "endIndex": 2}, "regular fraction");
+	deepEqual(getFrac("1/2 C flour"), {"num": 1, "den": 2, "text": "1/2", "start": 0, "end": 2}, "regular fraction");
 	deepEqual(getFrac("1 C flour"), null, "one whole number is not a fraction");
 	deepEqual(getFrac("one C flour"), null, "one whole number is not a fraction");
-	deepEqual(getFrac("½ C flour"), {"num": 1, "den": 2, "text": "½", "startIndex": 0, "endIndex": 0}, "unicode fraction");
-	deepEqual(getFrac("1...½ C flour"), {"num": 1, "den": 2, "text": "½", "startIndex": 4, "endIndex": 4}, "one whole number and one unicode fraction");
-	deepEqual(getFrac("1...1/2 C flour"), {"num": 1, "den": 2, "text": "1/2", "startIndex": 4, "endIndex": 6}, "one whole number and one regular fraction");
+	deepEqual(getFrac("½ C flour"), {"num": 1, "den": 2, "text": "½", "start": 0, "end": 0}, "unicode fraction");
+	deepEqual(getFrac("1 ½ C flour"), {"num": 1, "den": 2, "text": "½", "start": 2, "end": 2}, "one whole number and one unicode fraction");
+	deepEqual(getFrac("1 1/2 C flour"), {"num": 1, "den": 2, "text": "1/2", "start": 2, "end": 4}, "one whole number and one regular fraction");
 });
 
 test("split text fraction", function() {
@@ -14,15 +14,15 @@ test("split text fraction", function() {
 });
 
 test("find the first whole number in the line", function() {
-	deepEqual(findFirstWholeNumber("1 C flour"), {"value": 1, "text": "1", "startIndex": 0, "endIndex": 0}, "1 C flour");
-	deepEqual(findFirstWholeNumber("at least 1 C flour"), {"value": 1, "text": "1", "startIndex": 9, "endIndex": 9}, "at least 1 C flour");
+	deepEqual(findFirstWholeNumber("1 C flour"), {"value": 1, "text": "1", "start": 0, "end": 0}, "1 C flour");
+	deepEqual(findFirstWholeNumber("at least 1 C flour"), {"value": 1, "text": "1", "start": 9, "end": 9}, "at least 1 C flour");
 	deepEqual(findFirstWholeNumber("½ C flour"), null, "½ C flour");
-	deepEqual(findFirstWholeNumber("1 ½ C flour"), {"value": 1, "text": "1", "startIndex": 0, "endIndex": 0}, "1 ½ C flour");
-	deepEqual(findFirstWholeNumber("1 1/2 C flour"), {"value": 1, "text": "1", "startIndex": 0, "endIndex": 0}, "1 1/2 C flour")
-	deepEqual(findFirstWholeNumber("2 1/2 C flour"), {"value": 2, "text": "2", "startIndex": 0, "endIndex": 0}, "2 1/2 C flour")
-	deepEqual(findFirstWholeNumber("10 1/2 C flour"), {"value": 10, "text": "10", "startIndex": 0, "endIndex": 1}, "10 1/2 C flour")
-	deepEqual(findFirstWholeNumber("1/2 C flour"), null, "1/2 C flour")
-	deepEqual(findFirstWholeNumber("one C flour"), null, "one C flour")
+	deepEqual(findFirstWholeNumber("1 ½ C flour"), {"value": 1, "text": "1", "start": 0, "end": 0}, "1 ½ C flour");
+	deepEqual(findFirstWholeNumber("1 1/2 C flour"), {"value": 1, "text": "1", "start": 0, "end": 0}, "1 1/2 C flour");
+	deepEqual(findFirstWholeNumber("2 1/2 C flour"), {"value": 2, "text": "2", "start": 0, "end": 0}, "2 1/2 C flour");
+	deepEqual(findFirstWholeNumber("10 1/2 C flour"), {"value": 10, "text": "10", "start": 0, "end": 1}, "10 1/2 C flour");
+	deepEqual(findFirstWholeNumber("1/2 C flour"), null, "1/2 C flour");
+	deepEqual(findFirstWholeNumber("one C flour"), null, "one C flour");
 });
 
 test("get the quantity info, value and location", function() {
@@ -30,8 +30,8 @@ test("get the quantity info, value and location", function() {
 	deepEqual(getQuantityInfo("1 1/2 C flour"), {"text": "1 1/2", "start": 0, "end": 4}, "1 1/2 C flour");
 	deepEqual(getQuantityInfo("½ C flour"),{"text": "½", "start": 0, "end": 0}, "½ C flour");
 	deepEqual(getQuantityInfo("1 C flour"), {"text": "1", "start": 0, "end": 0}, "1 C flour");
-	deepEqual(getQuantityInfo("1...½ C flour"), {"text": "1...½", "start": 0, "end": 4}, "1...½ C flour");
-	deepEqual(getQuantityInfo("1...1/2 flour"), {"text": "1/2", "start": 0, "end": 6}, "1...1/2 flour");
+	deepEqual(getQuantityInfo("1 ½ C flour"), {"text": "1 ½", "start": 0, "end": 2}, "one whole number and one unicode fraction");
+	deepEqual(getQuantityInfo(" 1 1/2 C flour"), {"text": "1 1/2", "start": 1, "end": 5}, "one whole number and one regular fraction");
 });
 
 //we need to replace this funciton
@@ -47,17 +47,17 @@ test("remove the quantity", function() {
 });
 
 test("get the unit info, value and location", function() {
-	deepEqual(getUnit("1/2 C flour", getQuantityInfo("1/2 C flour")), {"text": "C", "start":4, "end":5}, "1/2 C flour");
-	deepEqual(getUnit("1/2 Cup flour", getQuantityInfo("1/2 Cup flour")), {"text": "Cup", "start":4, "end":7}, "1/2 Cup flour");
-	deepEqual(getUnit("½ tsp flour", getQuantityInfo("½ tsp flour")), {"text": "tsp", "start":2, "end":5}, "½ tsp flour");
-	deepEqual(getUnit("½C sugar", getQuantityInfo("½C sugar")), {"text": "C", "start":1, "end":2}, "½C flour");
-	deepEqual(getUnit("1 Tbsp flour", getQuantityInfo("1 Tbsp flour")), {"text": "Tbsp", "start":2, "end":6} , "1 Tbsp flour");
-	deepEqual(getUnit("1tsp flour", getQuantityInfo("1tsp flour")),  {"text": "tsp", "start":1, "end":4} , "1tsp flour");
+	deepEqual(getUnitInfo("1/2 C flour", getQuantityInfo("1/2 C flour")), {"text": "C", "start":4, "end":5, "unit": "cup"}, "1/2 C flour");
+	deepEqual(getUnitInfo("1/2 Cup flour", getQuantityInfo("1/2 Cup flour")), {"text": "Cup", "start":4, "end":7, "unit": "cup"}, "1/2 Cup flour");
+	deepEqual(getUnitInfo("½ tsp flour", getQuantityInfo("½ tsp flour")), {"text": "tsp", "start":2, "end":5, "unit":"teaspoon"}, "½ tsp flour");
+	deepEqual(getUnitInfo("½C sugar", getQuantityInfo("½C sugar")), {"text": "C", "start":1, "end":2, "unit": "cup"}, "½C flour");
+	deepEqual(getUnitInfo("1 Tbsp flour", getQuantityInfo("1 Tbsp flour")), {"text": "Tbsp", "start":2, "end":6, "unit": "tablespoon"} , "1 Tbsp flour");
+	deepEqual(getUnitInfo("1tsp flour", getQuantityInfo("1tsp flour")),  {"text": "tsp", "start":1, "end":4, "unit": "teaspoon"}, "1tsp flour");
 });
 
 test("get the ingredient", function() {
 	var line1 = "1/2 C flour";
-	equal((getIngredient(line1), getUnit(line1)), "flour", "1/2 C flour");
+	equal(getIngredient("1/2 C flour", 2, 4), "flour", "1/2 C flour");
 	// deepEqual(getIngredient("1/2 Cup chopped onions"), "chopped onions", "1/2 C chopped onions");
 	// deepEqual(getIngredient("½ C flour"), "flour", "½ C flour");
 	// deepEqual(getIngredient("½C sugar"), "sugar", "½C sugar");
@@ -161,12 +161,12 @@ test ("convert written recipe quantity to qts", function() {
 
 
 test ("rationalize fraction", function() {
-	equal(simplifyFrac("5/4"), "1 1/4", "5/4 - remainder");
-	equal(simplifyFrac("4/2"), "2", "4/2 - simplifying whole number");
-	equal(simplifyFrac("6/4"), "1 1/2", "6/4 - remainder that also needs simplifying");
-	equal(simplifyFrac("8/3"), "2 2/3", "8/3 - whole number greater than one, and remainders");
-	equal(simplifyFrac("12/4"), "3", "12/4 - whole number greater than one");
-	equal(simplifyFrac("4/12"), "1/3", "4/12 - whole number greater than one");
-	equal(simplifyFrac("2/3"), "2/3", "2/3 - no conversion");
+	equal(simplifyFrac(5, 4), "1 1/4", "5/4 - remainder");
+	equal(simplifyFrac(4, 2), "2", "4/2 - simplifying whole number");
+	equal(simplifyFrac(6, 4), "1 1/2", "6/4 - remainder that also needs simplifying");
+	equal(simplifyFrac(8, 3), "2 2/3", "8/3 - whole number greater than one, and remainders");
+	equal(simplifyFrac(12, 4), "3", "12/4 - whole number greater than one");
+	equal(simplifyFrac(4, 12), "1/3", "4/12 - whole number greater than one");
+	equal(simplifyFrac(2, 3), "2/3", "2/3 - no conversion");
 });
 
