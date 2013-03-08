@@ -8,6 +8,7 @@ function getFrac(line) {
 	// does fraction exist?
 	if(result !== null) {
 		var text = result[0];
+		console.log("line: "+line+", fraction text: "+text)
 		var startIndex = result.index;
 		var lastindex = startIndex + text.length - 1;
 		var num = den = 1; // 1/1 is a good initializer for a frac 
@@ -28,7 +29,10 @@ function getFrac(line) {
 }
 
 function splitTextFraction(text) {
-	var fracInfo = text.match(/[1-9]+/g);
+
+	console.log("splitTextFraction parameter: "+text);
+	var fracInfo = text.toString().match(/[1-9]+/g);
+	console.log(fracInfo)
 	num = parseInt(fracInfo[0]);
 	den = parseInt(fracInfo[1]);
 	return {"num": num, "den": den, "text": text};
@@ -66,11 +70,11 @@ function findFirstWholeNumber(line) {
 	var ans = null;
 
 	if(result !== null) {
-		var lastindex = result.index + result[0].length - 1;
-		var nextChar = line.charAt(lastindex+1)
+		var endIndex= result.index + result[0].length - 1;
+		var nextChar = line.charAt(endIndex+1)
 		// double check to see if not a fraction
 		if(nextChar != '/') {
-			ans = {"value": parseInt(result[0]), "text": result[0], "startIndex": result.index, "endIndex": lastindex};	
+			ans = {"value": parseInt(result[0]), "text": result[0], "startIndex": result.index, "endIndex": endIndex};	
 		}
 	}
 	return ans;
@@ -417,11 +421,11 @@ function multiplyIngredient(line, factor) {
 	var fractorNumerator = splitTextFraction(factor).num;
 	var fractorDenominator = splitTextFraction(factor).den;
 	var enteredQuantityInfo = getQuantityInfo(line);	
-	console.log(enteredQuantityInfo);
+	// console.log(enteredQuantityInfo);
 	var unitInfo = getUnit(line, enteredQuantityInfo);
-	console.log(unitInfo);
+	// console.log(unitInfo);
 	var unit = standardizeUnit(unitInfo.text);
-	console.log("standard unit: " +unit);
+	// console.log("standard unit: " +unit);
 	var printedResult = ""
 	var total = ""
 	// if the line is not an ingredient (a lable or irrelevent line)
@@ -430,9 +434,9 @@ function multiplyIngredient(line, factor) {
 	}
 	else if(unit == "unknown") {
 		// var enteredQuantity = getQuantity(line);
-		var noQuant = removeQuantity(line);
-		console.log(noQuant);
-		var ingredient = noQuant.join(" ");
+		// var noQuant = removeQuantity(line);
+		// var ingredient = noQuant.join(" ");
+		var ingredient = line.slice(getQuantityInfo(line).end+1)
 		//if the enteredQuantity contains a fraction it needs to be converted into something that can be multiplied
 
 		if(getFrac(enteredQuantityInfo.text) !== null){
@@ -442,9 +446,11 @@ function multiplyIngredient(line, factor) {
 			if (wholeNum !== ""){
 				wholeNum *= parseInt(enteredQuantityInfo.text);
 			}
-			console.log(enteredQuantityInfo); 
+			console.log("numerator:");
 			console.log(splitTextFraction(enteredQuantityInfo.text).num);
-			var newNum = splitTextFraction(enteredQuantityInfo.text).num * fractorNumerator;
+			var newNum = splitTextFraction(getFrac(enteredQuantityInfo.text)).num * fractorNumerator;
+			console.log("newNum: "+newNum);
+			// var newNum = splitTextFraction(enteredQuantityInfo.text).num * fractorNumerator;
 			var newDen = splitTextFraction(enteredQuantityInfo.text).den * fractorDenominator;
 			total = simplifyFrac(newNum + "/" + newDen);
 			// if(wholeNum !== ""){
@@ -456,7 +462,7 @@ function multiplyIngredient(line, factor) {
 		}
 		else {
 			total = simplifyFrac((enteredQuantityInfo.text*fractorNumerator)+"/"+fractorDenominator);
-			console.log("ingredient: "+ingredient+", total: "+total)
+			console.log("quantity has no fraction, ingredient: "+ingredient+", total: "+total)
 			printedResult = total+" "+ingredient;
 		};
 	} else {

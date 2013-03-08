@@ -4,10 +4,16 @@ test("return the fractions in the line", function() {
 	deepEqual(getFrac("one C flour"), null, "one whole number is not a fraction");
 	deepEqual(getFrac("½ C flour"), {"num": 1, "den": 2, "text": "½", "startIndex": 0, "endIndex": 0}, "unicode fraction");
 	deepEqual(getFrac("1...½ C flour"), {"num": 1, "den": 2, "text": "½", "startIndex": 4, "endIndex": 4}, "one whole number and one unicode fraction");
-	deepEqual(getFrac("1...1/2 1/8C flour"), {"num": 1, "den": 2, "text": "1/2", "startIndex": 4, "endIndex": 6}, "one whole number and one regular fraction");
+	deepEqual(getFrac("1...1/2 C flour"), {"num": 1, "den": 2, "text": "1/2", "startIndex": 4, "endIndex": 6}, "one whole number and one regular fraction");
 });
 
-test("get the index of the whole number", function() {
+test("split text fraction", function() {
+	deepEqual(splitTextFraction("1/2"), {"num": 1, "den": 2, "text": "1/2"}, "r1/2");
+	deepEqual(splitTextFraction("2/3"), {"num": 2, "den": 3, "text": "2/3"}, "2/3");
+	deepEqual(splitTextFraction("5/2"), {"num": 5, "den": 2, "text": "5/2"}, "5/2");
+});
+
+test("find the first whole number in the line", function() {
 	deepEqual(findFirstWholeNumber("1 C flour"), {"value": 1, "text": "1", "startIndex": 0, "endIndex": 0}, "1 C flour");
 	deepEqual(findFirstWholeNumber("at least 1 C flour"), {"value": 1, "text": "1", "startIndex": 9, "endIndex": 9}, "at least 1 C flour");
 	deepEqual(findFirstWholeNumber("½ C flour"), null, "½ C flour");
@@ -19,16 +25,16 @@ test("get the index of the whole number", function() {
 	deepEqual(findFirstWholeNumber("one C flour"), null, "one C flour")
 });
 
-test("get the quantity", function() {
-	equal(getQuantity("1/2 C flour"), "1/2", "1/2 C flour");
-	equal(getQuantity("½ C flour"), "½", "½ C flour");
-	equal(getQuantity("½C flour"), "½", "½C flour");
-	equal(getQuantity("1 C flour"), "1", "1C flour");
-	equal(getQuantity("1C flour"), "1", "1C flour");
-	equal(getQuantity("1...½ C flour"), "1...½", "1...½ C flour");
-	equal(getQuantity("1...1/2 flour"), "1...1/2", "1...1/2 flour");
+test("get the quantity info, value and location", function() {
+	deepEqual(getQuantityInfo("1/2 C flour"), {"text": "1/2", "start": 0, "end": 2}, "1/2 C flour");
+	deepEqual(getQuantityInfo("1 1/2 C flour"), {"text": "1 1/2", "start": 0, "end": 4}, "1 1/2 C flour");
+	deepEqual(getQuantityInfo("½ C flour"),{"text": "½", "start": 0, "end": 0}, "½ C flour");
+	deepEqual(getQuantityInfo("1 C flour"), {"text": "1", "start": 0, "end": 0}, "1 C flour");
+	deepEqual(getQuantityInfo("1...½ C flour"), {"text": "1...½", "start": 0, "end": 4}, "1...½ C flour");
+	deepEqual(getQuantityInfo("1...1/2 flour"), {"text": "1/2", "start": 0, "end": 6}, "1...1/2 flour");
 });
 
+//we need to replace this funciton
 test("remove the quantity", function() {
 	deepEqual(removeQuantity("1/2 C flour"), ["C", "flour"], "1/2 C flour");
 	deepEqual(removeQuantity("1/2 Cup flour"), ["Cup", "flour"], "1/2 C flour");
@@ -40,26 +46,25 @@ test("remove the quantity", function() {
 	deepEqual(removeQuantity("1 1/2 teaspoon flour"), ["teaspoon", "flour"], "1 1/2 teaspoon flour");
 });
 
-test("get the unit", function() {
-	equal(getUnit("1/2 C flour"), "C", "1/2 C flour");
-	equal(getUnit("1/2 Cup flour"), "Cup", "1/2 C flour");
-	equal(getUnit("½ C flour"), "C", "½ C flour");
-	equal(getUnit("½C sugar"), "C", "½C flour");
-	equal(getUnit("1 Tbsp flour"), "Tbsp", "1 Tbsp flour");
-	equal(getUnit("1tsp flour"), "tsp", "1tsp flour");
-	equal(getUnit("1½ Tablespoon flour"), "Tablespoon", "1½ Tablespoon flour");
-	equal(getUnit("1 1/2 teaspoon flour"), "teaspoon", "1 1/2 teaspoon flour");
+test("get the unit info, value and location", function() {
+	deepEqual(getUnit("1/2 C flour", getQuantityInfo("1/2 C flour")), {"text": "C", "start":4, "end":5}, "1/2 C flour");
+	deepEqual(getUnit("1/2 Cup flour", getQuantityInfo("1/2 Cup flour")), {"text": "Cup", "start":4, "end":7}, "1/2 Cup flour");
+	deepEqual(getUnit("½ tsp flour", getQuantityInfo("½ tsp flour")), {"text": "tsp", "start":2, "end":5}, "½ tsp flour");
+	deepEqual(getUnit("½C sugar", getQuantityInfo("½C sugar")), {"text": "C", "start":1, "end":2}, "½C flour");
+	deepEqual(getUnit("1 Tbsp flour", getQuantityInfo("1 Tbsp flour")), {"text": "Tbsp", "start":2, "end":6} , "1 Tbsp flour");
+	deepEqual(getUnit("1tsp flour", getQuantityInfo("1tsp flour")),  {"text": "tsp", "start":1, "end":4} , "1tsp flour");
 });
 
 test("get the ingredient", function() {
-	equal(getIngredient("1/2 C flour"), "flour", "1/2 C flour");
-	equal(getIngredient("1/2 Cup chopped onions"), "chopped onions", "1/2 C chopped onions");
-	equal(getIngredient("½ C flour"), "flour", "½ C flour");
-	equal(getIngredient("½C sugar"), "sugar", "½C sugar");
-	equal(getIngredient("1 Tbsp baking powder"), "baking powder", "1 Tbsp baking powder");
-	equal(getIngredient("1tsp flour"), "flour", "1tsp flour");
-	equal(getIngredient("1½ Tablespoon salt"), "salt", "1½ Tablespoon salt");
-	equal(getIngredient("1 1/2 teaspoon flour"), "flour", "1 1/2 teaspoon flour");
+	var line1 = "1/2 C flour";
+	equal((getIngredient(line1), getUnit(line1)), "flour", "1/2 C flour");
+	// deepEqual(getIngredient("1/2 Cup chopped onions"), "chopped onions", "1/2 C chopped onions");
+	// deepEqual(getIngredient("½ C flour"), "flour", "½ C flour");
+	// deepEqual(getIngredient("½C sugar"), "sugar", "½C sugar");
+	// deepEqual(getIngredient("1 Tbsp baking powder"), "baking powder", "1 Tbsp baking powder");
+	// deepEqual(getIngredient("1tsp flour"), "flour", "1tsp flour");
+	// deepEqual(getIngredient("1½ Tablespoon salt"), "salt", "1½ Tablespoon salt");
+	// deepEqual(getIngredient("1 1/2 teaspoon flour"), "flour", "1 1/2 teaspoon flour");
 });
 
 
@@ -72,12 +77,12 @@ test("create a JSON object to store values of unicode fractions", function(){
 })
 
 test("get uniform unit", function() {
-	equal(StandardizeUnit("C"), "cup", "C");
-	equal(StandardizeUnit("Cup"), "cup", "Cup");
-	equal(StandardizeUnit("Tbsp"), "tablespoon", "Tbsp");
-	equal(StandardizeUnit("tsp"), "teaspoon", "tsp");
-	equal(StandardizeUnit("Tablespoon"), "tablespoon", "Tablespoon");
-	equal(StandardizeUnit("teaspoon"), "teaspoon", "teaspoon");
+	equal(standardizeUnit("C"), "cup", "C");
+	equal(standardizeUnit("Cup"), "cup", "Cup");
+	equal(standardizeUnit("Tbsp"), "tablespoon", "Tbsp");
+	equal(standardizeUnit("tsp"), "teaspoon", "tsp");
+	equal(standardizeUnit("Tablespoon"), "tablespoon", "Tablespoon");
+	equal(standardizeUnit("teaspoon"), "teaspoon", "teaspoon");
 });
 
 
@@ -139,12 +144,11 @@ test ("Are unicode fractions recognized as fractions", function() {
 
 
 test ("convert written recipe quantity to qts", function() {
-	equal(convertToQts("1 C"), "192", "1 C");
-	equal(convertToQts("1 cup"), "192", "1 cup");
-	equal(convertToQts("2 tsp"), "8", "2 tsp");
-	equal(convertToQts("1/2 tsp"), "2", "1/2 tsp");
-	equal(convertToQts("1 1/2 tsp"), "6", "1 1/2 tsp");
-	equal(convertToQts("½ teaspoon"), "2", "½ teaspoon");
+	equal(convertToQts("1", "cup"), "192", "1 cup");
+	equal(convertToQts("2", "teaspoon"), "8", "2 teaspoon");
+	equal(convertToQts("1/2", "teaspoon"), "2", "1/2 tsp");
+	equal(convertToQts("1 1/2", "teaspoon"), "6", "1 1/2 teaspoon");
+	equal(convertToQts("½", "teaspoon"), "2", "½ teaspoon");
 });
 
 test ("convert written recipe quantity to qts", function() {
