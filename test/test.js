@@ -26,12 +26,9 @@ test("find the first whole number in the line", function() {
 });
 
 test("get the quantity info, value and location", function() {
-	deepEqual(getQuantityInfo("1/2 C flour"), {"text": "1/2", "start": 0, "end": 2}, "1/2 C flour");
-	deepEqual(getQuantityInfo("1 1/2 C flour"), {"text": "1 1/2", "start": 0, "end": 4}, "1 1/2 C flour");
-	deepEqual(getQuantityInfo("½ C flour"),{"text": "½", "start": 0, "end": 0}, "½ C flour");
-	deepEqual(getQuantityInfo("1 C flour"), {"text": "1", "start": 0, "end": 0}, "1 C flour");
-	deepEqual(getQuantityInfo("1 ½ C flour"), {"text": "1 ½", "start": 0, "end": 2}, "one whole number and one unicode fraction");
-	deepEqual(getQuantityInfo(" 1 1/2 C flour"), {"text": "1 1/2", "start": 1, "end": 5}, "one whole number and one regular fraction");
+	deepEqual(getQuantityInfo("1/2 C flour"), {"improperFraction": {"num":1, "den":2}, "text": "1/2", "start":0, "end":2}, "1/2 C flour");
+	deepEqual(getQuantityInfo("1 1/2 C flour"), {"improperFraction": {"num":3, "den":2}, "text": "1 1/2", "start": 0, "end": 4}, "1 1/2 C flour");
+	deepEqual(getQuantityInfo("1 C flour"), {"improperFraction": {"num":1, "den":1}, "text": "1", "start": 0, "end": 0}, "1 C flour");
 });
 
 //we need to replace this funciton

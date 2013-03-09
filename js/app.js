@@ -59,7 +59,7 @@ var convertUnicodeFraction = (function() {
 	};
 })();
 
-// return the index of the number in the line
+// return the first number in the line and its location
 //TODO: rename to something more explicit
 function findFirstWholeNumber(line) {
 	var num = new RegExp("[0-9]+");
@@ -97,6 +97,7 @@ function getQuantityInfo(line){
 	// if a whole number and a fraction are present
 	// characters between the whole number and the fraction can only be spaces
 	// also no more then 5 spaces between them
+	// this will prevent picking up two numbers that are not both part of the quantity
 	if (fracInfo !== null && wholeNumInfo !== null
 		&& (fracInfo.start - wholeNumInfo.end) > 5
 		&&	!isBlank(line.slice(wholeNumInfo.end+1, fracInfo.start))
@@ -115,17 +116,21 @@ function getQuantityInfo(line){
 
 	var quantityEndIndex = Math.max(fracEndIndex, wholeNumbEndIndex);
 	var text = line.slice(quantityStartIndex, quantityEndIndex+1);
-	// return {"value": 2.5, "improperFraction":{"numerator":7, "denominator":3}, "text": text, "start":quantityStartIndex, "end":quantityEndIndex};
-	return {"text": text, "start":quantityStartIndex, "end":quantityEndIndex};
+
+	// combine whole number and fraction into improper fraction
+	var numerator = NaN;
+	var denominator = NaN;
+	if(fracStartIndex > -1 && wholeNumStartIndex > -1){
+		numerator = fracInfo.den * wholeNumInfo.value + fracInfo.num;
+		denominator = fracInfo.den;
+	}
+	else if (wholeNumInfo) { numerator = wholeNumInfo.value ; denominator = 1; }
+	else if (fracInfo) { numerator = fracInfo.num ; denominator = fracInfo.den }
+
+	return {"improperFraction":{"num":numerator, "den":denominator}, "text": text, "start":quantityStartIndex, "end":quantityEndIndex};
+	// return {"text": text, "start":quantityStartIndex, "end":quantityEndIndex};
 }
 
-// function getQuantity(line) {
-// 	var quantityStartIndex = getQuantityInfo(line).start;
-// 	var quantityEndIndex = getQuantityInfo(line).end;
-// 	var quantity = line.slice(quantityStartIndex,quantityEndIndex);
-// 	console.log("quantity: "+quantity);
-// 	return quantity;
-// }
 
 // used only if unit is unkown
 function removeQuantity(line){
@@ -136,24 +141,6 @@ function removeQuantity(line){
 	return ar;
 }
 
-// function removeQuantity(line){
-// 	var lineItems = line.split(" ");
-// 	console.log(lineItems);
-// 	for (var i = 0; i < lineItems.length; i++) {
-// 		if(getFrac(lineItems[i]) || getNumb(lineItems[i])) {
-// 			console.log(i+" is a number or fraction");
-// 			lineItems = lineItems.splice(i, 1);
-// 		};
-// 	};
-// 	return lineItems;	
-// }
-
-// function getUnit2(line){
-// 	var quantityInfo = getQuantityInfo(line);
-// 	var afterQuantity = line.slice(quantityInfo.end, line.length);
-// 	var words = line.split(" ");
-// 	return words[0];
-// }
 
 function getUnitInfo(line, quantityInfo){
 	var afterQuantity = line.slice(quantityInfo.end + 1).trim();
@@ -404,7 +391,7 @@ function isBlank(str) {
 function multiplyQuantity (quantityInfo, factor) {
 	var num = quantityInfo.improperFraction.numerator * factor.numerator;
 	var den = quantityInfo.improperFraction.denominator * factor.denominator;
-	console.log(simplifyFrac(num, den));
+	// console.log(simplifyFrac(num, den));
 }
 
 function multiplyIngredient(line, factor) {
@@ -417,63 +404,37 @@ function multiplyIngredient(line, factor) {
 	else if(/http|\/\/www./.test(line)){
 		return line;
 	}
-	//if there's a fraction in the entered quantity
-	if(getFrac(line) ==! null) {
 
-		// console.log("quantity: "+getQuantity(line)+" has a fraction");
-	}
 	var splitFactor = splitTextFraction(factor);
 	var fractorNumerator = splitFactor.num;
 	var fractorDenominator = splitFactor.den;
 	var enteredQuantityInfo = getQuantityInfo(line);	
-	console.log(enteredQuantityInfo);
+	// console.log(enteredQuantityInfo);
 	var unitInfo = getUnitInfo(line, enteredQuantityInfo);
-	console.log(unitInfo);
+	// console.log(unitInfo);
 	var unit = standardizeUnit(unitInfo.text);
 	var ingredient = getIngredient(line, enteredQuantityInfo.end, unitInfo.end);
-	console.log(">>> qty: '"+enteredQuantityInfo.text+"', unit: '"+unit+"', ingredient: '"+ingredient+"'");
+	// console.log(">>> qty: '"+enteredQuantityInfo.text+"', unit: '"+unit+"', ingredient: '"+ingredient+"'");
 	var printedResult = ""
 	var total = ""
-	// if the line is not an ingredient (a lable or irrelevent line)
+	// if the line is not an ingredient (a lable or irrelevent line), do not process
 	if(unit === "unknown" && enteredQuantityInfo.text === "") {
 		return line;
 	}
 	else if(unit == "unknown") {
-		// var enteredQuantity = getQuantity(line);
-		// var noQuant = removeQuantity(line);
-		// var ingredient = noQuant.join(" ");
-		// var ingredient = line.slice(getQuantityInfo(line).end+1)
-		//if the enteredQuantity contains a fraction it needs to be converted into something that can be multiplied
-
-		if(getFrac(enteredQuantityInfo.text) !== null){
-			// if there is also a whole number, retreive that as well
-			var wholeNum = findFirstWholeNumber(line);
-			if (wholeNum !== ""){
-				wholeNum *= parseInt(enteredQuantityInfo.text);
-			}
-			var splitFrac = splitTextFraction(enteredQuantityInfo.text);
-			var newNum = splitFrac.num * fractorNumerator;
-			var newDen = splitFrac.den * fractorDenominator;
-			total = simplifyFrac(newNum, newDen);
-			// if(wholeNum !== ""){
-			// 	printedResult = wholeNum+" "+total +" "+ ingredient;
-			// }
-			// else {
-				printedResult = total +" "+ ingredient;
-			// }
-		}
-		else {
-			total = simplifyFrac((enteredQuantityInfo.text*fractorNumerator), fractorDenominator);
-			console.log("quantity has no fraction, ingredient: "+ingredient+", total: "+total)
-			printedResult = total+" "+ingredient;
-		};
-	} else {
+		var totalNum = (enteredQuantityInfo.improperFraction.num*fractorNumerator);
+		var totalDen = (enteredQuantityInfo.improperFraction.den*fractorDenominator);
+		total = simplifyFrac(totalNum, totalDen);
+		printedResult = total+" "+ingredient;
+	}
+	else {
 		var qtQuantity = convertToQts(enteredQuantityInfo.text, unit);	
 		var totalQts = (qtQuantity*fractorNumerator)/fractorDenominator;	
 		var unitList = getUnitList(totalQts);
 		var convertedResult = combineLikeUnits(unitList);
 		printedResult = format(convertedResult) + " " + ingredient;
 	}	
+	// return {'text': printedResult, 'quantStart': quantityStartIndex, 'quantEnd': quantityEndIndex, 'unitStart': unitStartIndex, 'unitEnd': unitEndIndex}
 	return printedResult;
 }
 
@@ -481,7 +442,7 @@ function multiplyRecipe(textBlock, factor) {
 	var result = [];
 	lines = textBlock.split("\n");
 	for (var i = 0; i < lines.length; i++) {
-		console.log("----- start: "+lines[i] + " -----------");
+		// console.log("----- start: "+lines[i] + " -----------");
 		if (!isBlank(lines[i])){
 			result.push(multiplyIngredient(lines[i], factor));
 		}

@@ -1,6 +1,6 @@
 body {
 	color: #97b1ad;
-	font-family: arial, sans-serif;
+	font-family: 'helvetica', arial, sans-serif;
 	background-color: #263143;
 	/*background: #fff url('http://thatnothingbewasted.files.wordpress.com/2011/04/green_vegetables.jpg') repeat right top;*/
 	padding: 10px;
@@ -37,7 +37,7 @@ a:link {
 	/*background-color: #1A212D;*/
 	position: absolute;
 	background: transparent;
-	font-family: monofur, monaco;
+	font-family: 'monofur', monaco, 'courier new';
 	color: #899dbd;
 	font-size: 1em;
 	width: 48%;
