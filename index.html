@@ -10,17 +10,6 @@
 	<body>
 		<div id="content">
 			<h1>Halve Your Cake, and Eat it too!</h1>
-	<!--
-			<div id="click_block">clicked: <span id="click_count"> 0 </span> times</div>
-	-->
-<!-- 			<div id="backmodel">
-				<span class="quantity">1 1/2</span> <span class="unit">cups</span> bread<br/>
-				<span class="quantity">1/2</span> <span class="unit">cup</span>flour
-			</div> -->
-
-			<form class="recipe_form">
-				<textarea id="recipe_input" name="ingredients" placeholder="enter the ingredients list from your recipe (no need to enter the directions)" rows="30" cols="50" wrap="hard" autofocus>1/2 pounds russet potatoes, peeled and sliced 1 inch thick
-</textarea>
 				<div class="controls">
 					<select id="factor-list" required>
 						<option value="1/3">1/3</option>
@@ -37,13 +26,16 @@
 
 					<button id="process_factor" type="button">halve it!</button>
 				</div>
-			</form>
-			<!-- <ul id="converted-recipe">
-			</ul>	 -->
-			<div id="converted-recipe">
-				<p>
-				</p>
-			</div>
+			<div id="main">
+				<div id="backmodel">
+				</div>
+				<textarea id="recipe_input" name="ingredients" placeholder="enter the ingredients list from your recipe (no need to enter the directions)" rows="30" cols="50" wrap="hard" autofocus></textarea>
+
+				<div id="converted-recipe">
+					<p>
+					</p>
+				</div>
+			</div> <!-- #main -->
 		</div> <!-- #content -->
 	</body>
 </html>

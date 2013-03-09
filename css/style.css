@@ -10,6 +10,7 @@ body {
 
 div#content {
 	width: 100%;
+	position: relative;
 }
 
 h1 {
@@ -24,18 +25,22 @@ a:link {
 	a:visited {
 		color: #d1c578;}
 
-.recipe_form {
+/*.recipe_form {
 	width: 48%;
 	margin: 1% 1% 1% 0%;
 	float:left;
-}
+}*/
 
 #recipe_input {
-	background-color: #1A212D;
+	float: left;
+	/*margin: 1% 1% 1% 0%;*/
+	/*background-color: #1A212D;*/
+	position: absolute;
+	background: transparent;
 	font-family: monofur, monaco;
 	color: #899dbd;
 	font-size: 1em;
-	width: 100%;
+	width: 48%;
 	height: 300px;
 
 }
@@ -97,33 +102,39 @@ ul#converted-recipe li {
 	float: right;
 	width: 48%;
 	height: 300px;
-	margin: 1% 0% 1% 1%;
-	border: 2px inset #fff;
+	/*margin: 1% 0% 1% 1%;*/
+	border: 1px inset #fff;
 	background-color: #222b3b;
 }
 
 #backmodel {
-	background: transparent;
+	float: left;
+	/*margin: 1% 1% 1% 0%;*/
+	padding: 3px;
+	position: absolute;
 	font-family: monofur, monaco;
-    position: absolute;
-    height: 300px;
-    /*width: 100%;*/
-    height: 120px;
-    color: rgba(0, 0, 0, 0.3);/* make text invisable */
+	color: #899dbd;
+	font-size: 1em;
+	width: 48%;
+	height: 300px;
+    color: rgba(255, 0, 0, 0.9);/* make text invisable */
 }
 
 @media(max-width: 800px) {
-	.recipe_form, #converted-recipe { 
-		width:98%;
-		margin: 1%;}
-	#recipe_imput {
-		background-color: red;
-	} 
-	#converted-recipe {
-
+	#recipe_input, #converted-recipe, #backmodel { 
+		width: 98%;
+		margin: 0%;
+		clear: both;
 	}
 }
 
+.quantity {
+    /*background-color: #D8DFEA;*/
+  background: rgba(255, 0, 0, 0.3);/* make background visable */
+}
 
+.unit {
+  background: rgba(0, 255, 0, 0.3);/* make background visable */
+}
 
 
