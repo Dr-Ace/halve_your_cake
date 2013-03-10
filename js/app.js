@@ -60,7 +60,6 @@ var convertUnicodeFraction = (function() {
 })();
 
 // return the first number in the line and its location
-//TODO: rename to something more explicit
 function findFirstWholeNumber(line) {
 	var num = new RegExp("[0-9]+");
 	var result = num.exec(line);
@@ -98,9 +97,9 @@ function getQuantityInfo(line){
 	// characters between the whole number and the fraction can only be spaces
 	// also no more then 5 spaces between them
 	// this will prevent picking up two numbers that are not both part of the quantity
-	if (fracInfo !== null && wholeNumInfo !== null
-		&& (fracInfo.start - wholeNumInfo.end) > 5
-		&&	!isBlank(line.slice(wholeNumInfo.end+1, fracInfo.start))
+	if (fracInfo !== null && wholeNumInfo !== null &&
+		((fracInfo.start - wholeNumInfo.end) > 4
+		||	!isBlank(line.slice(wholeNumInfo.end+1, fracInfo.start)))
 		) {
 		console.log("fraction and whole number are NOT adjacent");
 		fracEndIndex = -1;
@@ -128,19 +127,7 @@ function getQuantityInfo(line){
 	else if (fracInfo) { numerator = fracInfo.num ; denominator = fracInfo.den }
 
 	return {"improperFraction":{"num":numerator, "den":denominator}, "text": text, "start":quantityStartIndex, "end":quantityEndIndex};
-	// return {"text": text, "start":quantityStartIndex, "end":quantityEndIndex};
 }
-
-
-// used only if unit is unkown
-function removeQuantity(line){
-	var quantityInfo = getQuantityInfo(line);
-	var noQuant = line.slice(quantityInfo.end + 1);
-	noQuant = noQuant.replace(/(^[\s]+)/, '');  //remove space at beginning of line
-	var ar = noQuant.split(" ");
-	return ar;
-}
-
 
 function getUnitInfo(line, quantityInfo){
 	var afterQuantity = line.slice(quantityInfo.end + 1).trim();
@@ -351,15 +338,6 @@ function isUnicodeFraction(char) {
 	return ((unicode >= 188 && unicode <= 190) || (unicode >= 8531 && unicode <= 8542))
 }
 
-// process the text input by seperating the quantity and ingredient and converting into qts.
-// take the fraction value from the selected 'option' element, 
-// convert it into an object containing two integers, and multiply the qts by the "fraction"
-// function multiplyRecipe(line, factor){
-// 	console.log("multiplyRecipe has been called");
-// 	var qtQuantity = convertToQts(line);	
-// 	return((qtQuantity*numerator)/denominator);		
-// }
-
 function simplifyFrac(numerator, denominator){
 	// if it is an improper fraction (greater than one)
 	var wholeNum = Math.floor(numerator/denominator);
@@ -388,12 +366,6 @@ function isBlank(str) {
     return (!str || /^\s*$/.test(str));
 }
 
-function multiplyQuantity (quantityInfo, factor) {
-	var num = quantityInfo.improperFraction.numerator * factor.numerator;
-	var den = quantityInfo.improperFraction.denominator * factor.denominator;
-	// console.log(simplifyFrac(num, den));
-}
-
 function multiplyIngredient(line, factor) {
 	// if the line is blank, do not process
 	if(isBlank(line)) {
@@ -409,18 +381,16 @@ function multiplyIngredient(line, factor) {
 	var fractorNumerator = splitFactor.num;
 	var fractorDenominator = splitFactor.den;
 	var enteredQuantityInfo = getQuantityInfo(line);	
-	// console.log(enteredQuantityInfo);
 	var unitInfo = getUnitInfo(line, enteredQuantityInfo);
-	// console.log(unitInfo);
 	var unit = standardizeUnit(unitInfo.text);
 	var ingredient = getIngredient(line, enteredQuantityInfo.end, unitInfo.end);
-	// console.log(">>> qty: '"+enteredQuantityInfo.text+"', unit: '"+unit+"', ingredient: '"+ingredient+"'");
 	var printedResult = ""
 	var total = ""
 	// if the line is not an ingredient (a lable or irrelevent line), do not process
 	if(unit === "unknown" && enteredQuantityInfo.text === "") {
 		return line;
 	}
+
 	else if(unit == "unknown") {
 		var totalNum = (enteredQuantityInfo.improperFraction.num*fractorNumerator);
 		var totalDen = (enteredQuantityInfo.improperFraction.den*fractorDenominator);
@@ -433,16 +403,21 @@ function multiplyIngredient(line, factor) {
 		var unitList = getUnitList(totalQts);
 		var convertedResult = combineLikeUnits(unitList);
 		printedResult = format(convertedResult) + " " + ingredient;
-	}	
-	// return {'text': printedResult, 'quantStart': quantityStartIndex, 'quantEnd': quantityEndIndex, 'unitStart': unitStartIndex, 'unitEnd': unitEndIndex}
-	return printedResult;
+	}
+
+	var printedQuant = getQuantityInfo(printedResult);
+	var printedUnit = getUnitInfo(printedResult, printedQuant);
+
+	return {
+			'input': { 'text': line, 'quantityInfo': enteredQuantityInfo, 'unitInfo': unitInfo},
+			'output': {'text': printedResult,'quantityInfo': printedQuant, 'unitInfo': printedUnit}	
+		};
 }
 
 function multiplyRecipe(textBlock, factor) {
 	var result = [];
 	lines = textBlock.split("\n");
 	for (var i = 0; i < lines.length; i++) {
-		// console.log("----- start: "+lines[i] + " -----------");
 		if (!isBlank(lines[i])){
 			result.push(multiplyIngredient(lines[i], factor));
 		}

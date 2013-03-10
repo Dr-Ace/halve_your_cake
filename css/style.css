@@ -42,7 +42,6 @@ a:link {
 	font-size: 1em;
 	width: 48%;
 	height: 300px;
-
 }
 
 .recipe_form button {
@@ -117,7 +116,7 @@ ul#converted-recipe li {
 	font-size: 1em;
 	width: 48%;
 	height: 300px;
-    color: rgba(255, 0, 0, 0.9);/* make text invisable */
+    color: rgba(255, 0, 0, 0.0);/* make text invisable */
 }
 
 @media(max-width: 800px) {
