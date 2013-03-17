@@ -73,7 +73,7 @@ a:link {
 
 #backmodel {
 	padding: 3px;
-	background-color: rgba(255,255,255, 0.1);
+	background-color: rgba(231, 228, 228, 0.2);
     color: rgba(255, 0, 0, 0.0);/* make text invisable */
 }
 
@@ -85,17 +85,24 @@ a:link {
 	/*color: rgb(60,115,109); */
 	/*margin: 1% 0% 1% 1%;*/
 	border: 1px inset #fff;
-	background-color: rgba(255,255,255, 0.1);
+	background-color: rgba(231, 228, 228, 0.2);
 }
 
 
 
 @media(max-width: 800px) {
-	#recipe_input, #converted-recipe, #backmodel { 
-		width: 98%;
-		margin: 0%;
-		clear: both;
+	#converted-recipe, .input_area { 
+		width: 100%;
+		margin: 0 auto;
+		float: none;
 	}
+
+	#converted-recipe {
+		position: relative;
+		top: 325px;
+	}
+
+
 }
 
 .quantity {

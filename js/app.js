@@ -1,4 +1,4 @@
-////////Parse the input for Quantity, Unit, Ingredien////////
+////////Parse the input for Quantity, Unit, Ingredient////////
 
 // regular expression to determine if there is a fraction in the string
 function getFrac(line) {
@@ -10,18 +10,10 @@ function getFrac(line) {
 		var text = result[0];
 		var startIndex = result.index;
 		var lastindex = startIndex + text.length - 1;
-		var num = den = 1; // 1/1 is a good initializer for a frac 
-		// single char means it is a UNICODE Char
-		if(text.length === 1) {
-			var fracInfo = convertUnicodeFraction(text);
-			num = fracInfo.num;
-			den = fracInfo.den;
-			// text = fracInfo.text;
-		} else {
-			var fracInfo = splitTextFraction(text);
-			num = fracInfo.num;
-			den = fracInfo.den;
-		}
+		// single char means it is a UNICODE Char		
+		var fracInfo = (text.length === 1) ? convertUnicodeFraction(text) : splitTextFraction(text);
+		var num = fracInfo.num;
+		var den = fracInfo.den;
 		// ans = {"value": (num/den) ,"num": num, "den": den, "text": text, "start": startIndex, "end": lastindex};
 		ans = {"num": num, "den": den, "text": text, "start": startIndex, "end": lastindex};
 	}
@@ -30,8 +22,8 @@ function getFrac(line) {
 
 function splitTextFraction(text) {
 	var fracInfo = text.toString().match(/[1-9]+/g);
-	num = parseInt(fracInfo[0]);
-	den = parseInt(fracInfo[1]);
+	var num = parseInt(fracInfo[0], 10);
+	var den = parseInt(fracInfo[1], 10);
 	return {"num": num, "den": den, "text": text};
 }
 
@@ -54,8 +46,8 @@ var convertUnicodeFraction = (function() {
 		"⅞": {"num": 7, "den": 8, "text": "7/8"}
 		};
 
-	return function(char) {
-		return(vulgar[char])
+	return function(character) {
+		return vulgar[character];
 	};
 })();
 
@@ -67,10 +59,10 @@ function findFirstWholeNumber(line) {
 
 	if(result !== null) {
 		var endIndex= result.index + result[0].length - 1;
-		var nextChar = line.charAt(endIndex+1)
+		var nextChar = line.charAt(endIndex+1);
 		// double check to see if not a fraction
-		if(nextChar != '/') {
-			ans = {"value": parseInt(result[0]), "text": result[0], "start": result.index, "end": endIndex};	
+		if(nextChar !== '/') {
+			ans = {"value": parseInt(result[0], 10), "text": result[0], "start": result.index, "end": endIndex};	
 		}
 	}
 	return ans;
@@ -83,23 +75,23 @@ function getQuantityInfo(line){
 	if (wholeNumInfo != null) {
 		wholeNumStartIndex = wholeNumInfo.start;
 		wholeNumbEndIndex =  wholeNumInfo.end;
-	};
+	}
 
-	var fracStartIndex = -1
+	var fracStartIndex = -1;
 	var fracEndIndex  = -1;
 	var fracInfo = getFrac(line);
 	if (fracInfo != null) {
 		fracEndIndex = fracInfo.end;
 		fracStartIndex = fracInfo.start;
-	};
+	}
 
 	// if a whole number and a fraction are present
 	// characters between the whole number and the fraction can only be spaces
 	// also no more then 5 spaces between them
 	// this will prevent picking up two numbers that are not both part of the quantity
 	if (fracInfo !== null && wholeNumInfo !== null &&
-		((fracInfo.start - wholeNumInfo.end) > 4
-		||	!isBlank(line.slice(wholeNumInfo.end+1, fracInfo.start)))
+		((fracInfo.start - wholeNumInfo.end) > 4 ||
+		!isBlank(line.slice(wholeNumInfo.end+1, fracInfo.start)))
 		) {
 		console.log("fraction and whole number are NOT adjacent");
 		fracEndIndex = -1;
@@ -124,7 +116,7 @@ function getQuantityInfo(line){
 		denominator = fracInfo.den;
 	}
 	else if (wholeNumInfo) { numerator = wholeNumInfo.value ; denominator = 1; }
-	else if (fracInfo) { numerator = fracInfo.num ; denominator = fracInfo.den }
+	else if (fracInfo) { numerator = fracInfo.num ; denominator = fracInfo.den; }
 
 	return {"improperFraction":{"num":numerator, "den":denominator}, "text": text, "start":quantityStartIndex, "end":quantityEndIndex};
 }
@@ -151,48 +143,49 @@ function getIngredient(line, quantityEndIndex, unitEndIndex){
 
 
 function standardizeUnit(unit) {
- var result = "";
- // T by itself is case sesitive.
- if(unit != "T") {
-   unit = unit.toLowerCase();
- }
- switch(unit) {
-     case "cups":
-     case "cup":
-     case "c":
-         result = "cup";
-         break;
-     case "teaspoon":
-     case "teaspoons":
-     case "tsp":
-     case "t":
-         result = "teaspoon";
-         break;
-     case "tablespoon":
-     case "tablespoons":
-     case "tbs":
-	 case "tbsp":
-     case "T":
-         result = "tablespoon";
-         break;
-     case "fluid ounce":
-     case "fluid oz":
-         result = "fluidOunce";
-         break;
-     case "pint":
-     case "pt":
-         result = "pint";
-     case "quart":
-     case "qt":
-         result = "quart";
-         break;
-     case "gallon":
-     case "gl":
-         result = "gallon";
-         break;
-     default:
-         result = "unknown"
- }
+	var result = "";
+	// T by itself is case sesitive.
+	if(unit !== "T") {
+	unit = unit.toLowerCase();
+	}
+	switch(unit) {
+		case "cups":
+		case "cup":
+		case "c":
+			result = "cup";
+			break;
+		case "teaspoon":
+		case "teaspoons":
+		case "tsp":
+		case "t":
+			result = "teaspoon";
+			break;
+		case "tablespoon":
+		case "tablespoons":
+		case "tbs":
+		case "tbsp":
+		case "T":
+			result = "tablespoon";
+			break;
+		case "fluid ounce":
+		case "fluid oz":
+			result = "fluidOunce";
+			break;
+		case "pint":
+		case "pt":
+			result = "pint";
+			break;
+		case "quart":
+		case "qt":
+			result = "quart";
+			break;
+		case "gallon":
+		case "gl":
+			result = "gallon";
+			break;
+		default:
+			result = "unknown";
+	}
  return result;
 }
 
@@ -217,12 +210,12 @@ var _orderUnits = [
 
 function lookupUnit(amount, unit) {
 		for (var i = 0; i < _orderUnits.length; i++) {
-		if (_orderUnits[i].unit == unit && _orderUnits[i].amount == amount) {
+		if (_orderUnits[i].unit === unit && _orderUnits[i].amount === amount) {
 			return _orderUnits[i];
-		};
-	};
+		}
+	}
 	return null;
-};
+}
 
 function convertToQts(quantityStr, standardUnit) {
 	if (standardUnit === "unkown"){
@@ -231,7 +224,7 @@ function convertToQts(quantityStr, standardUnit) {
 	var fracQts = 0;
 	var fracObj = getFrac(quantityStr);
 	if (fracObj !== null) {
-		var fracQuantityStr = fracObj.num + "/" + fracObj.den
+		var fracQuantityStr = fracObj.num + "/" + fracObj.den;
 		var fracUnit = lookupUnit(fracQuantityStr, standardUnit);
 		// check if the unit exists
 		if(fracUnit !== null) {
@@ -254,10 +247,10 @@ function convertToQts(quantityStr, standardUnit) {
 
 	var enteredQtQuantity = wholeNumQts + fracQts;
 	return enteredQtQuantity;
-};
+}
 
 function getUnitList(enteredQtQuantity) {
-	unitsList = [];
+	var unitsList = [];
 
 	// Chose the smaller unit that the quantity is inbetween.
 	// Find out how many of those units are contained in that quantity.
@@ -273,7 +266,7 @@ function getUnitList(enteredQtQuantity) {
 				largestUnit = _orderUnits[unitIdx];
 				break;
 			}
-		};
+		}
 	// subtract the largest unit from the quantity and do the exercise again with the remainder.
 		var numberOfUnits = Math.floor(enteredQtQuantity/largestUnit.qts);
 		var numberOfQts = numberOfUnits * largestUnit.qts;
@@ -296,7 +289,7 @@ function combineLikeUnits(unitsList) {
 		// console.log("for loop is running")
 		// console.log ("currentUnit: " + currentUnit + ", nextUnit: " + nextUnit);
 
-		if (nextUnit != null && currentUnit.unit == nextUnit.unit) {
+		if (nextUnit != null && currentUnit.unit === nextUnit.unit) {
 			// console.log("units are the same")
 			var combinedItem = {qts: (currentUnit.qts + nextUnit.qts), 
 								amount: currentUnit.amount+ " "+nextUnit.amount, 
@@ -316,10 +309,10 @@ function format(combinedUnits) {
 	if(combinedUnits == null || combinedUnits.length === 0) {
 		return "";
 	}
-	formattedString = combinedUnits[0].amount + " " + combinedUnits[0].unit;
+	var formattedString = combinedUnits[0].amount + " " + combinedUnits[0].unit;
 	for (var i = 1; i < combinedUnits.length; i++) {
 		formattedString += ", " + combinedUnits[i].amount + " " + combinedUnits[i].unit;
-	};
+	}
 	return formattedString;
 }
 
@@ -327,40 +320,42 @@ function isFraction(element) {
 	var isVul = isUnicodeFraction(element);
 	var hasSlash = element.indexOf('/') >= 0;
 	var fracPieces = element.split('/');
-	var hasNum = !isNaN(parseInt(fracPieces[0]))
-	var hasDom = !isNaN(parseInt(fracPieces[1]))
+	var hasNum = !isNaN(parseInt(fracPieces[0], 10));
+	var hasDom = !isNaN(parseInt(fracPieces[1], 10));
 	return isVul || (hasSlash && hasNum && hasDom);
 }
 
 // check to see if it is a unicode vulgar fraction
-function isUnicodeFraction(char) {
-	var unicode = char.charCodeAt(0);
-	return ((unicode >= 188 && unicode <= 190) || (unicode >= 8531 && unicode <= 8542))
+function isUnicodeFraction(character) {
+	var unicode = character.charCodeAt(0);
+	return ((unicode >= 188 && unicode <= 190) || (unicode >= 8531 && unicode <= 8542));
 }
+
 
 function simplifyFrac(numerator, denominator){
 	// if it is an improper fraction (greater than one)
 	var wholeNum = Math.floor(numerator/denominator);
-	var numerator = (numerator%denominator);
+	var num = (numerator%denominator);
+	var den = denominator;
 	// if the fraction can be simplified
 	var x = [10,9,8,7,6,5,4,3,2];
 	for (var i = 0; i < x.length; i++) {
-		if(numerator%x[i] === 0 && denominator%x[i] === 0){
-			numerator /= x[i];
-			denominator /= x[i];
+		if(num%x[i] === 0 && den%x[i] === 0){
+			num /= x[i];
+			den /= x[i];
 			break;
-		};
-	};
-	if (numerator === 0){
+		}
+	}
+	if (num === 0){
 		return wholeNum;
 	}
 	else if(wholeNum !== 0) {
-		return wholeNum +" "+numerator+"/"+denominator;
+		return wholeNum +" "+num+"/"+den;
 	}
 	else{
-		return numerator+"/"+denominator;
+		return num+"/"+den;
 	}
-};
+}
 
 function isBlank(str) {
     return (!str || /^\s*$/.test(str));
@@ -384,14 +379,14 @@ function multiplyIngredient(line, factor) {
 	var unitInfo = getUnitInfo(line, enteredQuantityInfo);
 	var unit = standardizeUnit(unitInfo.text);
 	var ingredient = getIngredient(line, enteredQuantityInfo.end, unitInfo.end);
-	var printedResult = ""
-	var total = ""
+	var printedResult = "";
+	var total = "";
 	// if the line is not an ingredient (a lable or irrelevent line), do not process
 	if(unit === "unknown" && enteredQuantityInfo.text === "") {
 		return line;
 	}
 
-	else if(unit == "unknown") {
+	else if(unit === "unknown") {
 		var totalNum = (enteredQuantityInfo.improperFraction.num*fractorNumerator);
 		var totalDen = (enteredQuantityInfo.improperFraction.den*fractorDenominator);
 		total = simplifyFrac(totalNum, totalDen);
@@ -416,7 +411,7 @@ function multiplyIngredient(line, factor) {
 
 function multiplyRecipe(textBlock, factor) {
 	var result = [];
-	lines = textBlock.split("\n");
+	var lines = textBlock.split("\n");
 	for (var i = 0; i < lines.length; i++) {
 		if (!isBlank(lines[i])){
 			result.push(multiplyIngredient(lines[i], factor));
@@ -425,7 +420,7 @@ function multiplyRecipe(textBlock, factor) {
 			// leave in line breaks to perserve the orginal format
 			result.push("");
 		}
-	};
+	}
 	return result;
 }
 	
