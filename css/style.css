@@ -1,11 +1,11 @@
 body {
-	color: #97b1ad;
+	color: rgb(78,60,14);
 	font-family: 'helvetica', arial, sans-serif;
-	background-color: #263143;
-	/*background: #fff url('http://thatnothingbewasted.files.wordpress.com/2011/04/green_vegetables.jpg') repeat right top;*/
+	background: url('../images/natural_paper.png') repeat top left;
+	/*background-color: rgb(103,143,115);*/
 	padding: 10px;
 	margin: 2%;
-	font-size: 77%;
+	font-size: 100%;
 }
 
 div#content {
@@ -14,7 +14,7 @@ div#content {
 }
 
 h1 {
-	font-size: 2.5em;
+	font-size: 2em;
 }
 
 a:link {
@@ -31,31 +31,6 @@ a:link {
 	float:left;
 }*/
 
-#recipe_input {
-	float: left;
-	/*margin: 1% 1% 1% 0%;*/
-	/*background-color: #1A212D;*/
-	position: absolute;
-	background: transparent;
-	font-family: 'monofur', monaco, 'courier new';
-	color: #899dbd;
-	font-size: 1em;
-	width: 48%;
-	height: 300px;
-}
-
-.recipe_form button {
-/*	margin: 1%; */
-	font-size: 1em;
-	color: #263143;
-	background-color: #899dbd;
-	border: none;
-	height: 25px;
-	border-radius: 5px;
-	font-weight: bold;
-	box-shadow: inset 0px 0px 3px 2px #abbddb; 
-}
-
 .recipe_form select {
 	font-size: 1em;
 	padding: 3px;
@@ -67,13 +42,6 @@ a:link {
 	border-radius: 5px;
 	font-weight: bold;
 	box-shadow: inset 0px 0px 3px 2px #abbddb; */
-}
-
-#range-value {
-	font-size: 14px;
-	font-weight: bold;
-	width: 30px;
-	
 }
 
 .controls {
@@ -88,36 +56,39 @@ a:link {
 	position: relative;
 }
 
-ul#converted-recipe {
-	padding: 10px;
-	font-size: 14px;
+.input_area {
+	float: left;
+	/*margin: 1% 1% 1% 0%;*/
+	position: absolute;
+	font-family: 'andale mono', monaco, 'Lucida Console', 'courier new';
+	font-size: 1em;
+	width: 48%;
+	height: 300px;
 }
 
-ul#converted-recipe li {
-	list-style-type: none;
+#recipe_input {
+	background: transparent;
+	color: rgb(78,60,14);
+}
+
+#backmodel {
+	padding: 3px;
+	background-color: rgba(255,255,255, 0.1);
+    color: rgba(255, 0, 0, 0.0);/* make text invisable */
 }
 
 #converted-recipe{
 	float: right;
 	width: 48%;
 	height: 300px;
+	font-family: 'andale mono', monaco, 'Lucida Console', 'courier new';
+	/*color: rgb(60,115,109); */
 	/*margin: 1% 0% 1% 1%;*/
 	border: 1px inset #fff;
-	background-color: #222b3b;
+	background-color: rgba(255,255,255, 0.1);
 }
 
-#backmodel {
-	float: left;
-	/*margin: 1% 1% 1% 0%;*/
-	padding: 3px;
-	position: absolute;
-	font-family: monofur, monaco;
-	color: #899dbd;
-	font-size: 1em;
-	width: 48%;
-	height: 300px;
-    color: rgba(255, 0, 0, 0.0);/* make text invisable */
-}
+
 
 @media(max-width: 800px) {
 	#recipe_input, #converted-recipe, #backmodel { 
@@ -129,11 +100,22 @@ ul#converted-recipe li {
 
 .quantity {
     /*background-color: #D8DFEA;*/
-  background: rgba(255, 0, 0, 0.3);/* make background visable */
+  /*text-shadow: 0px 0px 6px rgba(164, 226, 97, 1);*//* make background visable */
+  /*text-shadow: 0px 0px 6px rgba(255, 0, 97, 1);*/
+  
+  text-shadow: -0.1em 0 rgba(194,212,190, 1), 
+  				0 0.1em rgba(194,212,190, 1), 
+  				0.1em 0 rgba(194,212,190, 1), 
+  			   0 -0.1em rgba(194,212,190, 1);
 }
 
 .unit {
-  background: rgba(0, 255, 0, 0.3);/* make background visable */
+  /*text-shadow: 0px 0px 6px rgba(149, 228, 228, 1); *//* make background visable */
+   text-shadow: -0.1em 0 rgba(217,194,174, 1), 
+   				 0 0.1em rgba(217,194,174, 1), 
+   				 0.1em 0 rgba(217,194,174, 1), 
+   				0 -0.1em rgba(217,194,174, 1); 
+   				/*(125,167,190, 0.7)*/
 }
 
 
