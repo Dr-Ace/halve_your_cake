@@ -109,11 +109,11 @@ a:link {
     /*background-color: #D8DFEA;*/
   /*text-shadow: 0px 0px 6px rgba(164, 226, 97, 1);*//* make background visable */
   /*text-shadow: 0px 0px 6px rgba(255, 0, 97, 1);*/
-  
-  text-shadow: -0.1em 0 rgba(194,212,190, 1), 
-  				0 0.1em rgba(194,212,190, 1), 
-  				0.1em 0 rgba(194,212,190, 1), 
-  			   0 -0.1em rgba(194,212,190, 1);
+  /*rgba(194,212,190, 1)*/
+  text-shadow: -0.1em 0 rgba(153,177,147, 1), 
+  				0 0.1em rgba(153,177,147, 1), 
+  				0.1em 0 rgba(153,177,147, 1), 
+  			   0 -0.1em rgba(153,177,147, 1);
 }
 
 .unit {
