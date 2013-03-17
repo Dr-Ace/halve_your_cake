@@ -1,7 +1,7 @@
 body {
 	color: rgb(78,60,14);
 	font-family: 'helvetica', arial, sans-serif;
-	background: url('../images/natural_paper.png') repeat top left;
+	background: url('../images/bedge_grunge.png') repeat top left;
 	/*background-color: rgb(103,143,115);*/
 	padding: 10px;
 	margin: 2%;
@@ -73,7 +73,7 @@ a:link {
 
 #backmodel {
 	padding: 3px;
-	background-color: rgba(231, 228, 228, 0.2);
+	background-color: rgba(255, 255, 255, 0.2);
     color: rgba(255, 0, 0, 0.0);/* make text invisable */
 }
 
@@ -85,7 +85,7 @@ a:link {
 	/*color: rgb(60,115,109); */
 	/*margin: 1% 0% 1% 1%;*/
 	border: 1px inset #fff;
-	background-color: rgba(231, 228, 228, 0.2);
+	background-color: rgba(255, 255, 255, 0.2);
 }
 
 
