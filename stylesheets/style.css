@@ -1,0 +1,213 @@
+body {
+	color: rgb(78,60,14);
+	font-family: 'helvetica', arial, sans-serif;
+	background: url('../images/bedge_grunge.png') repeat top left;
+	/*background-color: rgb(103,143,115);*/
+	padding: 10px;
+	margin: 2%;
+	font-size: 100%;
+}
+
+div#content {
+	width: 100%;
+	position: relative;
+}
+
+h1 {
+	font-size: 2em;
+}
+
+a:link {
+	text-decoration: none;
+	color: rgb(79, 107, 72);
+	font-weight:bold;
+}
+	a:visited {
+		color: rgb(79, 107, 72);}
+
+/*.recipe_form {
+	width: 48%;
+	margin: 1% 1% 1% 0%;
+	float:left;
+}*/
+
+.recipe_form select {
+	font-size: 1em;
+	padding: 3px;
+	line-height: 25px;
+	/*
+	color: #263143;
+	background-color: #899dbd;
+	border: none;
+	border-radius: 5px;
+	font-weight: bold;
+	box-shadow: inset 0px 0px 3px 2px #abbddb; */
+}
+
+.controls {
+	margin: 2% 1% ;
+	height: 25px;
+	position: relative;
+}
+
+.controls *{
+	float: left;
+	margin-right: 10px;
+	position: relative;
+}
+
+.input_area {
+	float: left;
+	position: absolute;
+	/*margin: 1% 1% 1% 0%;*/
+	font-family: 'andale mono', monaco, 'Lucida Console', 'courier new';
+	font-size: 1em;
+	width: 48%;
+	height: 300px;
+}
+
+#recipe_input {
+	background: transparent;
+	color: rgb(78,60,14);
+}
+
+#backmodel {
+	margin: 3px;
+	background-color: rgba(255, 255, 255, 0.2);
+    color: rgba(255, 0, 0, 0.0);/* make text invisable */
+}
+
+
+#converted-recipe{
+	float: right;
+	width: 48%;
+	height: 300px;
+	font-family: 'andale mono', monaco, 'Lucida Console', 'courier new';
+	/*color: rgb(60,115,109); */
+	/*margin: 1% 0% 1% 1%;*/
+	border: 1px inset #fff;
+	background-color: rgba(255, 255, 255, 0.2);
+}
+
+
+
+@media(max-width: 767px) {
+	#converted-recipe, .input_area { 
+		width: 100%;
+		margin: 0 auto;
+		float: none;
+	}
+
+	#converted-recipe {
+		position: relative;
+		top: 325px;
+	}
+	footer{
+		position: absolute;
+		top: 850px;
+	}
+
+
+}
+
+.quantity {
+    /*background-color: #D8DFEA;*/
+  /*text-shadow: 0px 0px 6px rgba(164, 226, 97, 1);*//* make background visable */
+  /*text-shadow: 0px 0px 6px rgba(255, 0, 97, 1);*/
+  /*rgba(194,212,190, 1)*/
+  text-shadow: -0.1em 0 rgba(153,177,147, 1), 
+  				0 0.1em rgba(153,177,147, 1), 
+  				0.1em 0 rgba(153,177,147, 1), 
+  			   0 -0.1em rgba(153,177,147, 1);
+}
+
+.unit {
+  /*text-shadow: 0px 0px 6px rgba(149, 228, 228, 1); *//* make background visable */
+   text-shadow: -0.1em 0 rgba(217,194,174, 1), 
+   				 0 0.1em rgba(217,194,174, 1), 
+   				 0.1em 0 rgba(217,194,174, 1), 
+   				0 -0.1em rgba(217,194,174, 1); 
+   				/*(125,167,190, 0.7)*/
+}
+
+
+/* for Github page only */
+#main {
+	height: 320px;
+}
+
+footer{
+	padding: 10px 0px;
+}
+
+
+/*-------- Github Pages Styles ---------*/
+
+#downloads {
+  float: right;
+  margin-bottom: 50px;
+  padding: 10px 0px;
+}
+
+a.button {
+  -moz-border-radius: 30px;
+  -webkit-border-radius: 30px;                     
+  border-radius: 30px;
+  border-top: solid 1px #cbcbcb;
+  border-left: solid 1px #b7b7b7;
+  border-right: solid 1px #b7b7b7;
+  border-bottom: solid 1px #b3b3b3;
+  color: #303030;
+  line-height: 25px;
+  font-weight: bold;
+  font-size: 15px;
+  padding: 12px 8px 12px 8px;
+  display: block;
+  float: left;
+  width: 179px;
+  margin-right: 14px;  
+  background: #fdfdfd; /* Old browsers */
+  background: -moz-linear-gradient(top,  #fdfdfd 0%, #f2f2f2 100%); /* FF3.6+ */
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#fdfdfd), color-stop(100%,#f2f2f2)); /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(top,  #fdfdfd 0%,#f2f2f2 100%); /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(top,  #fdfdfd 0%,#f2f2f2 100%); /* Opera 11.10+ */
+  background: -ms-linear-gradient(top,  #fdfdfd 0%,#f2f2f2 100%); /* IE10+ */
+  background: linear-gradient(top,  #fdfdfd 0%,#f2f2f2 100%); /* W3C */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fdfdfd', endColorstr='#f2f2f2',GradientType=0 ); /* IE6-9 */
+  -webkit-box-shadow: 10px 10px 5px #888;
+  -moz-box-shadow: 10px 10px 5px #888;
+  box-shadow: 0px 1px 5px #e8e8e8;
+}
+a.button:hover {
+  border-top: solid 1px #b7b7b7;
+  border-left: solid 1px #b3b3b3;
+  border-right: solid 1px #b3b3b3;
+  border-bottom: solid 1px #b3b3b3;
+  background: #fafafa; /* Old browsers */
+  background: -moz-linear-gradient(top,  #fdfdfd 0%, #f6f6f6 100%); /* FF3.6+ */
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#fdfdfd), color-stop(100%,#f6f6f6)); /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(top,  #fdfdfd 0%,#f6f6f6 100%); /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(top,  #fdfdfd 0%,#f6f6f6 100%); /* Opera 11.10+ */
+  background: -ms-linear-gradient(top,  #fdfdfd 0%,#f6f6f6 100%); /* IE10+ */
+  background: linear-gradient(top,  #fdfdfd 0%,#f6f6f6, 100%); /* W3C */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fdfdfd', endColorstr='#f6f6f6',GradientType=0 ); /* IE6-9 */
+}
+
+a.button span {
+  padding-left: 50px;
+  display: block;
+  height: 23px;
+}
+
+#download-zip span {
+  background: transparent url(../images/zip-icon.png) 12px 50% no-repeat;
+}
+#download-tar-gz span {
+  background: transparent url(../images/tar-gz-icon.png) 12px 50% no-repeat;
+}
+#view-on-github span {
+  background: transparent url(../images/octocat-icon.png) 12px 50% no-repeat;
+}
+#view-on-github {
+  margin-right: 0;
+}
