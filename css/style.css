@@ -19,11 +19,11 @@ h1 {
 
 a:link {
 	text-decoration: none;
-	color: #d3dd9f;
+	color: rgb(79, 107, 72);
 	font-weight:bold;
 }
 	a:visited {
-		color: #d1c578;}
+		color: rgb(79, 107, 72);}
 
 /*.recipe_form {
 	width: 48%;
@@ -58,8 +58,8 @@ a:link {
 
 .input_area {
 	float: left;
-	/*margin: 1% 1% 1% 0%;*/
 	position: absolute;
+	/*margin: 1% 1% 1% 0%;*/
 	font-family: 'andale mono', monaco, 'Lucida Console', 'courier new';
 	font-size: 1em;
 	width: 48%;
@@ -72,10 +72,11 @@ a:link {
 }
 
 #backmodel {
-	padding: 3px;
+	margin: 3px;
 	background-color: rgba(255, 255, 255, 0.2);
     color: rgba(255, 0, 0, 0.0);/* make text invisable */
 }
+
 
 #converted-recipe{
 	float: right;
@@ -90,7 +91,7 @@ a:link {
 
 
 
-@media(max-width: 800px) {
+@media(max-width: 767px) {
 	#converted-recipe, .input_area { 
 		width: 100%;
 		margin: 0 auto;
@@ -101,8 +102,6 @@ a:link {
 		position: relative;
 		top: 325px;
 	}
-
-
 }
 
 .quantity {
@@ -124,5 +123,3 @@ a:link {
    				0 -0.1em rgba(217,194,174, 1); 
    				/*(125,167,190, 0.7)*/
 }
-
-
