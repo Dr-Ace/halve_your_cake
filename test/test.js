@@ -60,7 +60,7 @@ test("get the ingredient", function() {
 
 
 //5
-test("create a JSON object to store values of unicode fractions", function(){
+test("create a JSON object to store values of unicode fractions", function() {
 	deepEqual(convertUnicodeFraction("¼"), {"num": 1, "den": 4, "text": "1/4"}, "one fourth");
 	deepEqual(convertUnicodeFraction("¼").text, "1/4", "one fourth");
 	deepEqual(convertUnicodeFraction("⅙"), {"num": 1, "den": 6, "text": "1/6"}, "one sixth");

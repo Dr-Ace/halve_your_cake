@@ -8,9 +8,10 @@ function getFrac(line) {
 	// does fraction exist?
 	if(result !== null) {
 		var text = result[0];
+		console.log(text)
 		var startIndex = result.index;
 		var lastindex = startIndex + text.length - 1;
-		// single char means it is a UNICODE Char		
+		// single char means it is a UNICODE Char
 		var fracInfo = (text.length === 1) ? convertUnicodeFraction(text) : splitTextFraction(text);
 		var num = fracInfo.num;
 		var den = fracInfo.den;
@@ -29,6 +30,7 @@ function splitTextFraction(text) {
 
 var convertUnicodeFraction = (function() {
 	var vulgar = {
+		'\u00BC': {"num": 1, "den": 4, "text": "1/4"},
 		"¼": {"num": 1, "den": 4, "text": "1/4"},
 		"½": {"num": 1, "den": 2, "text": "1/2"},
 		"¾": {"num": 3, "den": 4, "text": "3/4"},
@@ -43,10 +45,17 @@ var convertUnicodeFraction = (function() {
 		"⅛": {"num": 1, "den": 8, "text": "1/8"},
 		"⅜": {"num": 3, "den": 8, "text": "3/8"},
 		"⅝": {"num": 5, "den": 8, "text": "5/8"},
-		"⅞": {"num": 7, "den": 8, "text": "7/8"}
+		"⅞": {"num": 7, "den": 8, "text": "7/8"},
+		'\u215E': {"num": 7, "den": 8, "text": "7/8"},
+		'\u2150': {"num": 1, "den": 7, "text": "1/7"}
 		};
 
 	return function(character) {
+
+		console.log("char :"+character);
+		console.log(character.charCodeAt(0).toString(16));
+		console.log(vulgar[character]);
+		console.log("-----");
 		return vulgar[character];
 	};
 })();
@@ -152,19 +161,24 @@ function standardizeUnit(unit) {
 		case "cups":
 		case "cup":
 		case "c":
+		case "c.":
 			result = "cup";
 			break;
 		case "teaspoon":
 		case "teaspoons":
 		case "tsp":
+		case "tsp.":
 		case "t":
+		case "t.":
 			result = "teaspoon";
 			break;
 		case "tablespoon":
 		case "tablespoons":
 		case "tbs":
 		case "tbsp":
+		case "tbsp.":
 		case "T":
+		case "T.":
 			result = "tablespoon";
 			break;
 		case "fluid ounce":
@@ -173,14 +187,17 @@ function standardizeUnit(unit) {
 			break;
 		case "pint":
 		case "pt":
+		case "pt.":
 			result = "pint";
 			break;
 		case "quart":
 		case "qt":
+		case "qt.":
 			result = "quart";
 			break;
 		case "gallon":
 		case "gl":
+		case "gl.":
 			result = "gallon";
 			break;
 		default:
@@ -362,6 +379,7 @@ function isBlank(str) {
 }
 
 function multiplyIngredient(line, factor) {
+	console.log(line);
 	// if the line is blank, do not process
 	if(isBlank(line)) {
 		// console.log("input should not be an empty line: "+line);

@@ -1,5 +1,8 @@
 $(document).ready(function(){
 
+
+	$('textarea').autosize();
+
 	$("button#process_factor").click(function(e){
 	var textBlock = $("#recipe_input").val();
 	var factor = $("#factor-list").val(); 
@@ -53,14 +56,15 @@ $(document).ready(function(){
 	}
 
 	function highlight(inputInfo) {
-		var preSpace = inputInfo.text.slice(0,inputInfo.quantityInfo.start).replace(/\s/g,'&nbsp;');
-		var quantity = inputInfo.text.slice(inputInfo.quantityInfo.start, inputInfo.quantityInfo.end +1).replace(/\s/g,'&nbsp;');
-		var midSpace = inputInfo.text.slice(inputInfo.quantityInfo.end+1, inputInfo.unitInfo.start).replace(/\s/g,'&nbsp;');
+		var preSpace = inputInfo.text.slice(0,inputInfo.quantityInfo.start)//.replace(/\s/g,'&nbsp;');
+		var quantity = inputInfo.text.slice(inputInfo.quantityInfo.start, inputInfo.quantityInfo.end +1)//.replace(/\s/g,'&nbsp;');
+		var midSpace = inputInfo.text.slice(inputInfo.quantityInfo.end+1, inputInfo.unitInfo.start);//.replace(/\s/g,'&nbsp;');
 		var unit = inputInfo.text.slice(inputInfo.unitInfo.start, inputInfo.unitInfo.end);
+		var ingredient = inputInfo.text.slice(inputInfo.unitInfo.end)
 		// var preSpaceCount = inputInfo.quantityInfo.start;
 		// var midSpaceCount = inputInfo.unitInfo.start - (inputInfo.quantityInfo.end+1);
 
-		return preSpace+'<span class="quantity">' + quantity + '</span>'+midSpace+'<span class="unit">' + unit + '</span>' ;
+		return preSpace+'<span class="quantity">' + quantity + '</span>'+midSpace+'<span class="unit">' + unit + '</span>'+ingredient ;
 	}
 
 	// highlight the background of the textarea when it's in focus
