@@ -1,8 +1,7 @@
 body {
 	color: rgb(78,60,14);
 	font-family: 'helvetica', arial, sans-serif;
-	background: url('../images/bedge_grunge.png') repeat top left;
-	/*background-color: rgb(103,143,115);*/
+	background: #d9d5cd url('../images/bedge_grunge.png') repeat top left;
 	padding: 10px;
 	margin: 2%;
 	font-size: 100%;
@@ -10,6 +9,7 @@ body {
 
 div#content {
 	width: 100%;
+	min-height: 370px;
 	position: relative;
 }
 
@@ -63,33 +63,39 @@ a:link {
 	font-family: 'andale mono', monaco, 'Lucida Console', 'courier new';
 	font-size: 1em;
 	width: 48%;
-	height: 300px;
+/*	overflow: auto;*/
 }
 
 #recipe_input {
 	background: transparent;
 	color: rgb(78,60,14);
+	height: 300px;
+	overflow: auto;
+	white-space: pre-wrap;
 }
 
 #backmodel {
 	margin: 3px;
 	background-color: rgba(255, 255, 255, 0.2);
     color: rgba(255, 0, 0, 0.0);/* make text invisable */
+    white-space: pre-wrap;
+    min-height: 300px;
 }
 
 
 #converted-recipe{
 	float: right;
 	width: 48%;
-	height: 300px;
+	min-height: 300px;
 	font-family: 'andale mono', monaco, 'Lucida Console', 'courier new';
 	/*color: rgb(60,115,109); */
 	/*margin: 1% 0% 1% 1%;*/
 	border: 1px inset #fff;
 	background-color: rgba(255, 255, 255, 0.2);
+/*	overflow: auto;*/
 }
 
-@media only screen and (max-width: 767px) {
+@media only screen and (max-width: 767px){
 	#converted-recipe, .input_area { 
 		width: 100%;
 		margin: 0 auto;
