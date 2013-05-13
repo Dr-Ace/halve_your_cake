@@ -95,7 +95,7 @@ a:link {
 /*	overflow: auto;*/
 }
 
-/*@media only screen and (max-width: 767px){
+@media only screen and (max-width: 767px) and (max-device-width: 480px) and (min-device-width: 320px) {
 	#converted-recipe, .input_area { 
 		width: 100%;
 		margin: 0 auto;
@@ -110,7 +110,7 @@ a:link {
 		position: absolute;
 		top: 850px;
 	}
-}*/
+}
 
 .quantity {
     /*background-color: #D8DFEA;*/
