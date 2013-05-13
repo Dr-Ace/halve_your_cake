@@ -110,6 +110,10 @@ a:link {
 		position: absolute;
 		top: 850px;
 	}
+
+	#downloads {
+		float: none;
+	}
 }
 
 .quantity {
