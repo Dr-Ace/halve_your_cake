@@ -52,10 +52,10 @@ var convertUnicodeFraction = (function() {
 
 	return function(character) {
 
-		console.log("char :"+character);
-		console.log(character.charCodeAt(0).toString(16));
-		console.log(vulgar[character]);
-		console.log("-----");
+		// console.log("char :"+character);
+		// console.log(character.charCodeAt(0).toString(16));
+		// console.log(vulgar[character]);
+		// console.log("-----");
 		return vulgar[character];
 	};
 })();
@@ -377,6 +377,7 @@ function simplifyFrac(numerator, denominator){
 function isBlank(str) {
     return (!str || /^\s*$/.test(str));
 }
+
 
 function multiplyIngredient(line, factor) {
 	console.log(line);
