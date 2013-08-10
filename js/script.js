@@ -1,17 +1,101 @@
 $(document).ready(function(){
+	// backbone
+	//template helper function
+	window.template = function(id) {
+		return _.template( $('#' + id).html() );
+	};
 
+	var Input = Backbone.Model.extend({
+		defaults: {
+			instructions: "Write your recipe in here, @@@@@@@@@@@@@@@@",
+			recipe: ""
+		}
+	});
 
-	$('textarea').autosize();
+	var Output = Backbone.Model.extend({
+		  defaults : {
+		    recipe: "hello food"
+		  }
+	});
+
+	var ShadowOutput = Backbone.Model.extend({
+		  defaults : {
+		    recipe: "hello food"
+		  }
+	});
+
+	var InputView = Backbone.View.extend({
+		tagName: 'textarea'
+		, id: 'recipe_input'
+		, className: 'input_area'
+		, convertedModel: null
+		, attributes: {
+			'name': 'ingredients'
+			, 'placeholder': 'this is your placeholder text'
+			, 'rows': 30
+			, 'cols': 50
+			, 'wrap': 'hard'
+			// , 'autofocus'
+		}
+		, template: template('input-template')
+		, initialize: function(){
+
+		}
+		, events: {
+			'keyup': 'textChanged',
+			'paste': 'pasteText'
+		}
+		, textChanged: function(){
+			var results = outputRecipe();
+			this.convertedModel.set('recipe', results.output);
+		}
+		, pasteText: function(){
+			// contentis not yet populated immediately afer paste ation
+			var parent = this;
+		 	setTimeout(function () {
+				var results = outputRecipe();
+				parent.convertedModel.set('recipe', results.output);
+		  }, 100);
+		}
+		, render: function(){
+			this.el.placeholder = this.model.get("instructions");
+			this.$el.html(this.template(this.model.toJSON()))
+			return this
+		}
+	})
+
+	var OutputView = Backbone.View.extend({
+		id: 'converted-recipe'
+		, template : template('output-template')
+		, initialize: function() {
+			this.model.on('change', this.render, this);
+		} 
+		// , initialize: function() {return this}
+		,render: function(){
+			this.$el.html(this.template(this.model.toJSON()))
+			return this
+		}
+	})
+var outputModel = new Output();
+var inWindow = new InputView({model: new Input()});
+inWindow.convertedModel = outputModel;
+
+var outWindow = new OutputView({model: outputModel});
+$('#main').append(inWindow.render().el);
+$("#main").append(outWindow.render().el);
+////////////////////
+
+	// $('textarea').autosize();
 
 	$("button#process_factor").click(function(e){
-	var textBlock = $("#recipe_input").val();
-	var factor = $("#factor-list").val(); 
-	var allLines = multiplyRecipe(textBlock, factor);
-	// print the new value to the screen
-	for (var i = 0; i < allLines.length; i++) {
-		allLines[i]
-		// $("#converted-recipe").append("<li>"+ allLines[i] +"</li>");
-		$("#converted-recipe p").append(allLines[i]+"<br />");
+		var textBlock = $("#recipe_input").val();
+		var factor = $("#factor-list").val(); 
+		var allLines = multiplyRecipe(textBlock, factor);
+		// print the new value to the screen
+		for (var i = 0; i < allLines.length; i++) {
+			allLines[i]
+			// $("#converted-recipe").append("<li>"+ allLines[i] +"</li>");
+			$("#converted-recipe p").append(allLines[i]+"<br />");
 		};
 	});
 
@@ -34,18 +118,21 @@ $(document).ready(function(){
 			highlights = highlights + highlightedLine+"<br/>";
 			output = output + convertedLine+"<br/>";
 		};
-		$("#backmodel").html(highlights);
-		$("#converted-recipe").html(output);
+		return {"output": output, "highlights": highlights};
 	}
 
 
-	$("#recipe_input").bind('input propertychange', function(){
-		outputRecipe();
-	});
+	// $("#recipe_input").bind('input propertychange', function(){
+	// 	outputRecipe();
+	//	$("#backmodel").html(highlights);
+	//	$("#converted-recipe").html(output);
+	// });
 
-	$("#factor-list").change(function(){
-		outputRecipe();
-	})
+	// $("#factor-list").change(function(){
+	// 	outputRecipe();
+	//	$("#backmodel").html(highlights);
+	//	$("#converted-recipe").html(output);
+	// })
 
 	function nbspCount (count) {
 		output = "";
