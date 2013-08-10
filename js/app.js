@@ -8,7 +8,7 @@ function getFrac(line) {
 	// does fraction exist?
 	if(result !== null) {
 		var text = result[0];
-		console.log(text)
+		// console.log(text)
 		var startIndex = result.index;
 		var lastindex = startIndex + text.length - 1;
 		// single char means it is a UNICODE Char
@@ -380,7 +380,7 @@ function isBlank(str) {
 
 
 function multiplyIngredient(line, factor) {
-	console.log(line);
+	// console.log(line);
 	// if the line is blank, do not process
 	if(isBlank(line)) {
 		// console.log("input should not be an empty line: "+line);
