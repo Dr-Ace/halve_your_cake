@@ -5,104 +5,123 @@ $(document).ready(function(){
 		return _.template( $('#' + id).html() );
 	};
 
+// Models
 	var Input = Backbone.Model.extend({
 		defaults: {
-			instructions: "Write your recipe in here, @@@@@@@@@@@@@@@@",
+			instructions: "Copy your ingredients into here",
 			recipe: ""
 		}
 	});
 
 	var Output = Backbone.Model.extend({
 		  defaults : {
-		    recipe: "hello food"
+		    recipe: ""
 		  }
 	});
 
 	var ShadowOutput = Backbone.Model.extend({
 		  defaults : {
-		    recipe: "hello food"
+		    recipe: ""
 		  }
 	});
 
+// Views
 	var InputView = Backbone.View.extend({
-		tagName: 'textarea'
-		, id: 'recipe_input'
-		, className: 'input_area'
-		, convertedModel: null
-		, attributes: {
-			'name': 'ingredients'
-			, 'placeholder': 'this is your placeholder text'
-			, 'rows': 30
-			, 'cols': 50
-			, 'wrap': 'hard'
-			// , 'autofocus'
-		}
-		, template: template('input-template')
-		, initialize: function(){
-
-		}
-		, events: {
+		// tagName: 'textarea'
+		el: '#recipe_input',
+		className: 'input_area',
+		convertedModel: null,
+		//  attributes: {
+		// 	'name': 'ingredients' ,
+		// 	'placeholder': 'this is your placeholder text',
+		// 	'rows': 30,
+		// 	'cols': 50,
+		// 	'wrap': 'hard',
+		// 	// 'autofocus',
+		// }
+		initialize: function(){
+			// this.render();
+		},
+		events: {
 			'keyup': 'textChanged',
 			'paste': 'pasteText'
-		}
-		, textChanged: function(){
+		},
+		textChanged: function(){
 			var results = outputRecipe();
 			this.convertedModel.set('recipe', results.output);
-		}
-		, pasteText: function(){
-			// contentis not yet populated immediately afer paste ation
+			this.model.set('recipe', $("#recipe_input").val());
+		},
+		pasteText: function(){
+			// contents not yet populated immediately afer paste ation
 			var parent = this;
 		 	setTimeout(function () {
 				var results = outputRecipe();
 				parent.convertedModel.set('recipe', results.output);
 		  }, 100);
 		}
-		, render: function(){
-			this.el.placeholder = this.model.get("instructions");
-			this.$el.html(this.template(this.model.toJSON()))
-			return this
-		}
+		// , render: function(){
+		// 	this.el.placeholder = this.model.get("instructions");
+		// 	this.$el.html(this.model);
+		// 	return this
+		// }
 	})
 
 	var OutputView = Backbone.View.extend({
-		id: 'converted-recipe'
-		, template : template('output-template')
-		, initialize: function() {
+		el: '#converted-recipe',
+		initialize: function() {
+			this.render();
 			this.model.on('change', this.render, this);
-		} 
-		// , initialize: function() {return this}
-		,render: function(){
-			this.$el.html(this.template(this.model.toJSON()))
-			return this
+		}, 
+		render: function(){
+			console.log(this.model.get('recipe'));
+			this.$el.html(this.model.get('recipe'));
+			return this;
 		}
 	})
+
+	var ShadowOutputView = Backbone.View.extend({
+		//apply the highlight() function to the contents of the textarea and output it.
+		highlight: function(){
+			highlight(inputView.val()) },
+		initialize: function() {
+			// $('#main').append(inWindow.render().el);
+			this.model.on('change', this.render, this);
+		},
+		render: function(){
+			this.$el.html(this.template(this.model.toJSON()));
+			return this;
+		}
+	})
+
+var inputModel = new Input();
 var outputModel = new Output();
-var inWindow = new InputView({model: new Input()});
+var inWindow = new InputView({model: inputModel});
+// window.myInputModel = inputModel;
 inWindow.convertedModel = outputModel;
+var shadowOutput = new ShadowOutputView({model: new ShadowOutput})
 
 var outWindow = new OutputView({model: outputModel});
-$('#main').append(inWindow.render().el);
-$("#main").append(outWindow.render().el);
+// $('#main').append(inWindow.render().el);
+// $("#main").append(outWindow.render().el);
+
 ////////////////////
 
 	// $('textarea').autosize();
 
-	$("button#process_factor").click(function(e){
-		var textBlock = $("#recipe_input").val();
-		var factor = $("#factor-list").val(); 
-		var allLines = multiplyRecipe(textBlock, factor);
-		// print the new value to the screen
-		for (var i = 0; i < allLines.length; i++) {
-			allLines[i]
-			// $("#converted-recipe").append("<li>"+ allLines[i] +"</li>");
-			$("#converted-recipe p").append(allLines[i]+"<br />");
-		};
-	});
+	// $("button#process_factor").click(function(e){
+	// 	var textBlock = $("#recipe_input").val();
+	// 	var factor = $("#factor-list").val(); 
+	// 	var allLines = multiplyRecipe(textBlock, factor);
+	// 	// print the new value to the screen
+	// 	for (var i = 0; i < allLines.length; i++) {
+	// 		allLines[i]
+	// 		// $("#converted-recipe").append("<li>"+ allLines[i] +"</li>");
+	// 		$("#converted-recipe p").append(allLines[i]+"<br />");
+	// 	};
+	// });
 
 	function outputRecipe() {
 		var textBlock = $("#recipe_input").val();
-		var inputTextHtml = (textBlock).replace(/\n\r?/g, '<br />');
-		$("#backmodel").html(inputTextHtml);
 		var factor = $("#factor-list").val(); 
 		var allLines = multiplyRecipe(textBlock, factor);
 		var output = "";
@@ -134,15 +153,17 @@ $("#main").append(outWindow.render().el);
 	//	$("#converted-recipe").html(output);
 	// })
 
-	function nbspCount (count) {
-		output = "";
-		for (var i = 0; i < count; i++) {
-			output += "&nbsp;";
-		};
-		return output;
-	}
+	// function nbspCount (count) {
+	// 	output = "";
+	// 	for (var i = 0; i < count; i++) {
+	// 		output += "&nbsp;";
+	// 	};
+	// 	return output;
+	// }
 
 	function highlight(inputInfo) {
+		// <lead space>1 1/2<mid space>cup ingredit
+		// ingredent contains its own lead white space
 		var preSpace = inputInfo.text.slice(0,inputInfo.quantityInfo.start)//.replace(/\s/g,'&nbsp;');
 		var quantity = inputInfo.text.slice(inputInfo.quantityInfo.start, inputInfo.quantityInfo.end +1)//.replace(/\s/g,'&nbsp;');
 		var midSpace = inputInfo.text.slice(inputInfo.quantityInfo.end+1, inputInfo.unitInfo.start);//.replace(/\s/g,'&nbsp;');
