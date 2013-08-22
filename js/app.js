@@ -1,3 +1,5 @@
+var Convert = (function(){
+
 ////////Parse the input for Quantity, Unit, Ingredient////////
 
 // regular expression to determine if there is a fraction in the string
@@ -427,18 +429,21 @@ function multiplyIngredient(line, factor) {
 		};
 }
 
-function multiplyRecipe(textBlock, factor) {
-	var result = [];
-	var lines = textBlock.split("\n");
-	for (var i = 0; i < lines.length; i++) {
-		if (!isBlank(lines[i])){
-			result.push(multiplyIngredient(lines[i], factor));
+return{ 
+	multiplyRecipe: function(textBlock, factor) {
+		var result = [];
+		var lines = textBlock.split("\n");
+		for (var i = 0; i < lines.length; i++) {
+			if (!isBlank(lines[i])){
+				result.push(multiplyIngredient(lines[i], factor));
+			}
+			else {
+				// leave in line breaks to perserve the orginal format
+				result.push("");
+			}
 		}
-		else {
-			// leave in line breaks to perserve the orginal format
-			result.push("");
-		}
+		return result;
 	}
-	return result;
 }
 	
+})();

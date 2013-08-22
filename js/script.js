@@ -6,7 +6,7 @@ $(document).ready(function(){
 	$("button#process_factor").click(function(e){
 	var textBlock = $("#recipe_input").val();
 	var factor = $("#factor-list").val(); 
-	var allLines = multiplyRecipe(textBlock, factor);
+	var allLines = Convert.multiplyRecipe(textBlock, factor);
 	// print the new value to the screen
 	for (var i = 0; i < allLines.length; i++) {
 		allLines[i]
@@ -20,7 +20,7 @@ $(document).ready(function(){
 		var inputTextHtml = (textBlock).replace(/\n\r?/g, '<br />');
 		$("#backmodel").html(inputTextHtml);
 		var factor = $("#factor-list").val(); 
-		var allLines = multiplyRecipe(textBlock, factor);
+		var allLines = Convert.multiplyRecipe(textBlock, factor);
 		var output = "";
 		var highlights = "";
 		for (var i = 0; i < allLines.length; i++) {
