@@ -25,6 +25,12 @@ $(document).ready(function(){
 		  }
 	});
 
+	var Factor = Backbone.Model.extend({
+		defaults: {
+			value: '1/1'
+		}
+	});
+
 // Views
 	var InputView = Backbone.View.extend({
 		// tagName: 'textarea'
@@ -39,24 +45,26 @@ $(document).ready(function(){
 		// 	'wrap': 'hard',
 		// 	// 'autofocus',
 		// }
+		factorModel: null,
 		initialize: function(){
-			// this.render();
+			console.log(this)
+			this.factorModel.on('change', this.textChanged, this);
 		},
 		events: {
 			'keyup': 'textChanged',
 			'paste': 'pasteText'
 		},
 		textChanged: function(){
-			var results = outputRecipe();
+			console.log('here');
+			this.model.set('recipe', $("#recipe_input").val());			
+			var results = outputRecipe(this.model.get('recipe'));
 			this.convertedModel.set('recipe', results.output);
-			this.model.set('recipe', $("#recipe_input").val());
 		},
 		pasteText: function(){
-			// contents not yet populated immediately afer paste ation
+			// contents not yet populated immediately afer paste action
 			var parent = this;
 		 	setTimeout(function () {
-				var results = outputRecipe();
-				parent.convertedModel.set('recipe', results.output);
+		 		parent.textChanged();
 		  }, 100);
 		}
 		// , render: function(){
@@ -93,16 +101,31 @@ $(document).ready(function(){
 		}
 	})
 
+	var FactorView = Backbone.View.extend({
+		el: '#factor-list',
+		events: {
+			'change' : 'getFactor'
+		},
+		getFactor: function() {
+			console.log(this.$el.val());
+			this.model.set('value', this.$el.val());
+			console.log('model.value: '+this.model.get('value'))
+		},
+		sayYay: function(){
+			console.log('models changed');
+		}
+	});
+
 var inputModel = new Input();
 var outputModel = new Output();
-var inWindow = new InputView({model: inputModel});
+var factor = new Factor();
+var inWindow = new InputView({model: inputModel, factorModel: factor});
 // window.myInputModel = inputModel;
 inWindow.convertedModel = outputModel;
 var shadowOutput = new ShadowOutputView({model: new ShadowOutput})
 
 var outWindow = new OutputView({model: outputModel});
-// $('#main').append(inWindow.render().el);
-// $("#main").append(outWindow.render().el);
+var factorView = new FactorView({model: factor})
 
 ////////////////////
 
@@ -120,8 +143,7 @@ var outWindow = new OutputView({model: outputModel});
 	// 	};
 	// });
 
-	function outputRecipe() {
-		var textBlock = $("#recipe_input").val();
+	function outputRecipe(textBlock) {		
 		var factor = $("#factor-list").val(); 
 		var allLines = multiplyRecipe(textBlock, factor);
 		var output = "";
