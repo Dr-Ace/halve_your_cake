@@ -444,9 +444,32 @@ function multiplyRecipe(textBlock, factor) {
 	return result;
 }
 
+var testingOnly = {
+	getFrac: getFrac,
+	splitTextFraction: splitTextFraction,
+	convertUnicodeFraction: convertUnicodeFraction, // var
+	findFirstWholeNumber: findFirstWholeNumber,
+	getQuantityInfo: getQuantityInfo,
+	getUnitInfo: getUnitInfo,
+	getIngredient: getIngredient,
+	standardizeUnit: standardizeUnit,
+	_orderUnits: _orderUnits, // var
+	lookupUnit: lookupUnit,
+	convertToQts: convertToQts,
+	getUnitList: getUnitList,
+	combineLikeUnits: combineLikeUnits,
+	format: format,
+	isFraction: isFraction,
+	isUnicodeFraction: isUnicodeFraction,
+	simplifyFrac: simplifyFrac,
+	isBlank : isBlank,
+	multiplyIngredient: multiplyIngredient,
+	multiplyRecipe: multiplyRecipe
+};
 
 return{ 
-	multiplyRecipe: multiplyRecipe
+	multiplyRecipe: multiplyRecipe,
+	__testonly__: testingOnly // expose privates for testing 
 }
 	
 })();
