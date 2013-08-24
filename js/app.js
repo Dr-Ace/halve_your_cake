@@ -429,21 +429,24 @@ function multiplyIngredient(line, factor) {
 		};
 }
 
-return{ 
-	multiplyRecipe: function(textBlock, factor) {
-		var result = [];
-		var lines = textBlock.split("\n");
-		for (var i = 0; i < lines.length; i++) {
-			if (!isBlank(lines[i])){
-				result.push(multiplyIngredient(lines[i], factor));
-			}
-			else {
-				// leave in line breaks to perserve the orginal format
-				result.push("");
-			}
+function multiplyRecipe(textBlock, factor) {
+	var result = [];
+	var lines = textBlock.split("\n");
+	for (var i = 0; i < lines.length; i++) {
+		if (!isBlank(lines[i])){
+			result.push(multiplyIngredient(lines[i], factor));
 		}
-		return result;
+		else {
+			// leave in line breaks to perserve the orginal format
+			result.push("");
+		}
 	}
+	return result;
+}
+
+
+return{ 
+	multiplyRecipe: multiplyRecipe
 }
 	
 })();
