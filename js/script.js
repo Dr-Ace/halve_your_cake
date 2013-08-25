@@ -61,24 +61,25 @@ $(document).ready(function(){
 		var midSpace = inputInfo.text.slice(inputInfo.quantityInfo.end+1, inputInfo.unitInfo.start);//.replace(/\s/g,'&nbsp;');
 		var unit = inputInfo.text.slice(inputInfo.unitInfo.start, inputInfo.unitInfo.end);
 		var ingredient = inputInfo.text.slice(inputInfo.unitInfo.end)
-		// var preSpaceCount = inputInfo.quantityInfo.start;
-		// var midSpaceCount = inputInfo.unitInfo.start - (inputInfo.quantityInfo.end+1);
 
 		return preSpace+'<span class="quantity">' + quantity + '</span>'+midSpace+'<span class="unit">' + unit + '</span>'+ingredient ;
 	}
 
-	// highlight the background of the textarea when it's in focus
-	// $("#recipe_input").on({
-	// 	blur : function(){
-	// 		$(this).css("background-color", "#222b3b")
-	// 	},
-	// 	focus: function(){
-	// 		$(this).css("background-color", "#1A212D")
-	// 	}
-	// });
+	// Print Controls
 
-	
+	$('#add').click(function(){
+		$(this).hide();
+		$('.add_only').show();
+	})
 
+	$('#print_controls input').mousedown(function(){
+		console.log('mouse down');
+		$(this).css('border', '2px inset rgba(78, 60, 14, 0.4)')
+	});
+	$('#print_controls input').mouseup(function(){
+		console.log('mouse up');
+		$(this).css('border', '2px outset rgba(78, 60, 14, 0.4)')
+	});
 
 	
 });

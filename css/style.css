@@ -83,8 +83,9 @@ a:link {
 
 
 #converted-recipe{
-	float: right;
-	width: 48%;
+	/*float: right;
+	width: 48%;*/
+	width: 100%;
 	min-height: 300px;
 	font-family: 'andale mono', monaco, 'Lucida Console', 'courier new';
 	/*color: rgb(60,115,109); */
@@ -125,4 +126,57 @@ a:link {
    				 0.1em 0 rgba(217,194,174, 1), 
    				0 -0.1em rgba(217,194,174, 1); 
    				/*(125,167,190, 0.7)*/
+}
+
+#main:after {clear:both;}
+
+#print_area {
+	float: right;
+	width: 48%;
+}
+
+#print_controls { margin-top: 1em;}
+
+#print_controls input{
+    background-color: transparent;
+    padding: 0.2em 0.5em;
+    -moz-border-radius: 6px;
+    -webkit-border-radius: 6px;
+    border-radius:6px;
+    color: #4E3C0E;
+    font-size: 1.1em;
+    text-decoration: none;
+    border: 2px outset rgba(78, 60, 14, 0.4);
+    cursor: pointer;
+}
+
+.add_only{ 
+	display: none; 
+	background: transparent; 
+	font-family: 'andale mono', monaco, 'Lucida Console', 'courier new'; 
+	}
+input.add_only{font-size: 2em; font-weight: bold; margin-bottom: 0.5em;}
+textarea.add_only{width: 100%; font-size: 1em;}
+
+
+@media print {
+	.controls, .input_area, #print_controls {
+		display: none;
+	}
+
+	#print_area {
+		width: 96%;
+		margin: 2%;
+		border: none;
+	}
+	#print_area *{
+		font-family: Helvetica, Arial, 'sans-serif'; color: #000;}
+
+	#print_area input, #print_area textarea, #converted-recipe {border: none;}
+
+	#converted-recipe {
+		width: 100%;
+	}
+
+	h1 {font-size: 1em; font-weight: normal;}
 }
