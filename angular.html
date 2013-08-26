@@ -1,0 +1,44 @@
+<html ng-app>
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<link rel="stylesheet" href="css/style.css" type="text/css">
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize-min.js"></script>
+		<script src="js/app.js"></script>
+		<!--script src="js/script.js"></script-->
+		<script src="js/ng-app.js"></script>
+	</head>
+
+
+	<body>
+		<div id="content" ng-controller="HalveYourCakeCrtl">
+			<h1>Halve Your Cake, and Eat it too!</h1>
+				<div class="controls">
+					<select id="factor-list" required>
+						<option value="1/3">1/3</option>
+						<option value="1/2">1/2</option>
+						<option value="1/1" selected>1</option>
+						<option value="4/3">1 1/3</option>
+						<option value="3/2">1 1/2</option>
+						<option value="5/3">1 2/3</option>
+						<option value="2/1">2</option>
+						<option value="5/2">2 1/2</option>
+						<option value="3/1">3</option>
+						<option value="4/1">4</option>
+					</select>
+
+					<!-- <button id="process_factor" type="button">halve it!</button> -->
+				</div>
+			<div id="main">
+				<div id="backmodel" class="input_area" ng-bind-html-unsafe="highlights">
+				</div>
+				<textarea ng-model="recipeInput" id="recipe_input" class="input_area" name="ingredients" placeholder="enter the ingredients list from your recipe (no need to enter the directions)" rows="30" cols="50" wrap="hard" autofocus></textarea>
+
+				<div id="converted-recipe" ng-bind-html-unsafe="convertedRecipe">
+				</div>
+				
+			</div> <!-- #main -->
+		</div> <!-- #content -->
+	</body>
+</html>
