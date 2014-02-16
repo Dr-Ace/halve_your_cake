@@ -1,7 +1,8 @@
 body {
-	color: rgb(78,60,14);
+	color: rgb(68,42,2);
 	font-family: 'helvetica', arial, sans-serif;
-	background: #d9d5cd url('../images/bedge_grunge.png') repeat top left;
+	/*background: #d9d5cd url('../images/bedge_grunge.png') repeat top left;*/
+	background-color: rgb(230, 220, 203);
 	padding: 10px;
 	margin: 2%;
 	font-size: 100%;
@@ -12,8 +13,34 @@ div#content {
 	position: relative;
 }
 
+h1, h2 {
+	font-family: 'Averia Libre', cursive, serif;
+}
+
 h1 {
+	font-size: 4.5em;
+	letter-spacing: 0.1em;
+	margin: 0;
+}
+
+h1 img {
+	height: 1.2em;
+	margin: 0 10px;
+	position: relative;
+	top: 0.1em;
+}
+h1 img:first-child {
+	height: 1em;
+	top: 0.2em;
+}
+
+h1 span {
+	white-space: nowrap;
+}
+
+h2 {
 	font-size: 2em;
+	margin: 1rem 0 1em 0;
 }
 
 a:link {
@@ -24,45 +51,36 @@ a:link {
 	a:visited {
 		color: rgb(79, 107, 72);}
 
-/*.recipe_form {
-	width: 48%;
-	margin: 1% 1% 1% 0%;
-	float:left;
-}*/
-
 .recipe_form select {
 	font-size: 1em;
 	padding: 3px;
 	line-height: 25px;
-	/*
-	color: #263143;
-	background-color: #899dbd;
-	border: none;
-	border-radius: 5px;
-	font-weight: bold;
-	box-shadow: inset 0px 0px 3px 2px #abbddb; */
 }
 
-.controls {
-	margin: 2% 1% ;
-	height: 25px;
-	position: relative;
+.controls > div {
+	display: inline-block;
+	margin: 0 30px 10px 0;
 }
 
-.controls *{
-	float: left;
-	margin-right: 10px;
-	position: relative;
+.controls p {
+	margin: 0 0 10px 0;
 }
+
 
 .input_area {
 	float: left;
 	position: absolute;
 	/*margin: 1% 1% 1% 0%;*/
-	font-family: 'andale mono', monaco, 'Lucida Console', 'courier new';
+	/*font-family: 'andale mono', monaco, 'Lucida Console', 'courier new';*/
 	font-size: 1em;
 	width: 48%;
 /*	overflow: auto;*/
+}
+
+.input_area, #converted-recipe {
+	/*font-family: 'andale mono', monaco, 'Lucida Console', 'courier new';*/
+	font-family: helvtica, sans-serif;
+	line-height: 1.5em;
 }
 
 #recipe_input {
@@ -74,23 +92,22 @@ a:link {
 }
 
 #backmodel {
-	margin: 3px;
-	background-color: rgba(255, 255, 255, 0.2);
+	padding: 4px 0px 0px 4px;
+	background-color: rgba(255, 255, 255, 0.4);
     color: rgba(255, 0, 0, 0.0);/* make text invisable */
     white-space: pre-wrap;
     min-height: 300px;
 }
 
-
 #converted-recipe{
 	float: right;
 	width: 48%;
 	min-height: 300px;
-	font-family: 'andale mono', monaco, 'Lucida Console', 'courier new';
+	/*font-family: 'andale mono', monaco, 'Lucida Console', 'courier new';*/
 	/*color: rgb(60,115,109); */
 	/*margin: 1% 0% 1% 1%;*/
 	border: 1px inset #fff;
-	background-color: rgba(255, 255, 255, 0.2);
+	background-color: rgba(255, 255, 255, 0.4);
 /*	overflow: auto;*/
 }
 
@@ -104,6 +121,14 @@ a:link {
 	#converted-recipe {
 		position: relative;
 		top: 325px;
+	}
+
+	h1 {
+		font-size: 3em;
+	}
+	h2 {
+		font-size: 2em;
+		text-align: right;
 	}
 }
 
