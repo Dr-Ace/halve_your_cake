@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Averia+Libre' rel='stylesheet' type='text/css'>
     <!--
     <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
     <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
@@ -12,6 +13,7 @@
     <!-- my custome stylesheet -->
     <link rel="stylesheet" type="text/css" href="stylesheets/style.css" media="screen" />
     <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
     <script type="text/javascript" src="javascripts/jquery.autosize-min.js"></script>
     <script type="text/javascript" src="javascripts/app.js"></script>
@@ -26,15 +28,17 @@
     <div id="container">
       <div class="inner">
 
-        <section id="downloads" class="clearfix">
-          <!-- <a href="https://github.com/Dr-Ace/halve_your_cake/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
-          <a href="https://github.com/Dr-Ace/halve_your_cake/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a> -->
+        <!-- <section id="downloads" class="clearfix">
+          <a href="https://github.com/Dr-Ace/halve_your_cake/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
+          <a href="https://github.com/Dr-Ace/halve_your_cake/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
           <a href="https://github.com/Dr-Ace/halve_your_cake" id="view-on-github" class="button" target="_blank"><span>View on GitHub</span></a><br />
-        </section>
+
+        </section> -->
+        <a href="https://github.com/Dr-Ace/halve_your_cake" class='octocat' target="_blank"><img src="images/octocat.png" alt="view on github"><span>github</span></a><br />
 
         <header>
-          <h1>Halve your cake</h1>
-          <h2>and eat it too</h2>
+          <h1><span>Hal<img src='images/V_slice.png' alt='v'>e</span> Your <span><img src='images/C_cake.png' alt='C'>ake</span></h1>
+          <h2>and Eat it too!</h2>
         </header>
 
 
@@ -42,18 +46,21 @@
         <div id="content">
           <!-- <h1>Halve Your Cake, and Eat it too!</h1> -->
             <div class="controls">
-              <select id="factor-list" required>
-                <option value="1/3">1/3</option>
-                <option value="1/2">1/2</option>
-                <option value="1/1" selected>1</option>
-                <option value="4/3">1 1/3</option>
-                <option value="3/2">1 1/2</option>
-                <option value="5/3">1 2/3</option>
-                <option value="2/1">2</option>
-                <option value="5/2">2 1/2</option>
-                <option value="3/1">3</option>
-                <option value="4/1">4</option>
-              </select>
+              <div class='dropdown'>
+                <p>Multiply by</p>
+                <select id="factor-list" required>
+                  <option value="1/3">1/3</option>
+                  <option value="1/2">1/2</option>
+                  <option value="1/1" selected>1</option>
+                  <option value="4/3">1 1/3</option>
+                  <option value="3/2">1 1/2</option>
+                  <option value="5/3">1 2/3</option>
+                  <option value="2/1">2</option>
+                  <option value="5/2">2 1/2</option>
+                  <option value="3/1">3</option>
+                  <option value="4/1">4</option>
+                </select>
+              </div>
 
               <!-- <button id="process_factor" type="button">halve it!</button> -->
             </div>

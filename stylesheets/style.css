@@ -1,119 +1,136 @@
 body {
-	color: rgb(78,60,14);
-	font-family: 'helvetica', arial, sans-serif;
-	background: #d9d5cd url('../images/bedge_grunge.png') repeat top left;
-	padding: 10px;
-	margin: 2%;
-	font-size: 100%;
+  color: rgb(68,42,2);
+  font-family: 'helvetica', arial, sans-serif;
+  /*background: #d9d5cd url('../images/bedge_grunge.png') repeat top left;*/
+  background-color: rgb(230, 220, 203);
+  padding: 10px;
+  margin: 2%;
+  font-size: 100%;
 }
 
 div#content {
-	width: 100%;
-	min-height: 370px;
-	position: relative;
+  width: 100%;
+  min-height: 370px;
+  position: relative;
+}
+
+h1, h2 {
+  font-family: 'Averia Libre', cursive, serif;
 }
 
 h1 {
-	font-size: 2em;
+  font-size: 4.5em;
+  letter-spacing: 0.1em;
+  margin: 0;
+}
+
+h1 img {
+  height: 1.2em;
+  margin: 0 10px;
+  position: relative;
+  top: 0.1em;
+}
+h1 img:first-child {
+  height: 1em;
+  top: 0.2em;
+}
+
+h1 span {
+  white-space: nowrap;
+}
+
+h2 {
+  font-size: 2em;
+  margin: 1rem 0 1em 0;
 }
 
 a:link {
-	text-decoration: none;
-	color: rgb(79, 107, 72);
-	font-weight:bold;
+  text-decoration: none;
+  color: rgb(79, 107, 72);
+  font-weight:bold;
 }
-	a:visited {
-		color: rgb(79, 107, 72);}
-
-/*.recipe_form {
-	width: 48%;
-	margin: 1% 1% 1% 0%;
-	float:left;
-}*/
+  a:visited {
+    color: rgb(79, 107, 72);}
 
 .recipe_form select {
-	font-size: 1em;
-	padding: 3px;
-	line-height: 25px;
-	/*
-	color: #263143;
-	background-color: #899dbd;
-	border: none;
-	border-radius: 5px;
-	font-weight: bold;
-	box-shadow: inset 0px 0px 3px 2px #abbddb; */
+  font-size: 1em;
+  padding: 3px;
+  line-height: 25px;
 }
 
-.controls {
-	margin: 2% 1% ;
-	height: 25px;
-	position: relative;
+.controls > div {
+  display: inline-block;
+  margin: 0 30px 10px 0;
 }
 
-.controls *{
-	float: left;
-	margin-right: 10px;
-	position: relative;
+.controls p {
+  margin: 0 0 10px 0;
 }
+
 
 .input_area {
-	float: left;
-	position: absolute;
-	/*margin: 1% 1% 1% 0%;*/
-	font-family: 'andale mono', monaco, 'Lucida Console', 'courier new';
-	font-size: 1em;
-	width: 48%;
-/*	overflow: auto;*/
+  float: left;
+  position: absolute;
+  /*margin: 1% 1% 1% 0%;*/
+  /*font-family: 'andale mono', monaco, 'Lucida Console', 'courier new';*/
+  font-size: 1em;
+  width: 48%;
+/*  overflow: auto;*/
+}
+
+.input_area, #converted-recipe {
+  /*font-family: 'andale mono', monaco, 'Lucida Console', 'courier new';*/
+  font-family: helvtica, sans-serif;
+  line-height: 1.5em;
 }
 
 #recipe_input {
-	background: transparent;
-	color: rgb(78,60,14);
-	height: 300px;
-	overflow: auto;
-	white-space: pre-wrap;
+  background: transparent;
+  color: rgb(78,60,14);
+  height: 300px;
+  overflow: auto;
+  white-space: pre-wrap;
 }
 
 #backmodel {
-	margin: 3px;
-	background-color: rgba(255, 255, 255, 0.2);
+  padding: 4px 0px 0px 4px;
+  background-color: rgba(255, 255, 255, 0.4);
     color: rgba(255, 0, 0, 0.0);/* make text invisable */
     white-space: pre-wrap;
     min-height: 300px;
 }
 
-
 #converted-recipe{
-	float: right;
-	width: 48%;
-	min-height: 300px;
-	font-family: 'andale mono', monaco, 'Lucida Console', 'courier new';
-	/*color: rgb(60,115,109); */
-	/*margin: 1% 0% 1% 1%;*/
-	border: 1px inset #fff;
-	background-color: rgba(255, 255, 255, 0.2);
-/*	overflow: auto;*/
+  float: right;
+  width: 48%;
+  min-height: 300px;
+  /*font-family: 'andale mono', monaco, 'Lucida Console', 'courier new';*/
+  /*color: rgb(60,115,109); */
+  /*margin: 1% 0% 1% 1%;*/
+  border: 1px inset #fff;
+  background-color: rgba(255, 255, 255, 0.4);
+/*  overflow: auto;*/
 }
 
 @media only screen and (max-width: 767px) and (max-device-width: 480px) and (min-device-width: 320px) {
-	#converted-recipe, .input_area { 
-		width: 100%;
-		margin: 0 auto;
-		float: none;
-	}
+  #converted-recipe, .input_area { 
+    width: 100%;
+    margin: 0 auto;
+    float: none;
+  }
 
-	#converted-recipe {
-		position: relative;
-		top: 325px;
-	}
-	footer{
-		position: absolute;
-		top: 850px;
-	}
+  #converted-recipe {
+    position: relative;
+    top: 325px;
+  }
 
-	#downloads {
-		float: none;
-	}
+  h1 {
+    font-size: 3em;
+  }
+  h2 {
+    font-size: 2em;
+    text-align: right;
+  }
 }
 
 .quantity {
@@ -145,6 +162,22 @@ a:link {
 footer{
 	padding: 10px 0px;
 }
+
+a.octocat {
+  float: right;
+}
+a.octocat img {
+  height: 60px;
+  width: 60px;
+}
+a.octocat span {
+  display: none;
+}
+a.octocat:hover span {
+  display: block;
+  text-align: center;
+}
+
 
 
 /*-------- Github Pages Styles ---------*/
